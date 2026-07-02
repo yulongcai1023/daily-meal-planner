@@ -142,6 +142,177 @@ const form = document.querySelector("#profile-form");
 const results = document.querySelector("#results");
 let latestProfile = null;
 
+const ACCOUNT_STORE_KEY = "dailyMealPlanner.accounts.v1";
+const SESSION_USER_KEY = "dailyMealPlanner.currentUser";
+const authModal = document.querySelector("#auth-modal");
+const authForm = document.querySelector("#auth-form");
+const authUsername = document.querySelector("#auth-username");
+const authPassword = document.querySelector("#auth-password");
+const authError = document.querySelector("#auth-error");
+const toast = document.querySelector("#toast");
+let authMode = "login";
+let currentUserKey = sessionStorage.getItem(SESSION_USER_KEY);
+let toastTimer = null;
+
+function readAccounts() {
+  try { return JSON.parse(localStorage.getItem(ACCOUNT_STORE_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function writeAccounts(accounts) {
+  localStorage.setItem(ACCOUNT_STORE_KEY, JSON.stringify(accounts));
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("is-visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+}
+
+async function hashPassword(password, salt) {
+  if (!globalThis.crypto?.subtle) throw new Error("当前浏览器不支持安全的本地密码存储。");
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, ["deriveBits"]);
+  const digest = await crypto.subtle.deriveBits({
+    name: "PBKDF2",
+    salt: encoder.encode(salt),
+    iterations: 120000,
+    hash: "SHA-256"
+  }, keyMaterial, 256);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function newSalt() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  document.querySelectorAll("[data-auth-mode]").forEach(tab => {
+    const active = tab.dataset.authMode === mode;
+    tab.classList.toggle("is-active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+  document.querySelector("#auth-title").textContent = mode === "login" ? "欢迎回来" : "创建本地账号";
+  document.querySelector("#auth-description").textContent = mode === "login" ? "登录后自动恢复你上次填写的身体数据。" : "注册后，每次生成食谱都会自动保存你的个人数据。";
+  document.querySelector("#auth-submit").textContent = mode === "login" ? "登录并恢复档案" : "注册并开始使用";
+  authPassword.autocomplete = mode === "login" ? "current-password" : "new-password";
+  authError.textContent = "";
+}
+
+function openAuth(mode = "login") {
+  setAuthMode(mode);
+  authModal.classList.add("is-open");
+  authModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  authUsername.focus();
+}
+
+function closeAuth() {
+  authModal.classList.remove("is-open");
+  authModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  authForm.reset();
+  authError.textContent = "";
+}
+
+function applyProfile(profile) {
+  if (!profile) return;
+  document.querySelector("#height").value = profile.height;
+  document.querySelector("#weight").value = profile.weight;
+  document.querySelector("#age").value = profile.age;
+  document.querySelector("#sex").value = profile.sex;
+  const activity = document.querySelector(`input[name="activity"][value="${profile.activity}"]`);
+  const goal = document.querySelector(`input[name="goal"][value="${profile.goal}"]`);
+  if (activity) activity.checked = true;
+  if (goal) goal.checked = true;
+}
+
+function updateAuthUI(restoreProfile = false) {
+  const accounts = readAccounts();
+  const account = currentUserKey ? accounts[currentUserKey] : null;
+  if (!account) {
+    currentUserKey = null;
+    sessionStorage.removeItem(SESSION_USER_KEY);
+    document.querySelector("#guest-actions").hidden = false;
+    document.querySelector("#user-actions").hidden = true;
+    return;
+  }
+  document.querySelector("#guest-actions").hidden = true;
+  document.querySelector("#user-actions").hidden = false;
+  document.querySelector("#current-username").textContent = account.username;
+  if (restoreProfile && account.profile) {
+    applyProfile(account.profile);
+    showToast("已恢复上次保存的个人数据");
+  }
+}
+
+function saveProfileForCurrentUser(profile) {
+  if (!currentUserKey) return;
+  const accounts = readAccounts();
+  if (!accounts[currentUserKey]) return;
+  accounts[currentUserKey].profile = profile;
+  accounts[currentUserKey].updatedAt = new Date().toISOString();
+  writeAccounts(accounts);
+  showToast("个人数据已保存到此账号");
+}
+
+document.querySelector("#open-auth").addEventListener("click", () => openAuth("login"));
+document.querySelector("#logout-button").addEventListener("click", () => {
+  currentUserKey = null;
+  sessionStorage.removeItem(SESSION_USER_KEY);
+  updateAuthUI();
+  showToast("已退出登录");
+});
+document.querySelectorAll("[data-close-auth]").forEach(element => element.addEventListener("click", closeAuth));
+document.querySelectorAll("[data-auth-mode]").forEach(tab => tab.addEventListener("click", () => setAuthMode(tab.dataset.authMode)));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && authModal.classList.contains("is-open")) closeAuth();
+});
+
+authForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  authError.textContent = "";
+  const username = authUsername.value.trim();
+  const key = username.toLocaleLowerCase();
+  const password = authPassword.value;
+  if (!/^[\p{L}\p{N}_-]{3,20}$/u.test(username)) {
+    authError.textContent = "用户名需为 3–20 个文字、字母、数字、下划线或短横线。";
+    return;
+  }
+  if (password.length < 6) {
+    authError.textContent = "密码至少需要 6 个字符。";
+    return;
+  }
+  try {
+    const accounts = readAccounts();
+    if (authMode === "register") {
+      if (accounts[key]) { authError.textContent = "该用户名已存在，请直接登录。"; return; }
+      const salt = newSalt();
+      accounts[key] = { username, salt, passwordHash: await hashPassword(password, salt), profile: null, createdAt: new Date().toISOString() };
+      writeAccounts(accounts);
+    } else {
+      const account = accounts[key];
+      if (!account || await hashPassword(password, account.salt) !== account.passwordHash) {
+        authError.textContent = "用户名或密码不正确。";
+        return;
+      }
+    }
+    currentUserKey = key;
+    sessionStorage.setItem(SESSION_USER_KEY, key);
+    closeAuth();
+    updateAuthUI(true);
+    showToast(authMode === "register" ? "注册成功，已登录" : "登录成功");
+  } catch (error) {
+    authError.textContent = error.message || "登录失败，请稍后重试。";
+  }
+});
+
+updateAuthUI(true);
+
 function calculate(profile) {
   const { height, weight, age, sex, activity, goal } = profile;
   const bmr = 10 * weight + 6.25 * height - 5 * age + (sex === "male" ? 5 : -161);
@@ -288,6 +459,7 @@ form.addEventListener("submit", event => {
   }
   error.textContent = "";
   latestProfile = profile;
+  saveProfileForCurrentUser(profile);
   render(profile);
   if (window.innerWidth < 900) results.scrollIntoView({ behavior: "smooth" });
 });
