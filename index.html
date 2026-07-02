@@ -9,6 +9,17 @@
 </head>
 <body>
   <main class="page-shell">
+    <nav class="account-bar" aria-label="账户">
+      <div class="account-copy"><span class="account-dot"></span><span>本地健康档案</span></div>
+      <div id="guest-actions">
+        <button id="open-auth" class="account-button" type="button">登录 / 注册</button>
+      </div>
+      <div id="user-actions" class="user-actions" hidden>
+        <span class="user-avatar" aria-hidden="true">食</span>
+        <span>你好，<b id="current-username"></b></span>
+        <button id="logout-button" type="button">退出</button>
+      </div>
+    </nav>
     <header class="hero">
       <div>
         <p class="eyebrow">DAILY NOURISHMENT</p>
@@ -67,6 +78,27 @@
       </section>
     </section>
 
+    <div id="auth-modal" class="auth-modal" aria-hidden="true">
+      <div class="auth-backdrop" data-close-auth></div>
+      <section class="auth-panel" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <button class="auth-close" type="button" data-close-auth aria-label="关闭登录窗口">×</button>
+        <p class="eyebrow">YOUR HEALTH PROFILE</p>
+        <h2 id="auth-title">欢迎回来</h2>
+        <p id="auth-description" class="auth-description">登录后自动恢复你上次填写的身体数据。</p>
+        <div class="auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">登录</button>
+          <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">注册</button>
+        </div>
+        <form id="auth-form">
+          <label>用户名<input id="auth-username" type="text" minlength="3" maxlength="20" autocomplete="username" placeholder="3–20 个字符" required /></label>
+          <label>密码<input id="auth-password" type="password" minlength="6" autocomplete="current-password" placeholder="至少 6 个字符" required /></label>
+          <div id="auth-error" class="auth-error" role="alert"></div>
+          <button id="auth-submit" class="primary-button" type="submit">登录并恢复档案</button>
+        </form>
+        <p class="auth-local-note">账号和档案仅保存在此浏览器。清除浏览器数据后将无法恢复。</p>
+      </section>
+    </div>
+
     <div id="recipe-modal" class="recipe-modal" aria-hidden="true">
       <div class="recipe-backdrop" data-close-recipe></div>
       <section class="recipe-panel" role="dialog" aria-modal="true" aria-labelledby="recipe-title">
@@ -91,6 +123,8 @@
         <p id="recipe-tip" class="recipe-tip"></p>
       </section>
     </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer>
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
