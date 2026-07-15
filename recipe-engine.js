@@ -110,6 +110,35 @@ const LUNCH_SERIES = ["鸡胸肉系列", "鸡腿肉系列", "牛肉系列", "牛
 const DINNER_SERIES = ["沙拉", "炖菜", "汤", "轻食", "空气炸锅系列", "低脂炒菜", "清蒸鱼", "豆腐煲", "番茄汤菜", "烤箱时蔬"];
 const SNACK_SERIES = ["水果酸奶杯", "水果坚果盒", "水煮蛋加餐", "毛豆加餐", "红薯加餐", "燕麦酸奶杯", "奇亚籽布丁", "牛油果吐司角", "豆浆坚果", "低脂奶酪水果"];
 
+const SEASONINGS = {
+  盐: { name: "盐", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  黑胡椒: { name: "黑胡椒", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  生抽: { name: "生抽", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  醋: { name: "醋", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  孜然粉: { name: "孜然粉", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  咖喱粉: { name: "咖喱粉", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  奥尔良粉: { name: "奥尔良粉", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  低糖照烧汁: { name: "低糖照烧汁", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  韩式辣酱: { name: "韩式辣酱", kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  清水: { name: "清水", kcal: 0, protein: 0, fat: 0, carbs: 0 }
+};
+
+const COOKWARE_BY_METHOD = {
+  香煎: ["平底锅"], 黑椒: ["炒锅"], 蒜香: ["炒锅"], 柠檬: ["平底锅"], 日式: ["平底锅"],
+  韩式: ["炒锅"], 照烧: ["平底锅"], 咖喱: ["汤锅"], 番茄: ["汤锅"], 孜然: ["炒锅"],
+  奥尔良: ["空气炸锅"], 清蒸: ["蒸锅"], 清炒: ["炒锅"], 炖: ["汤锅"], 焖: ["汤锅"],
+  空气炸锅: ["空气炸锅"], 烤箱: ["烤箱", "烤盘"], 凉拌: ["碗"], 水煮: ["汤锅"],
+  即食: ["碗"], 隔夜冷藏: ["杯"], 拌制: ["碗"], 快手: ["平底锅"], 蒸煮: ["蒸锅"], 捏制: ["碗"]
+};
+
+const NO_COOK_METHODS = new Set(["即食", "隔夜冷藏", "拌制"]);
+const HEAT_WORDS = ["加热", "煎", "炒", "煮", "焯水", "炖", "烤", "蒸", "预热", "空气炸锅", "热锅", "沸水", "水开", "小火", "中火", "大火"];
+const ALL_KNOWN_INGREDIENT_NAMES = [
+  ...FOOD_DB.proteins, ...FOOD_DB.staples, ...FOOD_DB.vegetables, ...FOOD_DB.fruits, ...FOOD_DB.nuts, ...FOOD_DB.fats,
+  ...Object.values(SEASONINGS)
+].map(item => item.name).sort((a, b) => b.length - a.length);
+const ALL_KNOWN_COOKWARE = [...new Set(Object.values(COOKWARE_BY_METHOD).flat())].sort((a, b) => b.length - a.length);
+
 function choice(list, rng = Math.random) {
   return list[Math.floor(rng() * list.length)];
 }
@@ -239,17 +268,213 @@ function balanceMainMealIngredients(ingredients, targetKcal, goal) {
   protein.grams += proteinAdd;
 }
 
-function stepsFor(method, meal) {
-  const names = meal.ingredients.map(i => i.name);
-  const protein = meal.ingredients[0]?.name;
-  const staple = meal.ingredients[1]?.name;
-  const vegNames = meal.ingredients.slice(2, -1).map(i => i.name).join("、");
+function addSeasonings(ingredients, names) {
+  for (const name of names) {
+    if (!ingredients.some(item => item.name === name) && SEASONINGS[name]) {
+      ingredients.push({ name, grams: name === "清水" ? 200 : 1, unit: name === "清水" ? "ml" : "g", ref: SEASONINGS[name] });
+    }
+  }
+}
+
+function seasoningsForMethod(methodName) {
+  const map = {
+    香煎: ["盐", "黑胡椒"],
+    黑椒: ["黑胡椒", "生抽"],
+    蒜香: ["盐", "黑胡椒"],
+    柠檬: ["盐", "黑胡椒"],
+    日式: ["生抽"],
+    韩式: ["韩式辣酱"],
+    照烧: ["低糖照烧汁"],
+    咖喱: ["清水", "咖喱粉"],
+    番茄: ["清水", "盐", "黑胡椒"],
+    孜然: ["孜然粉"],
+    奥尔良: ["奥尔良粉"],
+    清蒸: ["生抽"],
+    清炒: ["盐", "黑胡椒"],
+    炖: ["清水", "盐"],
+    焖: ["清水", "生抽"],
+    凉拌: ["醋"],
+    水煮: ["清水", "盐"],
+    空气炸锅: ["盐", "黑胡椒"],
+    烤箱: ["盐", "黑胡椒"]
+  };
+  return map[methodName] || [];
+}
+
+function splitRecipeIngredients(recipe) {
+  const seasoningNames = new Set(Object.keys(SEASONINGS));
+  const fatNames = new Set(FOOD_DB.fats.map(item => item.name));
+  const ingredients = recipe.ingredients;
+  return {
+    protein: ingredients[0],
+    staple: ingredients[1],
+    seasonings: ingredients.filter(item => seasoningNames.has(item.name)),
+    fats: ingredients.filter(item => fatNames.has(item.name)),
+    extras: ingredients.slice(2).filter(item => !seasoningNames.has(item.name) && !fatNames.has(item.name) && item.name !== "柠檬")
+  };
+}
+
+function listNames(items) {
+  return items.filter(Boolean).map(item => item.name).join("、");
+}
+
+function safeExtrasText(extras) {
+  return extras.length ? listNames(extras) : "配菜";
+}
+
+function generateNoCookSteps(recipe) {
+  const names = recipe.ingredients.map(item => item.name);
+  const tool = recipe.tools?.[0] || "碗";
+  const fruits = recipe.ingredients.filter(item => FOOD_DB.fruits.some(fruit => fruit.name === item.name));
+  const nuts = recipe.ingredients.filter(item => FOOD_DB.nuts.some(nut => nut.name === item.name));
+  const creamy = recipe.ingredients.filter(item => ["希腊酸奶", "低脂奶酪", "无糖豆浆"].includes(item.name));
+  const base = recipe.ingredients.filter(item => ["燕麦", "奇亚籽", "全麦吐司", "牛油果"].includes(item.name));
+  const steps = [];
+  if (fruits.length) steps.push(`将${listNames(fruits)}洗净切块。`);
+  if (nuts.length) steps.push(`将${listNames(nuts)}轻轻压碎或切碎备用。`);
+  if (creamy.length || base.length) steps.push(`${tool}中依次加入${listNames([...creamy, ...base])}。`);
+  const remaining = recipe.ingredients.filter(item => ![...fruits, ...nuts, ...creamy, ...base].includes(item));
+  if (remaining.length) steps.push(`放入${listNames(remaining)}。`);
+  if (nuts.length || recipe.ingredients.some(item => item.name === "奇亚籽")) steps.push(`撒上${listNames([...nuts, ...recipe.ingredients.filter(item => item.name === "奇亚籽")])}。`);
+  steps.push(`将${names.join("、")}轻轻混合或摆盘即可。`);
+  return steps.slice(0, 6);
+}
+
+function generateMainSteps(recipe) {
+  const method = recipe.method;
+  const { protein, staple, extras, fats, seasonings } = splitRecipeIngredients(recipe);
+  const vegNames = safeExtrasText(extras);
+  const fatName = fats[0]?.name;
+  const seasoningNames = listNames(seasonings);
+  if (["香煎", "黑椒", "蒜香", "孜然", "照烧", "韩式", "清炒"].includes(method)) {
+    return [
+      `将${protein.name}切成适口大小，${vegNames}洗净切好。`,
+      seasoningNames ? `用${seasoningNames}给${protein.name}抓匀腌制 5 分钟。` : `将${protein.name}擦干备用。`,
+      `${COOKWARE_BY_METHOD[method][0]}中加入${fatName || "食谱中的油"}，放入${protein.name}翻炒至变色。`,
+      extras.length ? `加入${vegNames}继续翻炒至熟。` : `继续翻炒${protein.name}至完全熟透。`,
+      `${staple.name}铺底，放入${protein.name}和${vegNames}即可。`
+    ];
+  }
+  if (["炖", "焖", "咖喱", "番茄", "水煮"].includes(method)) {
+    return [
+      `将${protein.name}切块，${vegNames}洗净切好。`,
+      extras.length ? `${COOKWARE_BY_METHOD[method][0]}中放入${protein.name}和较耐煮的${vegNames}。` : `${COOKWARE_BY_METHOD[method][0]}中放入${protein.name}。`,
+      `加入适量清水，煮至${protein.name}完全熟透。`,
+      seasoningNames ? `加入${seasoningNames}调味。` : `按口味清淡调味。`,
+      `搭配${staple.name}装盘即可。`
+    ];
+  }
+  if (method === "清蒸") {
+    return [
+      `将${protein.name}处理成适口大小，${vegNames}洗净切好。`,
+      `把${protein.name}放入${COOKWARE_BY_METHOD[method][0]}蒸至完全熟透。`,
+      extras.length ? `${vegNames}另行蒸熟或切好摆盘。` : `${protein.name}蒸好后静置片刻。`,
+      seasoningNames ? `用${seasoningNames}给${protein.name}${extras.length ? `和${vegNames}` : ""}调味。` : `按清淡口味调味。`,
+      `搭配${staple.name}食用。`
+    ];
+  }
+  if (method === "空气炸锅") {
+    return [
+      extras.length ? `将${protein.name}切块，${vegNames}洗净切好。` : `将${protein.name}处理成适口大小。`,
+      seasoningNames ? `用${seasoningNames}和${fatName || "少量油"}拌匀${protein.name}。` : `用${fatName || "少量油"}拌匀${protein.name}。`,
+      extras.length ? `将${protein.name}和${vegNames}放入空气炸锅。` : `将${protein.name}放入空气炸锅。`,
+      `中途翻面，直到${protein.name}完全熟透。`,
+      `搭配${staple.name}装盘即可。`
+    ];
+  }
+  if (method === "烤箱") {
+    return [
+      extras.length ? `将${protein.name}切块，${vegNames}洗净切好。` : `将${protein.name}处理成适口大小。`,
+      seasoningNames ? `用${seasoningNames}和${fatName || "少量油"}拌匀${protein.name}${extras.length ? `和${vegNames}` : ""}。` : `用${fatName || "少量油"}拌匀${protein.name}${extras.length ? `和${vegNames}` : ""}。`,
+      extras.length ? `将${protein.name}和${vegNames}铺入烤箱烤盘。` : `将${protein.name}铺入烤箱烤盘。`,
+      `烤至${protein.name}完全熟透。`,
+      `搭配${staple.name}装盘即可。`
+    ];
+  }
+  if (method === "凉拌" || /沙拉|轻食/.test(recipe.name)) {
+    return [
+      `将${protein.name}处理至可直接食用状态。`,
+      extras.length ? `将${vegNames}洗净切好。` : `将${protein.name}切成适口大小。`,
+      seasoningNames ? `用${seasoningNames}和${fatName || "食谱中的健康脂肪"}拌匀。` : `用${fatName || "食谱中的健康脂肪"}拌匀。`,
+      `加入${protein.name}和${staple.name}。`,
+      `轻轻混合后摆盘即可。`
+    ];
+  }
   return [
-    `准备食材：${names.join("、")}，蔬菜洗净切成适口大小。`,
-    ...method.steps,
-    `${staple ? `${staple}铺底，` : ""}放入${protein || "蛋白质食材"}和${vegNames || "配菜"}，按份量装盘。`,
-    "尝味后再决定是否加盐；酱料从少量开始，避免隐形热量。"
-  ].slice(0, 6);
+      extras.length ? `将${protein.name}切好，${vegNames}洗净切好。` : `将${protein.name}切好。`,
+    `${protein.name}按${method}方式处理至完全熟透。`,
+    extras.length ? `加入${vegNames}处理至适口。` : `继续处理${protein.name}至适口。`,
+    seasoningNames ? `用${seasoningNames}调味。` : `按清淡口味调味。`,
+    `搭配${staple.name}装盘即可。`
+  ];
+}
+
+function validateRecipe(recipe) {
+  const ingredientNames = recipe.ingredients.map(item => item.name);
+  const stepText = recipe.steps.join(" ");
+  for (const name of ALL_KNOWN_INGREDIENT_NAMES) {
+    const coveredByIngredient = ingredientNames.some(ingredient => ingredient === name || ingredient.includes(name) || name.includes(ingredient));
+    if (stepText.includes(name) && !coveredByIngredient) {
+      return { ok: false, reason: `步骤出现未列入食材的「${name}」` };
+    }
+    if (recipe.name.includes(name) && !coveredByIngredient) {
+      return { ok: false, reason: `菜名出现未列入食材的「${name}」` };
+    }
+  }
+  for (const tool of ALL_KNOWN_COOKWARE) {
+    if (stepText.includes(tool) && !recipe.tools?.includes(tool)) {
+      return { ok: false, reason: `步骤出现未列入厨具的「${tool}」` };
+    }
+  }
+  if (NO_COOK_METHODS.has(recipe.method)) {
+    const heatWord = HEAT_WORDS.find(word => stepText.includes(word));
+    if (heatWord) return { ok: false, reason: `No Cook 步骤出现加热动作「${heatWord}」` };
+  }
+  const macros = sumMacros(recipe.ingredients);
+  const expected = {
+    kcal: Math.round(macros.kcal),
+    protein: Math.round(macros.protein),
+    fat: Math.round(macros.fat),
+    carbs: Math.round(macros.carbs)
+  };
+  if (recipe.kcal !== expected.kcal || recipe.protein !== expected.protein || recipe.fat !== expected.fat || recipe.carbs !== expected.carbs) {
+    return { ok: false, reason: "营养数据不一致" };
+  }
+  if (recipe.foods.length !== recipe.ingredients.length || recipe.foods.some((food, index) => food[0] !== recipe.ingredients[index].name || food[1] !== recipe.ingredients[index].grams || food[2] !== recipe.ingredients[index].unit)) {
+    return { ok: false, reason: "克数或 foods 数据不一致" };
+  }
+  if (!recipe.name || !recipe.ingredients.length || recipe.steps.length < 3 || recipe.steps.length > 6) {
+    return { ok: false, reason: "菜名、食材或步骤数量不合法" };
+  }
+  return { ok: true };
+}
+
+function finalizeRecipe(recipe, generator) {
+  if (!NO_COOK_METHODS.has(recipe.method)) {
+    addSeasonings(recipe.ingredients, seasoningsForMethod(recipe.method));
+    if (["香煎", "黑椒", "蒜香", "孜然", "照烧", "韩式", "清炒", "空气炸锅", "烤箱"].includes(recipe.method)
+      && !recipe.ingredients.some(item => FOOD_DB.fats.some(fat => fat.name === item.name))) {
+      const oil = FOOD_DB.fats.find(fat => fat.name === "橄榄油");
+      recipe.ingredients.push({ name: oil.name, grams: 5, unit: "g", ref: oil });
+    }
+  }
+  recipe.tools = COOKWARE_BY_METHOD[recipe.method] || [];
+  recipe.steps = generator ? generator(recipe) : (NO_COOK_METHODS.has(recipe.method) ? generateNoCookSteps(recipe) : generateMainSteps(recipe));
+  const macros = sumMacros(recipe.ingredients);
+  recipe.foods = recipe.ingredients.map(i => [i.name, i.grams, i.unit]);
+  recipe.kcal = Math.round(macros.kcal);
+  recipe.protein = Math.round(macros.protein);
+  recipe.fat = Math.round(macros.fat);
+  recipe.carbs = Math.round(macros.carbs);
+  let result = validateRecipe(recipe);
+  if (!result.ok) {
+    recipe.steps = NO_COOK_METHODS.has(recipe.method) ? generateNoCookSteps(recipe) : generateMainSteps(recipe);
+    result = validateRecipe(recipe);
+  }
+  if (!result.ok) {
+    throw new Error(`Invalid recipe generated: ${recipe.name}; ${result.reason}`);
+  }
+  return recipe;
 }
 
 function mealName(protein, staple, vegetables, method, mealType, rng) {
@@ -297,6 +522,7 @@ function buildMainMeal(mealType, profile, nutrition, history, rng) {
   alignFlavorIngredients(method, vegetables, []);
   const ingredients = buildIngredients({ protein, staple, vegetables, fat, plan, mealType });
   alignFlavorIngredients(method, vegetables, ingredients);
+  addSeasonings(ingredients, seasoningsForMethod(method.name));
   balanceMainMealIngredients(ingredients, plan.target.kcal, profile.goal);
   const macros = sumMacros(ingredients);
   const meal = {
@@ -312,7 +538,7 @@ function buildMainMeal(mealType, profile, nutrition, history, rng) {
     time: `${Math.max(10, method.time - 5)}–${method.time + 5} 分钟`,
     suitableGoals: profile.goal === "lose" ? ["减脂", "维持"] : profile.goal === "gain" ? ["增肌", "维持"] : ["减脂", "增肌", "维持"]
   };
-  meal.steps = stepsFor(method, meal);
+  finalizeRecipe(meal);
   meal.tip = profile.goal === "lose" ? "减脂版已降低主食、提高蔬菜比例，烹调油建议严格计量。" : profile.goal === "gain" ? "增肌版提高蛋白质和主食份量，训练日前后可优先安排。" : "维持版强调主食、蛋白质和蔬菜均衡。";
   history.proteins.add(protein.name);
   history.staples.add(staple.name);
@@ -353,6 +579,7 @@ function buildBreakfast(profile, nutrition, history, rng) {
   const namedVeg = /菠菜/.test(template) ? [v("菠菜"), veg[0].name === "菠菜" ? veg[1] : veg[0]] : /番茄/.test(template) ? [v("番茄"), veg[0].name === "番茄" ? veg[1] : veg[0]] : veg;
   const nut = choice(FOOD_DB.nuts, rng);
   const chia = FOOD_DB.fats.find(f => f.name === "奇亚籽");
+  const avocado = FOOD_DB.fats.find(f => f.name === "牛油果");
   let ingredients;
   let method = "快手";
   let steps;
@@ -395,6 +622,24 @@ function buildBreakfast(profile, nutrition, history, rng) {
     ];
     method = "捏制";
     steps = [`${purpleRice.name}提前煮熟放温，${includeEdamame ? `${edamame.name}和${egg.name}` : egg.name}煮熟。`, `${namedVeg[0].name}切碎并挤去多余水分。`, "把所有食材按份量拌匀后捏成饭团，海苔可少量包裹。"];
+  } else if (/红薯酸奶碗/.test(template)) {
+    ingredients = [
+      { name: sweetPotato.name, grams: roundTo(160 * scale, 5), unit: "g", ref: sweetPotato },
+      { name: yogurt.name, grams: roundTo(150 * clamp(scale, .85, 1.15), 5), unit: "g", ref: yogurt },
+      { name: fruit.name, grams: 100, unit: "g", ref: fruit },
+      { name: nut.name, grams: roundTo((profile.goal === "lose" ? 8 : 12) * clamp(scale, .85, 1.2), 1), unit: "g", ref: nut }
+    ];
+    method = "蒸煮";
+    steps = [];
+  } else if (/南瓜燕麦粥/.test(template)) {
+    ingredients = [
+      { name: pumpkin.name, grams: roundTo(160 * scale, 5), unit: "g", ref: pumpkin },
+      { name: oats.name, grams: roundTo(32 * scale, 5), unit: "g", ref: oats },
+      { name: yogurt.name, grams: roundTo(120 * clamp(scale, .85, 1.15), 5), unit: "g", ref: yogurt },
+      { name: fruit.name, grams: 100, unit: "g", ref: fruit }
+    ];
+    method = "水煮";
+    steps = [];
   } else if (/酸奶|燕麦|隔夜|布丁|水果碗|蓝莓|香蕉/.test(template)) {
     const namedFruit = /蓝莓/.test(template) ? f("蓝莓") : /香蕉/.test(template) ? f("香蕉") : fruit;
     ingredients = [
@@ -414,7 +659,7 @@ function buildBreakfast(profile, nutrition, history, rng) {
     ingredients = [
       { name: protein.name, grams: protein.name === "鸡蛋" ? roundTo(55 * scale, 5) : roundTo(85 * scale, 5), unit: "g", ref: protein },
       { name: staple.name, grams: roundTo(65 * scale, 5), unit: "g", ref: staple },
-      { name: namedVeg[0].name, grams: 70, unit: "g", ref: namedVeg[0] },
+      /牛油果/.test(template) ? { name: avocado.name, grams: roundTo(45 * scale, 5), unit: "g", ref: avocado } : { name: namedVeg[0].name, grams: 70, unit: "g", ref: namedVeg[0] },
       { name: namedVeg[1].name, grams: 60, unit: "g", ref: namedVeg[1] }
     ];
     method = protein.name === "金枪鱼" ? "拌制" : protein.name === "三文鱼" ? "香煎" : "快手";
@@ -466,7 +711,7 @@ function buildBreakfast(profile, nutrition, history, rng) {
   }
   const macros = sumMacros(ingredients);
   ingredients.filter(item => FOOD_DB.fruits.some(fruitItem => fruitItem.name === item.name)).forEach(item => history.fruits.add(item.name));
-  return {
+  return finalizeRecipe({
     icon: "🍳",
     name: template,
     method,
@@ -480,7 +725,7 @@ function buildBreakfast(profile, nutrition, history, rng) {
     suitableGoals: profile.goal === "gain" ? ["增肌", "维持"] : ["减脂", "维持"],
     steps,
     tip: profile.goal === "lose" ? "早餐保留蛋白质和纤维，主食不过量。" : profile.goal === "gain" ? "训练日可把主食份量上调 10% 左右。" : "早餐尽量兼顾蛋白质、主食和水果。"
-  };
+  });
 }
 
 function buildSnack(profile, nutrition, history, rng) {
@@ -494,8 +739,10 @@ function buildSnack(profile, nutrition, history, rng) {
   const egg = FOOD_DB.proteins.find(p => p.name === "鸡蛋");
   const edamame = FOOD_DB.proteins.find(p => p.name === "毛豆");
   const sweetPotato = FOOD_DB.staples.find(s => s.name === "红薯");
+  const oats = FOOD_DB.staples.find(s => s.name === "燕麦");
   const toast = FOOD_DB.staples.find(s => s.name === "全麦吐司");
   const avocado = FOOD_DB.fats.find(f => f.name === "牛油果");
+  const chia = FOOD_DB.fats.find(f => f.name === "奇亚籽");
   let ingredients;
   if (/蛋/.test(template)) ingredients = [{ name: egg.name, grams: 55, unit: "g", ref: egg }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }];
   else if (/毛豆/.test(template)) ingredients = [{ name: edamame.name, grams: 130, unit: "g", ref: edamame }, { name: "圣女果", grams: 150, unit: "g", ref: FOOD_DB.fruits.find(f => f.name === "圣女果") }];
@@ -503,9 +750,12 @@ function buildSnack(profile, nutrition, history, rng) {
   else if (/牛油果/.test(template)) ingredients = [{ name: toast.name, grams: 35, unit: "g", ref: toast }, { name: avocado.name, grams: profile.goal === "lose" ? 35 : 50, unit: "g", ref: avocado }, { name: fruit.name, grams: roundTo(plan.fruitG * .65, 5), unit: "g", ref: fruit }];
   else if (/豆浆/.test(template)) ingredients = [{ name: soyMilk.name, grams: profile.goal === "gain" ? 350 : 300, unit: "ml", ref: soyMilk }, { name: nut.name, grams: plan.nutG, unit: "g", ref: nut }, { name: fruit.name, grams: roundTo(plan.fruitG * .6, 5), unit: "g", ref: fruit }];
   else if (/奶酪/.test(template)) ingredients = [{ name: cheese.name, grams: profile.goal === "gain" ? 80 : 60, unit: "g", ref: cheese }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }];
+  else if (/燕麦/.test(template)) ingredients = [{ name: dairy.name, grams: plan.dairyG, unit: "g", ref: dairy }, { name: oats.name, grams: roundTo(25 * (profile.goal === "gain" ? 1.25 : 1), 5), unit: "g", ref: oats }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }, { name: nut.name, grams: plan.nutG, unit: "g", ref: nut }];
+  else if (/奇亚籽/.test(template)) ingredients = [{ name: dairy.name, grams: plan.dairyG, unit: "g", ref: dairy }, { name: chia.name, grams: 10, unit: "g", ref: chia }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }, { name: nut.name, grams: plan.nutG, unit: "g", ref: nut }];
   else ingredients = [{ name: dairy.name, grams: plan.dairyG, unit: "g", ref: dairy }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }, { name: nut.name, grams: plan.nutG, unit: "g", ref: nut }];
   const macros = sumMacros(ingredients);
   history.fruits.add(fruit.name);
+  const method = /蛋|毛豆/.test(template) ? "水煮" : /红薯/.test(template) ? "蒸煮" : "即食";
   const ingredientNames = ingredients.map(item => item.name).join("、");
   let steps;
   if (/蛋/.test(template)) {
@@ -523,10 +773,16 @@ function buildSnack(profile, nutrition, history, rng) {
   } else {
     steps = [`${fruit.name}洗净切块。`, `${dairy.name}和${nut.name}按份量装入餐盒。`, `食用前再混合${ingredientNames}，坚果保持原味。`];
   }
-  return {
+  const snackFruit = ingredients.find(item => FOOD_DB.fruits.some(fruitItem => fruitItem.name === item.name));
+  const snackName = /红薯/.test(template)
+    ? "红薯希腊酸奶加餐"
+    : /毛豆/.test(template)
+      ? "圣女果毛豆加餐"
+      : `${snackFruit?.name || ""}${template}`;
+  return finalizeRecipe({
     icon: "🍎",
-    name: `${fruit.name}${template}`,
-    method: "即食",
+    name: snackName,
+    method,
     ingredients,
     foods: ingredients.map(i => [i.name, i.grams, i.unit]),
     kcal: Math.round(macros.kcal),
@@ -537,7 +793,7 @@ function buildSnack(profile, nutrition, history, rng) {
     suitableGoals: profile.goal === "gain" ? ["增肌", "维持"] : ["减脂", "维持"],
     steps,
     tip: "加餐用于补足两餐之间的能量，不建议再叠加含糖饮料。"
-  };
+  });
 }
 
 export function createDailyMenu(profile, nutrition) {
