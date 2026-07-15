@@ -34,8 +34,10 @@ const FOOD_DB = {
     ["全麦面", 112, 5, 0.8, 23],
     ["全麦吐司", 245, 9, 4, 43],
     ["全麦卷饼", 240, 8, 5, 42],
+    ["全麦贝果", 250, 10, 2.2, 48],
     ["全麦意面", 124, 5.3, 0.9, 26],
-    ["南瓜", 23, 0.7, 0.1, 5.3]
+    ["南瓜", 23, 0.7, 0.1, 5.3],
+    ["小米", 361, 9, 3.1, 75]
   ].map(([name, kcal, protein, fat, carbs]) => ({ name, kcal, protein, fat, carbs })),
   vegetables: [
     "西兰花", "菠菜", "生菜", "油麦菜", "上海青", "小白菜", "番茄", "黄瓜", "西葫芦", "芦笋",
@@ -77,14 +79,14 @@ const FOOD_DB = {
 const METHODS = [
   { name: "香煎", tags: ["pan"], time: 25, steps: ["蛋白质擦干后用少量盐和黑胡椒腌 5 分钟。", "平底锅烧热，加入计量油，小火到中火煎至两面上色。", "加入蔬菜翻炒或焯熟，搭配主食装盘。"] },
   { name: "黑椒", tags: ["pan", "stir"], time: 25, steps: ["蛋白质切片，用黑胡椒和少量生抽抓匀。", "热锅少油先炒蛋白质，再加入蔬菜。", "收汁后搭配主食，保持酱汁薄薄裹住即可。"] },
-  { name: "蒜香", tags: ["quick", "stir", "fish"], time: 20, steps: ["蒜末小火爆香，不要炸糊。", "加入蛋白质煎炒至熟，再放蔬菜。", "用少量盐、黑胡椒或柠檬汁调味。"] },
-  { name: "柠檬", tags: ["fish", "salad", "pan"], time: 20, steps: ["蛋白质用柠檬汁、黑胡椒腌 5 分钟。", "煎、烤或蒸熟后静置 2 分钟。", "搭配清爽蔬菜和主食，最后挤少量柠檬汁。"] },
+  { name: "蒜香", tags: ["quick", "stir", "fish"], time: 20, steps: ["蒜末小火爆香，不要炸糊。", "加入蛋白质煎炒至熟，再放蔬菜。", "用少量盐和黑胡椒调味。"] },
+  { name: "柠檬", tags: ["fish", "salad", "pan"], time: 20, steps: ["蛋白质用酸味汁和黑胡椒腌 5 分钟。", "煎、烤或蒸熟后静置 2 分钟。", "搭配清爽蔬菜和主食，最后用少量酸味汁提香。"] },
   { name: "日式", tags: ["fish", "stew", "quick"], time: 25, steps: ["用少量低盐酱油、味淋替代糖重酱汁。", "蛋白质煎熟或炖熟，蔬菜焯水。", "主食铺底后码入食材，撒芝麻或海苔。"] },
   { name: "韩式", tags: ["stir", "salad"], time: 25, steps: ["用少量韩式辣酱、蒜末和醋调低油酱汁。", "蛋白质炒熟，蔬菜分批焯熟或生拌。", "把主食、蛋白质和蔬菜拌匀。"] },
   { name: "照烧", tags: ["pan"], time: 25, steps: ["用低糖照烧汁或酱油加少量蜂蜜调汁。", "蛋白质煎熟后倒入酱汁快速收汁。", "搭配焯熟蔬菜和主食。"] },
-  { name: "咖喱", tags: ["stew"], time: 35, steps: ["洋葱和蛋白质少油炒香。", "加入主食类根茎或南瓜，加水炖软。", "放入低脂咖喱块或咖喱粉，最后加入绿叶菜。"] },
-  { name: "番茄", tags: ["stew", "fish"], time: 30, steps: ["番茄炒出汁后加少量水。", "放入蛋白质炖熟，再加入蔬菜。", "用黑胡椒和少量盐调味，搭配主食。"] },
-  { name: "孜然", tags: ["stir", "pan"], time: 25, steps: ["蛋白质切片并用孜然、胡椒腌制。", "热锅少油快速煎炒。", "加入彩椒、洋葱等蔬菜，出锅前补孜然粉。"] },
+  { name: "咖喱", tags: ["stew"], time: 35, steps: ["蛋白质少油炒香。", "加入耐煮主食或根茎类食材，加水炖软。", "放入低脂咖喱块或咖喱粉，最后加入易熟蔬菜。"] },
+  { name: "番茄", tags: ["stew", "fish"], time: 30, steps: ["先把多汁蔬菜炒软出汁后加少量水。", "放入蛋白质炖熟，再加入其余蔬菜。", "用黑胡椒和少量盐调味，搭配主食。"] },
+  { name: "孜然", tags: ["stir", "pan"], time: 25, steps: ["蛋白质切片并用孜然、胡椒腌制。", "热锅少油快速煎炒。", "加入食谱中的蔬菜，出锅前补少量孜然粉。"] },
   { name: "奥尔良", tags: ["air", "bake"], time: 35, steps: ["用低盐奥尔良粉薄薄腌制蛋白质。", "空气炸锅或烤箱烤至熟透。", "蔬菜焯熟或同烤，搭配主食。"] },
   { name: "清蒸", tags: ["steam", "fish"], time: 25, steps: ["蛋白质铺姜片去腥。", "水开后上锅蒸至中心熟透。", "蔬菜另行焯熟，淋少量低盐酱汁。"] },
   { name: "清炒", tags: ["stir", "quick", "plant"], time: 20, steps: ["热锅少油，先炒蛋白质或豆制品。", "加入蔬菜大火快炒。", "用蒜、胡椒和少量盐调味。"] },
@@ -92,7 +94,7 @@ const METHODS = [
   { name: "焖", tags: ["braise"], time: 35, steps: ["蛋白质和耐煮蔬菜先炒香。", "加入少量水，加盖焖至入味。", "收汁后搭配主食。"] },
   { name: "空气炸锅", tags: ["air"], time: 30, steps: ["蛋白质薄腌后铺入炸篮。", "180℃ 加热，中途翻面。", "蔬菜可同烤或焯熟，出锅后装盘。"] },
   { name: "烤箱", tags: ["bake"], time: 35, steps: ["蛋白质和蔬菜拌少量油与香料。", "平铺烤盘，190℃ 烤至熟透。", "搭配预先煮好的主食。"] },
-  { name: "凉拌", tags: ["salad"], time: 15, steps: ["蛋白质提前煮熟或使用即食低脂食材。", "蔬菜洗净沥干，部分蔬菜焯水。", "用醋、柠檬汁、少量橄榄油拌匀。"] },
+  { name: "凉拌", tags: ["salad"], time: 15, steps: ["蛋白质提前煮熟或使用即食低脂食材。", "蔬菜洗净沥干，部分蔬菜焯水。", "用醋、少量调味汁和食谱中的健康脂肪拌匀。"] },
   { name: "水煮", tags: ["lean", "quick"], time: 20, steps: ["水开后先煮主食或耐煮蔬菜。", "放入蛋白质煮至完全熟透。", "捞出后用低油蘸汁调味。"] }
 ];
 
@@ -199,6 +201,22 @@ function buildIngredients({ protein, staple, vegetables, fat, plan, mealType }) 
   ];
 }
 
+function alignFlavorIngredients(method, vegetables, ingredients) {
+  if (method.name === "番茄") {
+    const tomato = FOOD_DB.vegetables.find(veg => veg.name === "番茄");
+    if (tomato && !vegetables.some(veg => veg.name === "番茄")) {
+      vegetables[vegetables.length - 1] = tomato;
+    }
+  }
+  if (method.name === "柠檬") {
+    const lemon = FOOD_DB.fruits.find(fruit => fruit.name === "柠檬");
+    if (lemon && !ingredients.some(item => item.name === "柠檬")) {
+      const fatIndex = ingredients.findIndex(item => item.name === "橄榄油" || item.name === "牛油果");
+      ingredients.splice(fatIndex >= 0 ? fatIndex : ingredients.length, 0, { name: lemon.name, grams: 15, unit: "g", ref: lemon });
+    }
+  }
+}
+
 function balanceMainMealIngredients(ingredients, targetKcal, goal) {
   const minRatio = goal === "gain" ? 0.95 : goal === "maintain" ? 0.88 : 0.8;
   let macros = sumMacros(ingredients);
@@ -276,7 +294,9 @@ function buildMainMeal(mealType, profile, nutrition, history, rng) {
   const method = mealType === "breakfast" ? choice(METHODS.filter(m => ["香煎", "清蒸", "清炒", "水煮", "凉拌"].includes(m.name)), rng) : findCompatibleMethod(protein, mealType, rng);
   const fat = method.name === "凉拌" && profile.goal !== "lose" ? FOOD_DB.fats.find(f => f.name === "牛油果") : FOOD_DB.fats.find(f => f.name === "橄榄油");
   const plan = amountPlan(profile, nutrition, mealType, protein, staple, method);
+  alignFlavorIngredients(method, vegetables, []);
   const ingredients = buildIngredients({ protein, staple, vegetables, fat, plan, mealType });
+  alignFlavorIngredients(method, vegetables, ingredients);
   balanceMainMealIngredients(ingredients, plan.target.kcal, profile.goal);
   const macros = sumMacros(ingredients);
   const meal = {
@@ -304,71 +324,148 @@ function buildBreakfast(profile, nutrition, history, rng) {
   const template = choice(BREAKFAST_TEMPLATES, rng);
   const plan = targetProfile(profile, nutrition, "breakfast");
   const scale = clamp(plan.kcal / 430, 0.78, 1.35);
-  const egg = FOOD_DB.proteins.find(p => p.name === "鸡蛋");
-  const yogurt = FOOD_DB.proteins.find(p => p.name === "希腊酸奶");
-  const chicken = FOOD_DB.proteins.find(p => p.name === "鸡胸肉");
-  const tuna = FOOD_DB.proteins.find(p => p.name === "金枪鱼");
-  const tofu = FOOD_DB.proteins.find(p => p.name === "豆腐");
-  const salmon = FOOD_DB.proteins.find(p => p.name === "三文鱼");
-  const oats = FOOD_DB.staples.find(s => s.name === "燕麦");
-  const toast = FOOD_DB.staples.find(s => s.name === "全麦吐司");
-  const wrap = FOOD_DB.staples.find(s => s.name === "全麦卷饼");
-  const purplePotato = FOOD_DB.staples.find(s => s.name === "紫薯");
-  const corn = FOOD_DB.staples.find(s => s.name === "玉米");
-  const pumpkin = FOOD_DB.staples.find(s => s.name === "南瓜");
-  const noodle = FOOD_DB.staples.find(s => s.name === "全麦面");
+  const p = name => FOOD_DB.proteins.find(item => item.name === name);
+  const s = name => FOOD_DB.staples.find(item => item.name === name);
+  const v = name => FOOD_DB.vegetables.find(item => item.name === name);
+  const f = name => FOOD_DB.fruits.find(item => item.name === name);
+  const egg = p("鸡蛋");
+  const yogurt = p("希腊酸奶");
+  const soyMilk = p("无糖豆浆");
+  const chicken = p("鸡胸肉");
+  const tuna = p("金枪鱼");
+  const tofu = p("豆腐");
+  const driedTofu = p("豆干");
+  const salmon = p("三文鱼");
+  const oats = s("燕麦");
+  const toast = s("全麦吐司");
+  const wrap = s("全麦卷饼");
+  const bagel = s("全麦贝果");
+  const purplePotato = s("紫薯");
+  const sweetPotato = s("红薯");
+  const corn = s("玉米");
+  const yam = s("山药");
+  const pumpkin = s("南瓜");
+  const millet = s("小米");
+  const purpleRice = s("紫米饭");
+  const noodle = s("全麦面");
   const fruit = choice(shuffle(FOOD_DB.fruits, rng).filter(f => !history.fruits.has(f.name)).concat(FOOD_DB.fruits), rng);
   const veg = shuffle(FOOD_DB.vegetables, rng).slice(0, 2);
+  const namedVeg = /菠菜/.test(template) ? [v("菠菜"), veg[0].name === "菠菜" ? veg[1] : veg[0]] : /番茄/.test(template) ? [v("番茄"), veg[0].name === "番茄" ? veg[1] : veg[0]] : veg;
   const nut = choice(FOOD_DB.nuts, rng);
   const chia = FOOD_DB.fats.find(f => f.name === "奇亚籽");
   let ingredients;
   let method = "快手";
+  let steps;
 
-  if (/酸奶|燕麦|隔夜|布丁|水果碗|蓝莓|香蕉/.test(template)) {
+  if (/鸡蛋羹/.test(template)) {
+    ingredients = [
+      { name: egg.name, grams: roundTo(110 * scale, 5), unit: "g", ref: egg },
+      { name: toast.name, grams: roundTo(50 * scale, 5), unit: "g", ref: toast },
+      { name: namedVeg[0].name, grams: 80, unit: "g", ref: namedVeg[0] },
+      { name: fruit.name, grams: 100, unit: "g", ref: fruit }
+    ];
+    method = "清蒸";
+    steps = [`${egg.name}打散，加入约 1.5 倍温水并过滤。`, "盖保鲜膜或盘子，上锅小火蒸至凝固。", `${toast.name}加热，搭配${namedVeg[0].name}和水果食用。`];
+  } else if (/蛋饼/.test(template)) {
+    ingredients = [
+      { name: egg.name, grams: roundTo(90 * scale, 5), unit: "g", ref: egg },
+      { name: oats.name, grams: roundTo(32 * scale, 5), unit: "g", ref: oats },
+      { name: namedVeg[0].name, grams: 80, unit: "g", ref: namedVeg[0] },
+      { name: fruit.name, grams: 100, unit: "g", ref: fruit }
+    ];
+    method = "香煎";
+    steps = [`${oats.name}加少量水泡软，和${egg.name}、${namedVeg[0].name}混合。`, "不粘锅小火摊成薄饼，煎到两面定型。", "搭配水果食用，酱料少量即可。"];
+  } else if (/蛋花汤/.test(template)) {
+    ingredients = [
+      { name: tofu.name, grams: roundTo(120 * scale, 5), unit: "g", ref: tofu },
+      { name: egg.name, grams: roundTo(55 * scale, 5), unit: "g", ref: egg },
+      { name: namedVeg[0].name, grams: 100, unit: "g", ref: namedVeg[0] },
+      { name: toast.name, grams: roundTo(45 * scale, 5), unit: "g", ref: toast }
+    ];
+    method = "水煮";
+    steps = [`${tofu.name}切小块，${namedVeg[0].name}洗净切好，${egg.name}打散。`, `水开后放入${tofu.name}和${namedVeg[0].name}煮熟。`, `转小火淋入蛋液成蛋花，搭配${toast.name}食用。`];
+  } else if (/饭团/.test(template)) {
+    const includeEdamame = /毛豆/.test(template);
+    const edamame = p("毛豆");
+    ingredients = [
+      { name: includeEdamame ? edamame.name : egg.name, grams: includeEdamame ? 80 : roundTo(55 * scale, 5), unit: "g", ref: includeEdamame ? edamame : egg },
+      { name: purpleRice.name, grams: roundTo(140 * scale, 5), unit: "g", ref: purpleRice },
+      ...(includeEdamame ? [{ name: egg.name, grams: roundTo(55 * scale, 5), unit: "g", ref: egg }] : []),
+      { name: namedVeg[0].name, grams: 70, unit: "g", ref: namedVeg[0] }
+    ];
+    method = "捏制";
+    steps = [`${purpleRice.name}提前煮熟放温，${includeEdamame ? `${edamame.name}和${egg.name}` : egg.name}煮熟。`, `${namedVeg[0].name}切碎并挤去多余水分。`, "把所有食材按份量拌匀后捏成饭团，海苔可少量包裹。"];
+  } else if (/酸奶|燕麦|隔夜|布丁|水果碗|蓝莓|香蕉/.test(template)) {
+    const namedFruit = /蓝莓/.test(template) ? f("蓝莓") : /香蕉/.test(template) ? f("香蕉") : fruit;
     ingredients = [
       { name: yogurt.name, grams: roundTo(180 * scale, 5), unit: "g", ref: yogurt },
       { name: oats.name, grams: roundTo(38 * scale, 5), unit: "g", ref: oats },
-      { name: fruit.name, grams: roundTo(130 * clamp(scale, .85, 1.2), 5), unit: "g", ref: fruit },
+      { name: namedFruit.name, grams: roundTo(130 * clamp(scale, .85, 1.2), 5), unit: "g", ref: namedFruit },
       { name: nut.name, grams: roundTo((profile.goal === "lose" ? 8 : 12) * clamp(scale, .85, 1.2), 1), unit: "g", ref: nut },
       { name: chia.name, grams: 6, unit: "g", ref: chia }
     ];
     method = /隔夜/.test(template) ? "隔夜冷藏" : "即食";
+    steps = method === "隔夜冷藏"
+      ? [`睡前把${oats.name}、${yogurt.name}和${chia.name}混合，盖好冷藏。`, "早上取出后加入水果和坚果。", "拌匀即可；如果偏稠，可加少量凉白开调节。"]
+      : [`将${namedFruit.name}洗净切块，坚果保持原味。`, `碗中放入${yogurt.name}、${oats.name}和${chia.name}。`, "加入水果和坚果，拌匀后立即食用。"];
   } else if (/三明治|吐司|贝果|卷|饼/.test(template)) {
     const protein = /鸡胸/.test(template) ? chicken : /金枪鱼/.test(template) ? tuna : /三文鱼/.test(template) ? salmon : /豆干/.test(template) ? FOOD_DB.proteins.find(p => p.name === "豆干") : egg;
+    const staple = /卷|饼/.test(template) ? wrap : /贝果/.test(template) ? bagel : toast;
     ingredients = [
       { name: protein.name, grams: protein.name === "鸡蛋" ? roundTo(55 * scale, 5) : roundTo(85 * scale, 5), unit: "g", ref: protein },
-      { name: /卷|饼/.test(template) ? wrap.name : toast.name, grams: roundTo(65 * scale, 5), unit: "g", ref: /卷|饼/.test(template) ? wrap : toast },
-      { name: veg[0].name, grams: 70, unit: "g", ref: veg[0] },
-      { name: veg[1].name, grams: 60, unit: "g", ref: veg[1] }
+      { name: staple.name, grams: roundTo(65 * scale, 5), unit: "g", ref: staple },
+      { name: namedVeg[0].name, grams: 70, unit: "g", ref: namedVeg[0] },
+      { name: namedVeg[1].name, grams: 60, unit: "g", ref: namedVeg[1] }
     ];
-    method = "香煎";
+    method = protein.name === "金枪鱼" ? "拌制" : protein.name === "三文鱼" ? "香煎" : "快手";
+    steps = [
+      protein.name === "金枪鱼"
+        ? `${protein.name}沥干水分，用少量黑胡椒和低脂调味汁拌匀。`
+        : protein.name === "鸡蛋"
+          ? `${protein.name}煮熟、煎熟或做成蛋饼，确认蛋液完全凝固。`
+          : `${protein.name}用少量黑胡椒腌 5 分钟，煎熟或提前熟制后切片。`,
+      `${staple.name}用平底锅小火加热 1–2 分钟，${namedVeg.map(item => item.name).join("、")}洗净沥干。`,
+      `把${protein.name}和蔬菜夹入${staple.name}，按份量组合，酱料薄薄一层即可。`
+    ];
   } else if (/面/.test(template)) {
     ingredients = [
       { name: egg.name, grams: roundTo(55 * scale, 5), unit: "g", ref: egg },
       { name: noodle.name, grams: roundTo(65 * scale, 5), unit: "g", ref: noodle },
-      { name: "番茄", grams: 150, unit: "g", ref: FOOD_DB.vegetables.find(v => v.name === "番茄") },
-      { name: veg[0].name, grams: 90, unit: "g", ref: veg[0] }
+      { name: "番茄", grams: 150, unit: "g", ref: v("番茄") },
+      { name: namedVeg[0].name, grams: 90, unit: "g", ref: namedVeg[0] }
     ];
     method = "水煮";
+    steps = [
+      `${noodle.name}按包装时间煮熟，捞出备用。`,
+      `${egg.name}打散或煮熟，番茄切块，${namedVeg[0].name}洗净切好。`,
+      "锅中加水或少量油，先煮出番茄汤底，再放入面、鸡蛋和蔬菜煮熟。"
+    ];
   } else if (/紫薯|玉米|山药|南瓜|粥|豆浆/.test(template)) {
-    const staple = /玉米/.test(template) ? corn : /南瓜/.test(template) ? pumpkin : purplePotato;
+    const staple = /玉米/.test(template) ? corn : /山药/.test(template) ? yam : /南瓜/.test(template) ? pumpkin : /红薯/.test(template) ? sweetPotato : /小米|粥/.test(template) ? millet : purplePotato;
+    const includeSoy = /豆浆/.test(template);
     ingredients = [
       { name: egg.name, grams: roundTo(55 * scale, 5), unit: "g", ref: egg },
-      { name: staple.name, grams: roundTo(160 * scale, 5), unit: "g", ref: staple },
-      { name: yogurt.name, grams: roundTo(120 * clamp(scale, .85, 1.15), 5), unit: "g", ref: yogurt },
+      { name: staple.name, grams: roundTo((staple.name === "小米" ? 42 : 160) * scale, 5), unit: "g", ref: staple },
+      includeSoy
+        ? { name: soyMilk.name, grams: roundTo(260 * clamp(scale, .85, 1.2), 5), unit: "ml", ref: soyMilk }
+        : { name: yogurt.name, grams: roundTo(120 * clamp(scale, .85, 1.15), 5), unit: "g", ref: yogurt },
       { name: fruit.name, grams: 100, unit: "g", ref: fruit }
     ];
     method = /粥/.test(template) ? "水煮" : "蒸煮";
+    steps = /粥/.test(template)
+      ? [`${staple.name}淘洗后加 8–10 倍清水，小火煮至软糯。`, `${egg.name}另行煮熟或打散成蛋花，水果洗净备用。`, `粥煮好后搭配${egg.name}、${includeSoy ? soyMilk.name : yogurt.name}和水果食用。`]
+      : [`${staple.name}洗净后蒸熟或煮熟，${egg.name}煮熟。`, `${includeSoy ? soyMilk.name : yogurt.name}按份量准备，水果洗净切块。`, `把${staple.name}、${egg.name}和${includeSoy ? soyMilk.name : yogurt.name}组合成早餐盘。`];
   } else {
     ingredients = [
       { name: tofu.name, grams: roundTo(120 * scale, 5), unit: "g", ref: tofu },
       { name: toast.name, grams: roundTo(60 * scale, 5), unit: "g", ref: toast },
-      { name: veg[0].name, grams: 80, unit: "g", ref: veg[0] },
+      { name: namedVeg[0].name, grams: 80, unit: "g", ref: namedVeg[0] },
       { name: fruit.name, grams: 120, unit: "g", ref: fruit }
     ];
+    steps = [`${tofu.name}切块后焯水或煎至表面微黄。`, `${toast.name}小火加热，${namedVeg[0].name}和水果洗净切好。`, "按份量装盘，调味保持清淡。"];
   }
   const macros = sumMacros(ingredients);
-  history.fruits.add(fruit.name);
+  ingredients.filter(item => FOOD_DB.fruits.some(fruitItem => fruitItem.name === item.name)).forEach(item => history.fruits.add(item.name));
   return {
     icon: "🍳",
     name: template,
@@ -381,9 +478,7 @@ function buildBreakfast(profile, nutrition, history, rng) {
     carbs: Math.round(macros.carbs),
     time: method === "隔夜冷藏" ? "5 分钟 + 冷藏" : "8–20 分钟",
     suitableGoals: profile.goal === "gain" ? ["增肌", "维持"] : ["减脂", "维持"],
-    steps: method === "隔夜冷藏"
-      ? ["睡前把燕麦、酸奶和奇亚籽混合。", "密封冷藏一晚。", "早上加入水果和坚果，拌匀即可。"]
-      : ["先处理需要加热的鸡蛋、主食或蛋白质食材。", "蔬菜和水果洗净切好，面包或卷饼可小火加热。", "按份量组合装盘，酱料少量使用。"],
+    steps,
     tip: profile.goal === "lose" ? "早餐保留蛋白质和纤维，主食不过量。" : profile.goal === "gain" ? "训练日可把主食份量上调 10% 左右。" : "早餐尽量兼顾蛋白质、主食和水果。"
   };
 }
@@ -411,6 +506,23 @@ function buildSnack(profile, nutrition, history, rng) {
   else ingredients = [{ name: dairy.name, grams: plan.dairyG, unit: "g", ref: dairy }, { name: fruit.name, grams: plan.fruitG, unit: "g", ref: fruit }, { name: nut.name, grams: plan.nutG, unit: "g", ref: nut }];
   const macros = sumMacros(ingredients);
   history.fruits.add(fruit.name);
+  const ingredientNames = ingredients.map(item => item.name).join("、");
+  let steps;
+  if (/蛋/.test(template)) {
+    steps = [`${egg.name}冷水下锅，水开后煮 8–10 分钟至全熟。`, `${fruit.name}洗净切块。`, `按份量搭配${ingredientNames}，作为两餐之间的加餐。`];
+  } else if (/毛豆/.test(template)) {
+    steps = [`${edamame.name}洗净后沸水煮 6–8 分钟，沥干。`, "圣女果洗净，对半切开或整颗食用。", `按份量搭配${ingredientNames}，不额外加重口味蘸料。`];
+  } else if (/红薯/.test(template)) {
+    steps = [`${sweetPotato.name}洗净蒸熟，筷子能轻松穿透即可。`, `${dairy.name}按份量装入小碗。`, `搭配${ingredientNames}食用，适合训练前后或下午加餐。`];
+  } else if (/牛油果/.test(template)) {
+    steps = [`${toast.name}小火加热至表面微脆。`, `${avocado.name}压成泥或切片，${fruit.name}洗净切块。`, `按份量组合${ingredientNames}，现做现吃口感最好。`];
+  } else if (/豆浆/.test(template)) {
+    steps = [`${soyMilk.name}加热到温热即可，不需要煮沸过久。`, `${nut.name}按份量称好，${fruit.name}洗净切块。`, `搭配${ingredientNames}食用，坚果选择原味。`];
+  } else if (/奶酪/.test(template)) {
+    steps = [`${fruit.name}洗净切块。`, `${cheese.name}按份量取出，冷藏状态口感更清爽。`, `搭配${ingredientNames}食用，不额外加糖浆。`];
+  } else {
+    steps = [`${fruit.name}洗净切块。`, `${dairy.name}和${nut.name}按份量装入餐盒。`, `食用前再混合${ingredientNames}，坚果保持原味。`];
+  }
   return {
     icon: "🍎",
     name: `${fruit.name}${template}`,
@@ -423,7 +535,7 @@ function buildSnack(profile, nutrition, history, rng) {
     carbs: Math.round(macros.carbs),
     time: "3–10 分钟",
     suitableGoals: profile.goal === "gain" ? ["增肌", "维持"] : ["减脂", "维持"],
-    steps: ["水果洗净切块；需要蒸煮的红薯、鸡蛋或毛豆提前做好。", "酸奶、坚果或蛋白质食材按份量装入餐盒。", "食用前再混合，坚果保持原味，不额外加糖。"],
+    steps,
     tip: "加餐用于补足两餐之间的能量，不建议再叠加含糖饮料。"
   };
 }
