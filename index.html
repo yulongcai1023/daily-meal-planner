@@ -33,7 +33,7 @@
       <form id="profile-form" class="profile-card">
         <div class="section-heading">
           <span>01</span>
-          <div><h2>认识你</h2><p>112 道菜谱智能轮换</p></div>
+          <div><h2>认识你</h2><p>模块化健康食谱库智能组合</p></div>
         </div>
 
         <div class="field-grid">
@@ -91,11 +91,15 @@
         </div>
         <form id="auth-form">
           <label>用户名<input id="auth-username" type="text" minlength="3" maxlength="20" autocomplete="username" placeholder="3–20 个字符" required /></label>
-          <label>密码<input id="auth-password" type="password" minlength="6" autocomplete="current-password" placeholder="至少 6 个字符" required /></label>
+          <label data-auth-field="password">密码<input id="auth-password" type="password" minlength="6" autocomplete="current-password" placeholder="至少 6 个字符" /></label>
+          <label data-auth-field="confirm-password" hidden>确认密码<input id="auth-confirm-password" type="password" minlength="6" autocomplete="new-password" placeholder="再次输入密码" /></label>
+          <label data-auth-field="security-code" hidden>安全码<input id="auth-security-code" type="password" minlength="6" maxlength="40" autocomplete="off" placeholder="用于忘记密码时验证身份" /></label>
+          <label data-auth-field="new-password" hidden>新密码<input id="auth-new-password" type="password" minlength="6" autocomplete="new-password" placeholder="至少 6 个字符" /></label>
           <div id="auth-error" class="auth-error" role="alert"></div>
           <button id="auth-submit" class="primary-button" type="submit">登录并恢复档案</button>
         </form>
-        <p class="auth-local-note">账号和档案仅保存在此浏览器。清除浏览器数据后将无法恢复。</p>
+        <button id="forgot-password" class="auth-link-button" type="button">忘记密码？用安全码找回</button>
+        <p class="auth-local-note">用户名用于登录；安全码仅用于忘记密码时验证身份，请妥善保存。</p>
       </section>
     </div>
 
@@ -130,6 +134,6 @@
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

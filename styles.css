@@ -120,6 +120,8 @@ body.modal-open { overflow: hidden; }
 #auth-form input { width: 100%; margin-top: 8px; padding: 13px 14px; color: var(--ink); background: #faf8f2; border: 1px solid var(--line); border-radius: 10px; outline: none; font: inherit; }
 #auth-form input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(101,120,94,.12); }
 .auth-error { min-height: 17px; margin: -3px 0; color: #a44c42; font-size: 11px; }
+.auth-link-button { margin: 13px auto 0; display: block; color: var(--sage); background: none; border: 0; cursor: pointer; font: inherit; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.auth-link-button[hidden] { display: none !important; }
 .auth-local-note { margin: 14px 0 0; color: #969b93; text-align: center; font-size: 9px; line-height: 1.55; }
 .toast { position: fixed; z-index: 80; left: 50%; bottom: 28px; padding: 11px 17px; color: white; background: var(--ink); border-radius: 22px; box-shadow: 0 10px 30px rgba(25,34,27,.22); font-size: 11px; opacity: 0; pointer-events: none; transform: translate(-50%, 12px); transition: .25s; }
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
