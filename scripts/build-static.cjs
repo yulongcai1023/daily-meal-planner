@@ -3,7 +3,7 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "dist");
-const files = ["index.html", "styles.css", "app.js", "recipe-engine.js", "inventory-engine.js"];
+const files = ["index.html", "styles.css", "app.js", "recipe-engine.js"];
 
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true });
