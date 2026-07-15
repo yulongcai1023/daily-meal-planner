@@ -13,7 +13,7 @@ import {
   serverTimestamp,
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js";
+import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -333,21 +333,34 @@ let recipeReturnFocus = null;
 
 function recipeInstructions(meal, mealType) {
   const names = meal.foods.map(([name]) => name);
-  const main = names[0];
-  const protein = names.find(name => /鸡|鱼|虾|牛|猪|鸭|蛋|豆腐|豆干|金枪鱼|蛤蜊/.test(name));
-  const vegetables = names.filter(name => /菜|瓜|番茄|西兰花|芦笋|彩椒|蘑菇|菌菇|胡萝卜|黄瓜|茄子|笋|豆芽|芹菜|洋葱/.test(name)).join("、");
-  const finish = "装盘后趁热食用；盐和酱料少量添加，并将实际使用的烹调油计入当天摄入。";
+  const first = names[0] || "食材";
+  const rest = names.slice(1);
+  const restText = rest.join("、");
+  const noCook = /酸奶|水果|坚果|奇亚籽|奶酪/.test(meal.name) || names.some(name => /酸奶|水果|坚果|奇亚籽|奶酪|巴旦木|杏仁|核桃|腰果|开心果|榛子/.test(name));
 
-  if (mealType === "加餐") {
-    if (/玉米|紫薯|红薯|鸡蛋|毛豆/.test(meal.name)) return { time: "10–20 分钟", steps: ["将需要加热的食材洗净；薯类保留外皮蒸制，鸡蛋或毛豆用清水煮熟。", "薯类蒸至筷子可轻松穿透，鸡蛋全熟后过凉水剥壳，毛豆沥干。", `按食谱份量搭配${names.join("、")}，坚果或海苔最后加入。`, "分装后即可食用；若提前准备，请冷藏并在当天吃完。"], tip: "加餐用于连接两顿正餐，不必额外叠加甜饮或糕点。" };
-    return { time: "5 分钟", steps: ["水果洗净，需去皮或去核的食材处理成一口大小。", "酸奶或奶酪从冰箱取出回温片刻；坚果保持原味，不额外加糖。", `按食谱份量将${names.join("、")}装入碗或便携餐盒。`, "食用前再混合，口感更好；制作后尽快食用。"], tip: "选择无糖乳制品与原味坚果，可减少隐形糖和盐。" };
+  if (noCook) {
+    return {
+      time: meal.time || "3–10 分钟",
+      steps: [
+        `将${names.filter(name => !/酸奶|奶酪|燕麦|奇亚籽|杏仁|核桃|腰果|开心果|榛子|巴旦木/.test(name)).join("、") || first}洗净切块。`,
+        `杯中加入${names.filter(name => /酸奶|奶酪|燕麦|奇亚籽/.test(name)).join("、") || first}。`,
+        restText ? `放入${restText}。` : `放入${first}。`,
+        `轻轻混合${names.join("、")}，摆盘即可。`
+      ],
+      tip: "此兜底做法只使用当前食材列表，不额外引入未列出的食材或加热动作。"
+    };
   }
-  if (/粥/.test(meal.name)) return { time: "30–40 分钟", steps: [`将${main}淘洗后浸泡 15 分钟；其余食材洗净切成小块。`, `锅中加入约食材体积 6–8 倍的水，大火煮开后转小火，期间搅拌防止粘底。`, `煮约 20 分钟后加入${protein || "配菜"}${vegetables ? `和${vegetables}` : ""}，继续煮至软熟。`, "根据稠度补少量热水，确认肉类和蛋类完全熟透后关火。", finish], tip: "谷物提前浸泡能缩短煮制时间；不要用大量糖或咸菜调味。" };
-  if (/面|意面/.test(meal.name)) return { time: "20–30 分钟", steps: [`将${protein || "主要食材"}切成适口大小，蔬菜洗净切好；肉类可用少量胡椒腌 5 分钟。`, `水沸后放入${main}，按包装时间煮至适口，捞出并保留半碗面汤。`, `另锅加入食谱中的油，先将${protein || "配菜"}炒至熟透，再加入${vegetables || "蔬菜"}翻炒。`, "加入面条和少量面汤翻拌 1–2 分钟，让汤汁均匀附着。", finish], tip: "面条煮好后无需过度冲洗；用番茄、菌菇和香辛料增加风味，可少放盐。" };
-  if (/汤|煲|炖|咖喱/.test(meal.name)) return { time: "30–45 分钟", steps: [`将${protein || main}处理成 2–3 厘米小块，${vegetables || "蔬菜"}洗净切块。`, `锅中放入食谱所列的油，将${protein || main}快速翻炒至表面变色；豆腐和鱼肉可省略煸炒。`, "加入耐煮食材和适量热水，大火煮开后转小火，加盖焖煮 15–25 分钟。", "最后加入叶菜或易熟食材，再煮 3–5 分钟，确认中心完全熟透。", finish], tip: "汤汁以能浸没大部分食材为宜；喝汤也会摄入盐分，不建议额外勾芡。" };
-  if (/沙拉|碗|盘/.test(meal.name)) return { time: "20–30 分钟", steps: [`将${protein || main}提前解冻并擦干，谷物或薯类按食谱份量煮熟。`, `平底锅用食谱中的油将${protein || main}煎至两面上色、中心熟透，静置 2 分钟后切块。`, `${vegetables || "蔬菜"}洗净沥干；需要熟食的蔬菜焯水或烤熟。`, "依次铺入主食、蔬菜和蛋白质食材，用少量醋、胡椒或柠檬汁拌匀。", finish], tip: "沙拉酱热量容易被忽略，优先用柠檬汁、醋和少量橄榄油调味。" };
-  if (/三明治|吐司|卷|饼|贝果|饭团|华夫|松饼/.test(meal.name)) return { time: "15–25 分钟", steps: [`将${protein || main}和需要加热的配菜分别煮熟或煎熟，蔬菜洗净并充分沥水。`, "面包或饼皮用无油平底锅小火加热 1–2 分钟，使表面微脆。", `按食谱份量依次放入${names.join("、")}，尽量铺放均匀。`, "卷紧或合上后从中间切开；饭团类用湿手压紧成形。", finish], tip: "选择全麦、低糖主食；酱料薄薄一层即可，避免同时使用多种高脂酱。" };
-  return { time: "25–35 分钟", steps: [`将${protein || main}切成均匀小块，${vegetables || "蔬菜"}洗净切好；主食提前煮熟。`, `肉类用少量胡椒腌 5–10 分钟；锅烧热后加入食谱所列的油，将${protein || main}炒至变色。`, `加入${vegetables || "配菜"}，按耐熟程度先后下锅，中火翻炒至断生。`, "加入少量水或低盐调味汁，翻炒均匀并确认所有蛋白质食材完全熟透。", `搭配${names.find(name => /饭|米|藜麦|薯|玉米/.test(name)) || "食谱中的主食"}装盘，${finish}`], tip: "肉类切成相近大小更容易均匀熟透；用葱姜蒜、黑胡椒等替代部分盐。" };
+
+  return {
+    time: meal.time || "15–30 分钟",
+    steps: [
+      `将${names.join("、")}按食谱份量准备好。`,
+      restText ? `处理${first}，并将${restText}洗净切好。` : `处理${first}至适口大小。`,
+      `按菜品需要完成${names.join("、")}的熟制或组合。`,
+      `确认${names.join("、")}状态适口后装盘。`
+    ],
+    tip: "此兜底做法只使用当前食材列表，不额外引入未列出的食材。"
+  };
 }
 
 function openRecipe(meal, mealType, trigger) {
