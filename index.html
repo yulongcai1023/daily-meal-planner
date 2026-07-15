@@ -11,6 +11,12 @@
   <main class="page-shell">
     <nav class="account-bar" aria-label="账户">
       <div class="account-copy"><span class="account-dot"></span><span>本地健康档案</span></div>
+      <div class="top-tabs" aria-label="主导航">
+        <button class="top-tab is-active" type="button" data-section-target="meal">食谱</button>
+        <button class="top-tab" type="button" data-section-target="fitness">健身</button>
+        <button class="top-tab" type="button" data-section-target="progress">进度</button>
+        <button class="top-tab" type="button" data-section-target="mine">我的</button>
+      </div>
       <div id="guest-actions">
         <button id="open-auth" class="account-button" type="button">登录 / 注册</button>
       </div>
@@ -29,7 +35,7 @@
       <div class="hero-mark" aria-hidden="true"><span>食</span></div>
     </header>
 
-    <section class="workspace">
+    <section class="workspace app-section is-active" id="meal-section">
       <form id="profile-form" class="profile-card">
         <div class="section-heading">
           <span>01</span>
@@ -77,6 +83,56 @@
         </div>
       </section>
     </section>
+
+    <section class="fitness-section app-section" id="fitness-section" hidden>
+      <div class="fitness-head">
+        <div>
+          <p class="eyebrow">TRAINING PLAN</p>
+          <h2>健身训练</h2>
+          <p>复用你的身体数据和目标，根据训练条件、分化方式与器械生成一周训练计划。</p>
+        </div>
+        <div class="training-badge">本周完成度会在生成计划后显示</div>
+      </div>
+
+      <div class="training-warning">
+        本计划是一般健身建议，不能替代医生、物理治疗师或持证教练的个体化评估。如训练中出现胸痛、眩晕、呼吸异常、明显关节疼痛或其他异常症状，应立即停止训练并寻求专业帮助。
+      </div>
+
+      <div class="training-grid">
+        <form id="training-form" class="training-card">
+          <h3>训练资料设置</h3>
+          <div class="field-grid">
+            <label>主要目标<select id="training-primary-goal"><option value="fatLoss">减脂</option><option value="muscleGain" selected>增肌</option><option value="shape">塑形</option><option value="strength">提升力量</option><option value="conditioning">提升体能</option><option value="health">保持健康</option></select></label>
+            <label>次要目标<select id="training-secondary-goal"><option value="health">保持健康</option><option value="fatLoss">减脂</option><option value="muscleGain">增肌</option><option value="conditioning">提升体能</option></select></label>
+            <label>训练经验<select id="experience-level"><option value="beginner0">完全新手</option><option value="beginner" selected>新手</option><option value="novice">初级</option><option value="intermediate">中级</option><option value="advanced">高级</option></select></label>
+            <label>每周训练天数<select id="weekly-training-days"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
+            <label>单次训练时间<select id="session-duration"><option>20</option><option>30</option><option selected>45</option><option>60</option><option>75</option><option>90</option></select></label>
+            <label>训练地点<select id="training-location"><option value="homeNone">家中无器械</option><option value="homeSimple" selected>家中简单器械</option><option value="apartmentGym">公寓健身房</option><option value="commercialGym">商业健身房</option><option value="outdoor">户外</option></select></label>
+            <label>训练分化<select id="selected-split"><option value="fullBody">全身训练</option><option value="upperLower">上下肢二分化</option><option value="ppl">推拉腿三分化</option><option value="four">四分化</option><option value="five">五分化</option><option value="six">六分化</option></select></label>
+            <label>有氧安排<select id="cardio-preference"><option value="after">训练后有氧</option><option value="separate">独立有氧日</option><option value="steps">步数目标</option><option value="none">不做有氧</option></select></label>
+          </div>
+
+          <fieldset><legend>可用器械</legend><div id="equipment-options" class="tag-grid"></div></fieldset>
+          <fieldset><legend>身体限制</legend><div id="limitation-options" class="tag-grid"></div></fieldset>
+          <fieldset><legend>重点训练部位</legend><div id="muscle-options" class="tag-grid"></div></fieldset>
+          <fieldset><legend>用户偏好</legend><div id="style-options" class="tag-grid"></div></fieldset>
+          <label class="full-line">不喜欢的具体动作<input id="disliked-exercises" type="text" placeholder="例如：跑步、杠铃深蹲，用逗号分隔" /></label>
+          <div id="training-error" class="form-error"></div>
+          <button class="primary-button" type="submit">生成一周训练计划 <span>→</span></button>
+        </form>
+
+        <section id="training-results" class="training-results">
+          <div class="empty-state">
+            <div class="plate" aria-hidden="true"><span>🏋️</span></div>
+            <h2>你的训练周计划，正在等你</h2>
+            <p>设置目标、经验、器械和训练分化后，这里会生成一周训练安排。</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="app-section placeholder-section" id="progress-section" hidden><h2>进度</h2><p>训练和饮食记录功能可在后续继续扩展。</p></section>
+    <section class="app-section placeholder-section" id="mine-section" hidden><h2>我的</h2><p>这里将集中管理个人资料、训练模板和历史记录。</p></section>
 
     <div id="auth-modal" class="auth-modal" aria-hidden="true">
       <div class="auth-backdrop" data-close-auth></div>
@@ -134,6 +190,6 @@
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script type="module" src="app.js?v=20260715-strict2"></script>
+  <script type="module" src="app.js?v=20260715-workout1"></script>
 </body>
 </html>

@@ -2,6 +2,18 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsUserId(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function writesOwnUserId() {
+      return signedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
     match /usernames/{username} {
       allow read: if true;
       allow create: if request.auth != null
@@ -15,6 +27,55 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, create, update: if request.auth != null && request.auth.uid == userId;
       allow delete: if false;
+    }
+
+    match /trainingProfiles/{userId} {
+      allow read: if ownsUserId(userId);
+      allow create, update: if ownsUserId(userId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.weeklyTrainingDays is number
+        && request.resource.data.weeklyTrainingDays >= 1
+        && request.resource.data.weeklyTrainingDays <= 6
+        && request.resource.data.sessionDuration is number
+        && request.resource.data.sessionDuration >= 20
+        && request.resource.data.sessionDuration <= 120;
+      allow delete: if false;
+    }
+
+    match /workoutPlans/{planId} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create: if writesOwnUserId()
+        && request.resource.data.days is list
+        && request.resource.data.status in ["active", "archived", "draft"];
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /workoutSessions/{sessionId} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create: if writesOwnUserId()
+        && request.resource.data.status in ["planned", "started", "completed", "skipped"];
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /exerciseLogs/{logId} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create: if writesOwnUserId()
+        && request.resource.data.exerciseId is string;
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /exercises/{exerciseId} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }
