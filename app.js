@@ -13,7 +13,7 @@ import {
   serverTimestamp,
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
+import { INGREDIENT_CATALOG, generateRecipesFromInventory } from "./inventory-engine.js?v=20260715-inventory1";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -29,11 +29,14 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
-// 食谱推荐逻辑已迁移到 recipe-engine.js：食材、做法、模板和份量都由模块化数据库动态组合。
+// 食谱推荐逻辑已迁移到 inventory-engine.js：只使用用户选择的现有食材生成候选食谱。
 
 const form = document.querySelector("#profile-form");
 const results = document.querySelector("#results");
 let latestProfile = null;
+const INVENTORY_STORE_KEY = "dailyMealPlanner.inventory.v1";
+let inventoryState = [];
+let customIngredients = [];
 
 const authModal = document.querySelector("#auth-modal");
 const authForm = document.querySelector("#auth-form");
@@ -55,6 +58,144 @@ function showToast(message) {
   toast.classList.add("is-visible");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+}
+
+const categoryLabels = {
+  protein: "蛋白质",
+  staple: "主食",
+  vegetable: "蔬菜",
+  fruit: "水果",
+  nut: "坚果和种子",
+  seasoning: "调味料"
+};
+
+function readInventoryStore() {
+  try {
+    const data = JSON.parse(localStorage.getItem(INVENTORY_STORE_KEY)) || {};
+    inventoryState = Array.isArray(data.inventory) ? data.inventory : [];
+    customIngredients = Array.isArray(data.customIngredients) ? data.customIngredients : [];
+  } catch {
+    inventoryState = [];
+    customIngredients = [];
+  }
+}
+
+function saveInventoryStore() {
+  localStorage.setItem(INVENTORY_STORE_KEY, JSON.stringify({ inventory: inventoryState, customIngredients }));
+}
+
+function allIngredients() {
+  return [...INGREDIENT_CATALOG, ...customIngredients];
+}
+
+function stateFor(id) {
+  return inventoryState.find(item => item.id === id);
+}
+
+function upsertInventory(id, patch = {}) {
+  const existing = stateFor(id);
+  if (patch.role && patch.role !== "forbidden") patch.forbidden = false;
+  if (patch.role === "forbidden") patch.forbidden = true;
+  if (existing) Object.assign(existing, patch);
+  else inventoryState.push({ id, role: "available", stock: null, ...patch });
+  saveInventoryStore();
+  renderSelectedIngredients();
+  renderIngredientCatalog();
+}
+
+function removeInventory(id) {
+  inventoryState = inventoryState.filter(item => item.id !== id);
+  saveInventoryStore();
+  renderSelectedIngredients();
+  renderIngredientCatalog();
+}
+
+function renderIngredientCatalog() {
+  const host = document.querySelector("#ingredient-catalog");
+  if (!host) return;
+  const keyword = document.querySelector("#ingredient-search")?.value.trim().toLowerCase() || "";
+  const ingredients = allIngredients().filter(ingredient => {
+    if (!keyword) return true;
+    return [ingredient.name, ...(ingredient.aliases || [])].some(text => text.toLowerCase().includes(keyword));
+  });
+  host.innerHTML = Object.entries(categoryLabels).map(([category, label]) => {
+    const items = ingredients.filter(ingredient => ingredient.category === category);
+    if (!items.length) return "";
+    return `<section class="ingredient-category"><h3>${label}</h3><div class="ingredient-grid">
+      ${items.map(ingredient => {
+        const selected = Boolean(stateFor(ingredient.id));
+        return `<label class="ingredient-option ${selected ? "is-selected" : ""}">
+          <input type="checkbox" data-ingredient-id="${ingredient.id}" ${selected ? "checked" : ""} />
+          <span>${ingredient.name}</span>
+        </label>`;
+      }).join("")}
+    </div></section>`;
+  }).join("");
+  host.querySelectorAll("[data-ingredient-id]").forEach(input => {
+    input.addEventListener("change", event => {
+      const id = event.currentTarget.dataset.ingredientId;
+      if (event.currentTarget.checked) upsertInventory(id);
+      else removeInventory(id);
+    });
+  });
+}
+
+function renderSelectedIngredients() {
+  const host = document.querySelector("#selected-ingredients");
+  if (!host) return;
+  const ingredients = allIngredients();
+  if (!inventoryState.length) {
+    host.innerHTML = `<p class="privacy-note">还没有选择食材。至少选择 2–3 种食材后再生成。</p>`;
+    return;
+  }
+  host.innerHTML = inventoryState.map(entry => {
+    const ingredient = ingredients.find(item => item.id === entry.id);
+    if (!ingredient) return "";
+    return `<div class="selected-card" data-selected-id="${entry.id}">
+      <strong>${ingredient.name}</strong>
+      <input type="number" min="0" step="1" placeholder="库存" value="${entry.stock || ""}" aria-label="${ingredient.name}库存" />
+      <select aria-label="${ingredient.name}使用方式">
+        <option value="available" ${entry.role === "available" ? "selected" : ""}>可以使用</option>
+        <option value="must" ${entry.role === "must" ? "selected" : ""}>必须使用</option>
+        <option value="priority" ${entry.role === "priority" ? "selected" : ""}>优先消耗</option>
+        <option value="forbidden" ${entry.role === "forbidden" ? "selected" : ""}>禁忌/过敏</option>
+      </select>
+      <button type="button" aria-label="删除${ingredient.name}">×</button>
+    </div>`;
+  }).join("");
+  host.querySelectorAll(".selected-card").forEach(card => {
+    const id = card.dataset.selectedId;
+    card.querySelector("input").addEventListener("input", event => upsertInventory(id, { stock: event.target.value ? Number(event.target.value) : null }));
+    card.querySelector("select").addEventListener("change", event => upsertInventory(id, { role: event.target.value }));
+    card.querySelector("button").addEventListener("click", () => removeInventory(id));
+  });
+}
+
+function setupInventoryUI() {
+  readInventoryStore();
+  renderIngredientCatalog();
+  renderSelectedIngredients();
+  document.querySelector("#ingredient-search")?.addEventListener("input", renderIngredientCatalog);
+  document.querySelector("#select-common-seasonings")?.addEventListener("click", () => {
+    ["salt", "black_pepper", "water", "cooking_oil", "soy_sauce", "vinegar", "olive_oil", "garlic", "ginger", "scallion"].forEach(id => upsertInventory(id));
+    showToast("已选择常用调味料");
+  });
+  document.querySelector("#clear-inventory")?.addEventListener("click", () => {
+    inventoryState = [];
+    saveInventoryStore();
+    renderIngredientCatalog();
+    renderSelectedIngredients();
+  });
+  document.querySelector("#add-custom-ingredient")?.addEventListener("click", () => {
+    const nameInput = document.querySelector("#custom-ingredient-name");
+    const name = nameInput.value.trim();
+    if (!name) return;
+    const category = document.querySelector("#custom-ingredient-category").value;
+    const id = `custom_${Date.now()}`;
+    customIngredients.push({ id, name, category, aliases: [], unit: category === "seasoning" ? "g" : "g", caloriesPer100g: 0, proteinPer100g: 0, fatPer100g: 0, carbsPer100g: 0, isStaple: category === "staple", isSeasoning: category === "seasoning", isOptional: true, tags: [] });
+    upsertInventory(id);
+    nameInput.value = "";
+  });
 }
 
 function normalizeUsername(username) {
@@ -323,13 +464,27 @@ function bmiText(bmi) {
   return "较高";
 }
 
+function selectedValues(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(input => input.value);
+}
+
 function createMenu(profile, nutrition) {
-  return createDailyMenu(profile, nutrition);
+  return generateRecipesFromInventory(inventoryState, {
+    profile,
+    nutrition,
+    mealTypes: selectedValues("mealType"),
+    filters: selectedValues("recipeFilter"),
+    count: 6,
+    allowBasicSeasoning: document.querySelector("#allow-basic-seasoning").checked,
+    strictSeasoning: document.querySelector("#strict-seasoning").checked
+  });
 }
 
 const recipeModal = document.querySelector("#recipe-modal");
 const recipeCloseButton = document.querySelector(".recipe-close");
+const deductInventoryButton = document.querySelector("#deduct-inventory");
 let recipeReturnFocus = null;
+let activeRecipe = null;
 
 function recipeInstructions(meal, mealType) {
   const names = meal.foods.map(([name]) => name);
@@ -365,17 +520,28 @@ function recipeInstructions(meal, mealType) {
 
 function openRecipe(meal, mealType, trigger) {
   const guide = meal.steps ? { time: meal.time, steps: meal.steps, tip: meal.tip || "按需微调盐和酱料，烹调油建议计量使用。" } : recipeInstructions(meal, mealType);
+  activeRecipe = meal;
   recipeReturnFocus = trigger;
   document.querySelector("#recipe-detail-icon").textContent = meal.icon;
   document.querySelector("#recipe-detail-meta").textContent = `${mealType} · 约 ${meal.kcal} kcal · 蛋白 ${meal.protein || "-"}g · 脂肪 ${meal.fat || "-"}g · 碳水 ${meal.carbs || "-"}g · ${guide.time}`;
   document.querySelector("#recipe-title").textContent = meal.name;
   document.querySelector("#recipe-ingredients").innerHTML = meal.foods.map(([name, amount, unit]) => `<li><span>${name}</span><b>${amount}${unit}</b></li>`).join("");
   document.querySelector("#recipe-steps").innerHTML = guide.steps.map(step => `<li>${step}</li>`).join("");
-  document.querySelector("#recipe-tip").textContent = `小贴士：${guide.tip}`;
+  document.querySelector("#recipe-tip").textContent = `本食谱完全根据你选择的现有食材生成。小贴士：${guide.tip}`;
+  deductInventoryButton.hidden = !meal.ingredients?.some(ingredient => stateFor(ingredient.id)?.stock);
   recipeModal.classList.add("is-open");
   recipeModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
   recipeCloseButton.focus();
+}
+
+function recipeBadges(meal) {
+  return [
+    meal.needsExtraIngredients === false ? "无需额外食材" : "需要额外食材",
+    meal.difficulty ? `难度 ${meal.difficulty}` : "",
+    meal.basicSeasonings?.length ? `基础调味：${meal.basicSeasonings.join("、")}` : "",
+    meal.remainingStock?.length ? `剩余：${meal.remainingStock.map(i => `${i.name}${i.remaining}${i.unit}`).join("、")}` : ""
+  ].filter(Boolean).map(text => `<span>${text}</span>`).join("");
 }
 
 function closeRecipe() {
@@ -386,21 +552,41 @@ function closeRecipe() {
 }
 
 document.querySelectorAll("[data-close-recipe]").forEach(element => element.addEventListener("click", closeRecipe));
+deductInventoryButton.addEventListener("click", () => {
+  if (!activeRecipe) return;
+  for (const ingredient of activeRecipe.ingredients || []) {
+    const entry = stateFor(ingredient.id);
+    if (!entry?.stock) continue;
+    entry.stock = Math.max(0, Number(entry.stock) - Number(ingredient.grams || 0));
+  }
+  saveInventoryStore();
+  renderSelectedIngredients();
+  renderIngredientCatalog();
+  showToast("已按本食谱扣减库存");
+  if (latestProfile) render(latestProfile);
+  closeRecipe();
+});
 document.addEventListener("keydown", event => {
   if (event.key === "Escape" && recipeModal.classList.contains("is-open")) closeRecipe();
 });
 
 function render(profile) {
   const nutrition = calculate(profile);
-  const menu = createMenu(profile, nutrition);
+  const result = createMenu(profile, nutrition);
+  const menu = result.recipes || [];
   const actual = menu.reduce((sum, meal) => sum + meal.kcal, 0);
-  const labels = ["早餐", "午餐", "加餐", "晚餐"];
   const goalLabels = { lose: "温和减脂", maintain: "保持体重", gain: "稳步增重" };
-  const stats = getRecipeDatabaseStats();
+  if (!menu.length) {
+    results.innerHTML = `
+      <div class="result-head"><div><h2>暂时无法生成合理食谱</h2><p>${goalLabels[profile.goal]} · 目标 ${nutrition.calories} kcal</p></div></div>
+      <div class="inventory-note">${(result.errors || ["当前食材较少。"]).map(error => `<p>${error}</p>`).join("")}</div>
+      <p class="safety">系统不会自动加入你没有选择的食材。请补充蛋白质、主食或蔬菜后再试。</p>`;
+    return;
+  }
   results.innerHTML = `
     <div class="result-head">
-      <div><h2>今日食养方案</h2><p>${goalLabels[profile.goal]} · 预计维持热量 ${nutrition.maintenance} kcal · ${stats.proteins}类蛋白 / ${stats.vegetables}种蔬菜 / ${stats.methods}种做法 · 可组合约 ${stats.comboEstimate.toLocaleString()} 种</p></div>
-      <button class="refresh-btn" id="refresh-menu" type="button">换一组 ↻</button>
+      <div><h2>现有食材候选食谱</h2><p>${goalLabels[profile.goal]} · 预计维持热量 ${nutrition.maintenance} kcal · 仅使用你选择的食材</p></div>
+      <button class="refresh-btn" id="refresh-menu" type="button">重新生成 ↻</button>
     </div>
     <div class="metrics">
       <div class="metric"><strong>${nutrition.calories}</strong><span>目标千卡 kcal</span></div>
@@ -413,15 +599,15 @@ function render(profile) {
       ${menu.map((meal, index) => `
         <article class="meal" data-meal-index="${index}" role="button" tabindex="0" aria-label="查看${meal.name}的详细做法">
           <div class="meal-icon">${meal.icon}</div>
-          <div><h3>${labels[index]} · ${meal.name}</h3><p>${meal.foods.map(([f, a, u]) => `${f} ${a}${u}`).join(" ／ ")}</p><span class="meal-action">${meal.method || "家常"} · 蛋白 ${meal.protein || 0}g · 脂肪 ${meal.fat || 0}g · 碳水 ${meal.carbs || 0}g · 查看详细做法 →</span></div>
+          <div><h3>候选 ${index + 1} · ${meal.name}</h3><p>${meal.foods.map(([f, a, u]) => `${f} ${a}${u}`).join(" ／ ")}</p><span class="meal-action">${meal.method || "家常"} · ${meal.time} · 蛋白 ${meal.protein || 0}g · 脂肪 ${meal.fat || 0}g · 碳水 ${meal.carbs || 0}g · 查看详细做法 →</span><div class="recipe-badges">${recipeBadges(meal)}</div></div>
           <span class="meal-kcal">${meal.kcal} kcal</span>
         </article>`).join("")}
     </div>
-    <div class="intake-bar"><p><span>食谱计划摄入</span><b>${actual} / ${nutrition.calories} kcal</b></p><div class="track"><span style="width:${Math.min(100, actual / nutrition.calories * 100)}%"></span></div></div>
-    <p class="safety">${nutrition.floorApplied ? "已触发基础安全下限，未继续降低热量。" : "建议每日实际摄入保持在目标值上下约 10% 内。"} 食材重量为可食部估算值；烹调油、酱料和含糖饮料也需计入。连续 2–3 周观察体重与精神状态后再小幅调整。</p>`;
+    <div class="intake-bar"><p><span>候选食谱平均热量</span><b>${Math.round(actual / menu.length)} kcal / 道</b></p><div class="track"><span style="width:${Math.min(100, (actual / menu.length) / (nutrition.calories * .35) * 100)}%"></span></div></div>
+    <p class="safety">本食谱完全根据你选择的现有食材生成。若当前食材无法满足蛋白质或主食目标，系统只会提示补充，不会未经确认自动加入。</p>`;
   document.querySelector("#refresh-menu").addEventListener("click", () => render(profile));
   document.querySelectorAll(".meal").forEach(card => {
-    const open = () => openRecipe(menu[Number(card.dataset.mealIndex)], labels[Number(card.dataset.mealIndex)], card);
+    const open = () => openRecipe(menu[Number(card.dataset.mealIndex)], "现有食材食谱", card);
     card.addEventListener("click", open);
     card.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
@@ -444,6 +630,14 @@ form.addEventListener("submit", async event => {
     error.textContent = "请填写范围内的有效数据（仅适用于 18–80 岁成年人）。";
     return;
   }
+  if (!inventoryState.length) {
+    error.textContent = "请先选择家里现有的食材。";
+    return;
+  }
+  if (!selectedValues("mealType").length) {
+    error.textContent = "请至少选择一种用餐类型。";
+    return;
+  }
   error.textContent = "";
   latestProfile = profile;
   try {
@@ -454,3 +648,5 @@ form.addEventListener("submit", async event => {
   render(profile);
   if (window.innerWidth < 900) results.scrollIntoView({ behavior: "smooth" });
 });
+
+setupInventoryUI();

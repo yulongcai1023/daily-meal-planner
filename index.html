@@ -64,9 +64,54 @@
           </div>
         </fieldset>
 
+        <section class="inventory-builder" aria-labelledby="inventory-title">
+          <div class="section-heading compact-heading">
+            <span>02</span>
+            <div><h2 id="inventory-title">我的现有食材</h2><p>系统只会使用你勾选的食材生成</p></div>
+          </div>
+          <div class="inventory-toolbar">
+            <input id="ingredient-search" type="search" placeholder="搜索食材，例如 番茄 / 西红柿 / 土豆" />
+            <button id="select-common-seasonings" type="button">全选常用调味料</button>
+            <button id="clear-inventory" type="button">清空</button>
+          </div>
+          <label class="toggle-line"><input id="allow-basic-seasoning" type="checkbox" checked />允许使用基础调味料（盐、水、食用油、黑胡椒）</label>
+          <label class="toggle-line"><input id="strict-seasoning" type="checkbox" />严格模式：调味料也必须手动勾选</label>
+          <div id="ingredient-catalog" class="ingredient-catalog"></div>
+          <div class="custom-ingredient">
+            <input id="custom-ingredient-name" type="text" placeholder="手动新增自定义食材" />
+            <select id="custom-ingredient-category">
+              <option value="protein">蛋白质</option><option value="staple">主食</option><option value="vegetable">蔬菜</option><option value="fruit">水果</option><option value="nut">坚果和种子</option><option value="seasoning">调味料</option>
+            </select>
+            <button id="add-custom-ingredient" type="button">新增</button>
+          </div>
+          <div id="selected-ingredients" class="selected-ingredients"></div>
+        </section>
+
+        <fieldset>
+          <legend>生成范围</legend>
+          <div class="meal-type-row">
+            <label><input type="checkbox" name="mealType" value="breakfast" checked />早餐</label>
+            <label><input type="checkbox" name="mealType" value="lunch" checked />午餐</label>
+            <label><input type="checkbox" name="mealType" value="dinner" checked />晚餐</label>
+            <label><input type="checkbox" name="mealType" value="snack" checked />加餐</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>筛选</legend>
+          <div class="filter-row">
+            <label><input type="checkbox" name="recipeFilter" value="highProtein" />高蛋白</label>
+            <label><input type="checkbox" name="recipeFilter" value="lowFat" />低脂</label>
+            <label><input type="checkbox" name="recipeFilter" value="vegetarian" />素食</label>
+            <label><input type="checkbox" name="recipeFilter" value="noCook" />无需烹饪</label>
+            <label><input type="checkbox" name="recipeFilter" value="10min" />10分钟以内</label>
+            <label><input type="checkbox" name="recipeFilter" value="20min" />20分钟以内</label>
+          </div>
+        </fieldset>
+
         <div id="form-error" class="form-error" role="alert"></div>
-        <button class="primary-button" type="submit">生成今日食谱 <span>→</span></button>
-        <p class="privacy-note">所有计算均在本地完成，不会上传你的数据。</p>
+        <button class="primary-button" type="submit">用现有食材生成 <span>→</span></button>
+        <p class="privacy-note">食材选择会保存在本地；登录后身体数据仍可同步 Firebase。</p>
       </form>
 
       <section id="results" class="results" aria-live="polite">
@@ -125,6 +170,7 @@
           </section>
         </div>
         <p id="recipe-tip" class="recipe-tip"></p>
+        <button id="deduct-inventory" class="primary-button deduct-button" type="button">确认烹饪并扣减库存</button>
       </section>
     </div>
 
@@ -134,6 +180,6 @@
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script type="module" src="app.js?v=20260715-strict2"></script>
+  <script type="module" src="app.js?v=20260715-inventory1"></script>
 </body>
 </html>
