@@ -5,6 +5,7 @@ const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../app.js", import.meta.url), "utf8");
 const ui = await readFile(new URL("../fitness-ui.js", import.meta.url), "utf8");
 const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+const build = await readFile(new URL("../scripts/build-static.cjs", import.meta.url), "utf8");
 
 const experienceLabels = [...html.matchAll(/name="experience-segment" value="([^"]+)"[^>]*><span>([^<]+)<\/span>/g)]
   .map(match => ({ value: match[1], label: match[2] }));
@@ -24,6 +25,8 @@ assert.ok(ui.includes("renderExercisePreviewSvg") && ui.includes("data-preview-t
 assert.ok(css.includes(".media-figure.has-preview") && css.includes(".exercise-preview-svg"), "exercise preview SVG styles should be present");
 assert.ok(html.includes("exercise-preview-modal") && app.includes("openExercisePreview") && ui.includes("data-preview-open"), "exercise previews should open an enlarged centered modal");
 assert.ok(css.includes(".preview-modal.is-open") && css.includes(".preview-panel"), "exercise preview modal styles should be present");
-assert.ok(html.includes("fitness-ui16") && app.includes("fitness-ui16"), "cache-busting asset versions should be updated");
+assert.ok(ui.includes("assets/exercises/") && ui.includes("exercise-preview-img"), "exercise previews should prefer real image assets");
+assert.ok(build.includes("fs.cpSync") && build.includes("\"assets\""), "static build should copy image assets");
+assert.ok(html.includes("fitness-ui17") && app.includes("fitness-ui17"), "cache-busting asset versions should be updated");
 
-console.log("Fitness UI audit tests passed: 12 cases");
+console.log("Fitness UI audit tests passed: 14 cases");

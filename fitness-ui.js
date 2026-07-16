@@ -301,10 +301,12 @@ function renderExerciseMetrics(exercise) {
 function renderExerciseMedia(exercise) {
   const previewType = previewTypeForExercise(exercise);
   const previewMarkup = renderExercisePreviewSvg(exercise);
+  const imageSrc = exercise.exerciseId ? `assets/exercises/${encodeURIComponent(exercise.exerciseId)}.png` : "";
   return `
     <figure class="exercise-media">
       <button class="media-figure has-preview ${exerciseFamilyClass(exercise)}" type="button" data-preview-type="${escapeHtml(previewType)}" data-preview-open data-preview-title="${escapeHtml(exercise.name)}" data-preview-subtitle="${escapeHtml(`${exercise.englishName || ""} · ${exercise.movementPattern || exercise.category || ""}`)}" aria-label="放大查看 ${escapeHtml(exercise.name)} 动作预览">
-        ${previewMarkup}
+        ${imageSrc ? `<img class="exercise-preview-img" src="${escapeHtml(imageSrc)}" alt="${escapeHtml(exercise.name)} 动作示意图" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false">` : ""}
+        <span class="exercise-preview-fallback" ${imageSrc ? "hidden" : ""}>${previewMarkup}</span>
         <span class="preview-zoom-hint" aria-hidden="true">点击放大</span>
       </button>
       <figcaption>${escapeHtml(exercise.movementPattern || "动作预览")}</figcaption>
