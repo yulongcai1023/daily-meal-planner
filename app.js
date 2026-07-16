@@ -15,6 +15,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
 import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateWorkoutPlan } from "./workout-engine.js?v=20260715-workout1";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260715-fitness-ui2";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -447,10 +448,8 @@ const goalLabelMap = {
   conditioning: "体能提升",
   health: "健康活动"
 };
-const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const equipmentIconMap = { "无器械": "🤸", "瑜伽垫": "🧘", "弹力带": "🪢", "可调哑铃": "🏋️", "固定哑铃": "🏋️", "壶铃": "🔔", "杠铃": "🏋️", "深蹲架": "🏋️", "史密斯机": "🏋️", "卧推凳": "🪑", "拉力器": "🧵", "高位下拉器": "🧲", "腿举机": "🦵", "腿屈伸机": "🦵", "腿弯举机": "🦵", "跑步机": "🏃", "椭圆机": "👟", "单车": "🚴", "划船机": "🚣", "引体向上杆": "🧗", "双杠": "💪", "牧师椅": "🪑", "爬楼机": "🪜", "器械推胸": "🏋️", "器械肩推": "💪", "髋外展机": "🍑", "跳绳": "🪢" };
-const limitationIconMap = { "无明显限制": "✅", "肩部不适": "💪", "腰部不适": "🦴", "膝盖不适": "🦵", "手腕不适": "🖐", "肘部不适": "💪", "不能做深蹲类动作": "🚫", "不能做硬拉类动作": "⚠️", "不适合高冲击": "🪶" };
-const muscleIconMap = { "全身均衡": "⚖️", "胸": "🛡️", "背": "🪽", "肩": "💪", "手臂": "💪", "臀": "🍑", "腿": "🦵", "核心": "🔥" };
+const WORKOUT_PLAN_STORAGE_KEY = "dailyMealPlanner.latestWorkoutPlan.v1";
+const WORKOUT_LOG_STORAGE_KEY = "dailyMealPlanner.workoutLogs.v1";
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
@@ -470,33 +469,10 @@ function setupSectionTabs() {
   });
 }
 
-function optionIcon(value, name) {
-  if (name === "training-equipment") return equipmentIconMap[value] || "🏷️";
-  if (name === "training-limitations") return limitationIconMap[value] || "⚕️";
-  if (name === "training-muscles") return muscleIconMap[value] || "🎯";
-  return "✓";
-}
-
 function renderTagOptions(id, values, name, selected = []) {
   const container = document.querySelector(id);
   if (!container) return;
-  const selectedSet = new Set(selected);
-  if (name === "training-styles") {
-    container.innerHTML = values.map(value => `
-      <label class="switch-option">
-        <input type="checkbox" name="${name}" value="${escapeHtml(value)}" ${selectedSet.has(value) ? "checked" : ""}>
-        <span class="switch-ui"></span>
-        <span>${escapeHtml(value)}</span>
-      </label>
-    `).join("");
-    return;
-  }
-  container.innerHTML = values.map(value => `
-    <label class="tag-option chip-option" data-chip-label="${escapeHtml(value)}">
-      <input type="checkbox" name="${name}" value="${escapeHtml(value)}" ${selectedSet.has(value) ? "checked" : ""}>
-      <span><b>${optionIcon(value, name)}</b>${escapeHtml(value)}</span>
-    </label>
-  `).join("");
+  container.innerHTML = renderTrainingOptionList(id, values, name, selected);
 }
 
 function checkedValues(name) {
@@ -591,7 +567,7 @@ function setWorkoutLoading(loading) {
   if (!button) return;
   button.disabled = loading;
   button.classList.toggle("is-loading", loading);
-  button.innerHTML = loading ? `<span class="spinner"></span> Building Plan...` : `<span>⚡</span> Generate Workout`;
+  button.innerHTML = loading ? `<span class="spinner"></span> 正在生成...` : `<span class="button-icon icon-flash" aria-hidden="true"></span>生成训练计划`;
 }
 
 function exerciseIcon(exercise) {
@@ -611,12 +587,7 @@ function openExerciseSheet(dayIndex, exerciseIndex) {
   if (!sheet || !options || !current) return;
   const alternatives = getExerciseAlternatives(current.exerciseId, currentWorkoutPlan.settings)
     .filter(item => !currentWorkoutPlan.days[dayIndex].exercises.some(row => row.exerciseId === item.id));
-  options.innerHTML = alternatives.length ? alternatives.map(item => `
-    <button class="sheet-option" type="button" data-alt-id="${item.id}" data-day-index="${dayIndex}" data-exercise-index="${exerciseIndex}">
-      <span>${exerciseIcon(item)}</span>
-      <div><b>${escapeHtml(item.name)}</b><small>${escapeHtml(item.englishName)} · ${item.equipment.join("、")}</small></div>
-    </button>
-  `).join("") : `<p class="sheet-empty">当前设置下暂时没有更合适的替换动作。</p>`;
+  options.innerHTML = renderSheetOptions(alternatives, dayIndex, exerciseIndex);
   sheet.classList.add("is-open");
   sheet.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
@@ -655,120 +626,81 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
   renderWorkoutPlan(currentWorkoutPlan);
 }
 
+function selectWorkoutDay(dayIndex) {
+  document.querySelectorAll("[data-day-panel]").forEach(panel => {
+    const active = Number(panel.dataset.dayPanel) === dayIndex;
+    panel.classList.toggle("is-active", active);
+    panel.hidden = !active;
+  });
+  document.querySelectorAll("[data-select-day]").forEach(item => {
+    const active = Number(item.dataset.selectDay) === dayIndex;
+    item.classList.toggle("is-active", active);
+    item.setAttribute("aria-pressed", String(active));
+  });
+  const activeDay = currentWorkoutPlan?.days?.[dayIndex];
+  const summary = document.querySelector(".progress-summary");
+  if (summary && activeDay) {
+    summary.querySelector("strong b").textContent = activeDay.estimatedCalories || 0;
+  }
+}
+
+function loadWorkoutLogs() {
+  try {
+    return JSON.parse(localStorage.getItem(WORKOUT_LOG_STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveWorkoutLogs(logs) {
+  localStorage.setItem(WORKOUT_LOG_STORAGE_KEY, JSON.stringify(logs));
+}
+
+function restoreWorkoutLogs() {
+  const logs = loadWorkoutLogs();
+  document.querySelectorAll(".workout-log-input, .exercise-note-input").forEach(input => {
+    const key = input.dataset.logKey || input.dataset.noteKey;
+    const field = input.dataset.logField || "note";
+    if (logs[key]?.[field] !== undefined) input.value = logs[key][field];
+  });
+  document.querySelectorAll(".set-complete, .exercise-done").forEach(input => {
+    const key = input.dataset.logKey || input.dataset.exerciseDone;
+    const field = input.dataset.logField || "done";
+    if (logs[key]?.[field] !== undefined) input.checked = Boolean(logs[key][field]);
+  });
+}
+
+function bindWorkoutLogEvents() {
+  const updateLog = event => {
+    const input = event.currentTarget;
+    const key = input.dataset.logKey || input.dataset.noteKey || input.dataset.exerciseDone;
+    if (!key) return;
+    const field = input.dataset.logField || (input.dataset.noteKey ? "note" : "done");
+    const logs = loadWorkoutLogs();
+    logs[key] = logs[key] || {};
+    logs[key][field] = input.type === "checkbox" ? input.checked : input.value;
+    saveWorkoutLogs(logs);
+  };
+  document.querySelectorAll(".workout-log-input, .exercise-note-input, .set-complete, .exercise-done").forEach(input => {
+    input.addEventListener("input", updateLog);
+    input.addEventListener("change", updateLog);
+  });
+}
+
 function renderWorkoutPlan(plan) {
   currentWorkoutPlan = plan;
-  const splitName = SPLITS[plan.splitType]?.name || plan.splitType;
-  const trainingDays = plan.days.filter(day => !day.isRest);
-  const totalExercises = trainingDays.reduce((sum, day) => sum + day.exercises.length, 0);
-  const totalMinutes = trainingDays.reduce((sum, day) => sum + day.estimatedDuration, 0);
-  const todayIndex = plan.days.findIndex(day => !day.isRest);
-  const today = plan.days[todayIndex] || plan.days[0];
   const resultsNode = document.querySelector("#training-results");
-  resultsNode.innerHTML = `
-    <div class="workout-overview-card">
-      <div>
-        <span class="pill">${goalLabelMap[plan.goal] || plan.goal}</span>
-        <h2>${today.isRest ? "Recovery Day" : today.theme}</h2>
-        <p>${today.isRest ? "今天安排恢复，让身体真正长回来。" : escapeHtml(today.focus)}</p>
-      </div>
-      <div class="overview-metrics">
-        <div><strong>${today.isRest ? "0" : today.estimatedDuration}</strong><span>分钟</span></div>
-        <div><strong>${today.isRest ? "0" : today.exercises.length}</strong><span>动作</span></div>
-        <div><strong>${today.isRest ? "—" : today.estimatedCalories}</strong><span>kcal</span></div>
-      </div>
-      <div class="today-progress">
-        <div><span>Today's Progress</span><b id="training-completion">0%</b></div>
-        <div class="fitness-progress"><span id="training-progress-bar" style="width:0%"></span></div>
-      </div>
-    </div>
-
-    <div class="week-strip" aria-label="一周训练视图">
-      ${plan.days.map((day, dayIndex) => `
-        <button class="week-day ${dayIndex === todayIndex ? "is-active" : ""} ${day.isRest ? "is-rest" : ""}" type="button" data-scroll-day="${dayIndex}">
-          <span>${dayNames[dayIndex] || `Day ${dayIndex + 1}`}</span>
-          <b>${escapeHtml(day.isRest ? "Rest" : day.theme)}</b>
-          <small>${day.isRest ? "恢复" : `${day.exercises.length} 动作`}</small>
-        </button>
-      `).join("")}
-    </div>
-
-    <div class="plan-meta-row">
-      <div><strong>${splitName}</strong><span>训练分化</span></div>
-      <div><strong>${trainingDays.length} 天</strong><span>每周训练</span></div>
-      <div><strong>${totalExercises}</strong><span>动作总数</span></div>
-      <div><strong>${totalMinutes} 分钟</strong><span>周训练时长</span></div>
-    </div>
-
-    ${plan.warnings.length ? `<div class="warning-list compact">${plan.warnings.map(item => `<p>⚠️ ${escapeHtml(item)}</p>`).join("")}</div>` : ""}
-
-    <div class="workout-week modern-week">
-      ${plan.days.map((day, dayIndex) => day.isRest ? `
-        <article class="workout-day rest-day modern-day" id="workout-day-${dayIndex}">
-          <div class="workout-day-head"><div><span class="pill muted">${dayNames[dayIndex]}</span><h3>${day.theme}</h3><p>${day.recovery.join(" · ")}</p></div><span>Rest</span></div>
-        </article>
-      ` : `
-        <article class="workout-day modern-day" id="workout-day-${dayIndex}">
-          <div class="workout-day-head">
-            <div><span class="pill">${dayNames[dayIndex]}</span><h3>${day.day} · ${day.theme}</h3><p>${escapeHtml(day.focus)}</p></div>
-            <span>${day.estimatedDuration} min · 🔥 ${day.estimatedCalories}</span>
-          </div>
-          <div class="prep-row">
-            <details class="prep-card"><summary>🔥 热身 <b>5分钟</b></summary><p>${day.warmup.join("；")}</p></details>
-            <details class="prep-card"><summary>🧘 Cool Down <b>3–5分钟</b></summary><p>${day.cooldown.join("；")}</p></details>
-          </div>
-          <div class="exercise-list modern-exercises">
-            ${day.exercises.map((exercise, exerciseIndex) => `
-              <details class="exercise-card" data-day-index="${dayIndex}" data-exercise-index="${exerciseIndex}">
-                <summary>
-                  <div class="exercise-main">
-                    <span class="exercise-avatar">${exerciseIcon(exercise)}</span>
-                    <div><b>${escapeHtml(exercise.name)}</b><small>${escapeHtml(exercise.category)} · ${exercise.targetMuscles.join(" / ")}</small></div>
-                  </div>
-                  <div class="exercise-prescription">
-                    <span>${exercise.sets} × ${exercise.reps}</span>
-                    <span>${exercise.intensity.replace("RIR ", "RIR ")}</span>
-                    <span>${exercise.restSeconds}秒</span>
-                  </div>
-                  <button class="exercise-menu" type="button" data-open-sheet="${dayIndex}:${exerciseIndex}" aria-label="替换动作">⋮</button>
-                </summary>
-                <div class="exercise-detail">
-                  <div class="exercise-visual">GIF</div>
-                  <div>
-                    <h4>动作说明</h4>
-                    <ol>${exercise.instructions.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
-                    <p><b>目标肌群：</b>${exercise.targetMuscles.join("、")}</p>
-                    <p><b>常见错误：</b>${exercise.commonMistakes.map(escapeHtml).join("、")}</p>
-                    ${exercise.alternatives.length ? `<p><b>替代动作：</b>${exercise.alternatives.map(item => escapeHtml(item.name)).join("、")}</p>` : ""}
-                  </div>
-                  <div class="workout-log-card">
-                    <h4>Workout Log</h4>
-                    <label>Weight<input type="number" min="0" step="0.5" placeholder="20 kg"></label>
-                    <label>Reps<input type="text" placeholder="10"></label>
-                    <label>RIR<input type="text" placeholder="2"></label>
-                    <label>Notes<input type="text" placeholder="今天状态、动作感受"></label>
-                    <label class="done-switch"><input class="exercise-done" type="checkbox"><span>完成动作</span></label>
-                    <button class="save-set-button" type="button">Save Set</button>
-                  </div>
-                </div>
-              </details>
-            `).join("")}
-          </div>
-          ${day.cardio ? `<div class="cardio-card">🏃 有氧：${escapeHtml(day.cardio.name)} · ${day.cardio.reps} · ${escapeHtml(day.cardio.note)}</div>` : ""}
-        </article>
-      `).join("")}
-    </div>
-
-    <details class="plan-note modern-note">
-      <summary>进阶、饮食联动与安全提示</summary>
-      <p><b>进阶规则：</b>${plan.progression.join(" ")}</p>
-      <p><b>饮食联动：</b>${escapeHtml(plan.nutritionLink)}</p>
-      ${plan.safety.map(item => `<p>安全提示：${escapeHtml(item)}</p>`).join("")}
-    </details>
-  `;
-  document.querySelectorAll(".exercise-done").forEach(input => input.addEventListener("change", updateTrainingCompletion));
-  document.querySelectorAll("[data-scroll-day]").forEach(button => {
+  const activeIndex = Math.max(0, plan.days.findIndex(day => !day.isRest));
+  resultsNode.innerHTML = renderFitnessDashboard(plan, { activeIndex, splitName: SPLITS[plan.splitType]?.name || plan.splitType, goalLabel: goalLabelMap[plan.goal] || plan.goal });
+  localStorage.setItem(WORKOUT_PLAN_STORAGE_KEY, JSON.stringify(plan));
+  restoreWorkoutLogs();
+  bindWorkoutLogEvents();
+  document.querySelectorAll(".exercise-done, .set-complete").forEach(input => input.addEventListener("change", updateTrainingCompletion));
+  document.querySelectorAll("[data-select-day], [data-next-day]").forEach(button => {
     button.addEventListener("click", () => {
-      document.querySelector(`#workout-day-${button.dataset.scrollDay}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const current = Number(document.querySelector(".workout-day-detail.is-active")?.dataset.dayPanel || activeIndex);
+      const target = button.dataset.nextDay !== undefined ? (current + 1) % plan.days.length : Number(button.dataset.selectDay);
+      selectWorkoutDay(target);
     });
   });
   document.querySelectorAll("[data-open-sheet]").forEach(button => {
@@ -779,7 +711,7 @@ function renderWorkoutPlan(plan) {
       openExerciseSheet(dayIndex, exerciseIndex);
     });
   });
-  document.querySelectorAll(".save-set-button").forEach(button => button.addEventListener("click", () => showToast("本组记录已保存在当前页面。")));
+  document.querySelectorAll(".save-set-button, .exercise-actions .solid-action").forEach(button => button.addEventListener("click", () => showToast("训练记录已保存在当前页面。")));
   updateTrainingCompletion();
 }
 
@@ -794,7 +726,7 @@ function setupTrainingUI() {
   });
   document.querySelector("#equipment-search")?.addEventListener("input", event => {
     const keyword = event.target.value.trim().toLocaleLowerCase();
-    document.querySelectorAll("#equipment-options .chip-option").forEach(chip => {
+    document.querySelectorAll("#equipment-options .selector-tile").forEach(chip => {
       chip.hidden = keyword && !chip.dataset.chipLabel.toLocaleLowerCase().includes(keyword);
     });
   });
@@ -807,6 +739,9 @@ function setupTrainingUI() {
     });
   });
   document.querySelectorAll("[data-close-sheet]").forEach(item => item.addEventListener("click", closeExerciseSheet));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeExerciseSheet();
+  });
   document.querySelector("#sheet-options")?.addEventListener("click", event => {
     const option = event.target.closest(".sheet-option");
     if (!option) return;
@@ -814,6 +749,15 @@ function setupTrainingUI() {
   });
   const trainingForm = document.querySelector("#training-form");
   if (!trainingForm) return;
+  const savedPlan = localStorage.getItem(WORKOUT_PLAN_STORAGE_KEY);
+  if (savedPlan) {
+    try {
+      const plan = JSON.parse(savedPlan);
+      if (plan?.days?.length) renderWorkoutPlan(plan);
+    } catch {
+      localStorage.removeItem(WORKOUT_PLAN_STORAGE_KEY);
+    }
+  }
   trainingForm.addEventListener("submit", async event => {
     event.preventDefault();
     const settings = collectTrainingSettings();

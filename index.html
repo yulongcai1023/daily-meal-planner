@@ -90,92 +90,84 @@
     </section>
 
     <section class="fitness-section app-section" id="fitness-section" hidden>
-      <div class="fitness-hero">
-        <div>
-          <p class="eyebrow">TRAINING DASHBOARD</p>
-          <h2>今天练什么，一眼就知道。</h2>
-          <p>根据你的身体数据、目标、器械和训练经验，生成更像健身 App 的一周训练安排。</p>
-        </div>
-        <div class="today-progress-card">
-          <span>Today's Progress</span>
-          <strong id="hero-training-completion">0%</strong>
-          <div class="fitness-progress"><span id="hero-training-progress-bar" style="width:0%"></span></div>
-        </div>
-      </div>
-
-      <div class="fitness-app-layout">
-        <aside class="settings-panel">
-          <details class="settings-card" open>
-            <summary>
-              <span>训练设置</span>
-              <small>目标、经验、器械与偏好</small>
-            </summary>
-            <form id="training-form" class="fitness-form">
-              <div class="setting-block">
-                <label>主要目标</label>
-                <select id="training-primary-goal"><option value="fatLoss">减脂</option><option value="muscleGain" selected>增肌</option><option value="shape">塑形</option><option value="strength">提升力量</option><option value="conditioning">提升体能</option><option value="health">保持健康</option></select>
-              </div>
-              <div class="setting-block compact-grid">
-                <label>次要目标<select id="training-secondary-goal"><option value="health">保持健康</option><option value="fatLoss">减脂</option><option value="muscleGain">增肌</option><option value="conditioning">提升体能</option></select></label>
-                <label>训练地点<select id="training-location"><option value="homeNone">家中无器械</option><option value="homeSimple" selected>家中简单器械</option><option value="apartmentGym">公寓健身房</option><option value="commercialGym">商业健身房</option><option value="outdoor">户外</option></select></label>
-              </div>
-
-              <div class="setting-block">
-                <div class="setting-title"><span>训练经验</span><small>Segment</small></div>
-                <div class="segment-group">
-                  <label><input type="radio" name="experience-segment" value="beginner0"><span>新手</span></label>
-                  <label><input type="radio" name="experience-segment" value="beginner" checked><span>初级</span></label>
-                  <label><input type="radio" name="experience-segment" value="intermediate"><span>中级</span></label>
-                  <label><input type="radio" name="experience-segment" value="advanced"><span>高级</span></label>
-                </div>
-                <select id="experience-level" hidden><option value="beginner0">完全新手</option><option value="beginner" selected>新手</option><option value="novice">初级</option><option value="intermediate">中级</option><option value="advanced">高级</option></select>
-              </div>
-
-              <div class="setting-block compact-grid">
-                <label>每周天数<select id="weekly-training-days"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
-                <label>单次时长<select id="session-duration"><option>20</option><option>30</option><option selected>45</option><option>60</option><option>75</option><option>90</option></select></label>
-                <label>训练分化<select id="selected-split"><option value="fullBody">全身训练</option><option value="upperLower">上下肢二分化</option><option value="ppl">推拉腿三分化</option><option value="four">四分化</option><option value="five">五分化</option><option value="six">六分化</option></select></label>
-                <label>有氧安排<select id="cardio-preference"><option value="after">训练后有氧</option><option value="separate">独立有氧日</option><option value="steps">步数目标</option><option value="none">不做有氧</option></select></label>
-              </div>
-
-              <div class="setting-block">
-                <div class="setting-title"><span>器械选择</span><button class="chip-toggle" type="button" data-toggle-chips="equipment-options">展开更多</button></div>
-                <input id="equipment-search" class="chip-search" type="text" placeholder="搜索器械，例如：哑铃、跑步机" />
-                <div id="equipment-options" class="chip-cloud is-collapsed"></div>
-              </div>
-
-              <div class="setting-block">
-                <div class="setting-title"><span>身体限制</span><small>可多选</small></div>
-                <div id="limitation-options" class="chip-cloud"></div>
-              </div>
-
-              <div class="setting-block">
-                <div class="setting-title"><span>重点训练</span><small>高亮优先</small></div>
-                <div id="muscle-options" class="chip-cloud muscle-cloud"></div>
-              </div>
-
-              <div class="setting-block">
-                <div class="setting-title"><span>用户偏好</span><small>Switch</small></div>
-                <div id="style-options" class="switch-list"></div>
-              </div>
-
-              <label class="setting-block disliked-field">不喜欢的动作<input id="disliked-exercises" type="text" placeholder="例如：跑步、杠铃深蹲，用逗号分隔" /></label>
-              <div id="training-error" class="form-error"></div>
-              <button id="generate-workout-button" class="generate-workout-button" type="submit"><span>⚡</span> Generate Workout</button>
-            </form>
-          </details>
+      <div class="fitness-shell">
+        <aside class="fitness-sidebar" aria-label="健身功能导航">
+          <button class="fitness-side-link is-active" type="button"><span class="side-icon icon-plan" aria-hidden="true"></span>训练计划</button>
+          <button class="fitness-side-link" type="button"><span class="side-icon icon-library" aria-hidden="true"></span>动作库</button>
+          <button class="fitness-side-link" type="button"><span class="side-icon icon-log" aria-hidden="true"></span>训练记录</button>
+          <button class="fitness-side-link" type="button"><span class="side-icon icon-body-data" aria-hidden="true"></span>身体数据</button>
+          <button class="fitness-side-link" type="button"><span class="side-icon icon-settings" aria-hidden="true"></span>设置</button>
         </aside>
 
-        <section id="training-results" class="training-results fitness-dashboard" aria-live="polite">
-          <div class="fitness-empty-card">
-            <div class="skeleton-hero"></div>
-            <div>
-              <span class="pill">Ready</span>
-              <h2>生成后，这里会显示今天训练什么。</h2>
-              <p>默认折叠设置，只保留关键结果：今日训练、预计时长、动作数量和完成进度。</p>
+        <main class="fitness-main">
+          <form id="training-form" class="preference-card">
+            <div class="preference-head">
+              <div>
+                <h2>训练偏好设置</h2>
+                <p>选择可用器械、身体限制和重点部位，系统会继续使用现有训练算法生成计划。</p>
+              </div>
+              <div class="plan-cycle-pill"><span class="calendar-icon" aria-hidden="true"></span>本周计划</div>
             </div>
-          </div>
-        </section>
+
+            <div class="preference-controls">
+              <label>主要目标<select id="training-primary-goal"><option value="fatLoss">减脂</option><option value="muscleGain" selected>增肌</option><option value="shape">塑形</option><option value="strength">提升力量</option><option value="conditioning">提升体能</option><option value="health">保持健康</option></select></label>
+              <label>次要目标<select id="training-secondary-goal"><option value="health">保持健康</option><option value="fatLoss">减脂</option><option value="muscleGain">增肌</option><option value="conditioning">提升体能</option></select></label>
+              <label>训练地点<select id="training-location"><option value="homeNone">家中无器械</option><option value="homeSimple" selected>家中简单器械</option><option value="apartmentGym">公寓健身房</option><option value="commercialGym">商业健身房</option><option value="outdoor">户外</option></select></label>
+              <label>每周天数<select id="weekly-training-days"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
+              <label>单次时长<select id="session-duration"><option>20</option><option>30</option><option selected>45</option><option>60</option><option>75</option><option>90</option></select></label>
+              <label>训练分化<select id="selected-split"><option value="fullBody">全身训练</option><option value="upperLower">上下肢二分化</option><option value="ppl">推拉腿三分化</option><option value="four">四分化</option><option value="five">五分化</option><option value="six">六分化</option></select></label>
+              <label>有氧安排<select id="cardio-preference"><option value="after">训练后有氧</option><option value="separate">独立有氧日</option><option value="steps">步数目标</option><option value="none">不做有氧</option></select></label>
+            </div>
+
+            <div class="segment-row" aria-label="训练经验">
+              <span>训练经验</span>
+              <div class="segment-group">
+                <label><input type="radio" name="experience-segment" value="beginner0"><span>新手</span></label>
+                <label><input type="radio" name="experience-segment" value="beginner" checked><span>初级</span></label>
+                <label><input type="radio" name="experience-segment" value="intermediate"><span>中级</span></label>
+                <label><input type="radio" name="experience-segment" value="advanced"><span>高级</span></label>
+              </div>
+              <select id="experience-level" hidden><option value="beginner0">完全新手</option><option value="beginner" selected>新手</option><option value="novice">初级</option><option value="intermediate">中级</option><option value="advanced">高级</option></select>
+            </div>
+
+            <div class="preference-grid">
+              <section class="preference-subcard">
+                <div class="subcard-head"><h3>可用器械</h3><button class="chip-toggle" type="button" data-toggle-chips="equipment-options">更多</button></div>
+                <input id="equipment-search" class="chip-search" type="text" placeholder="搜索器械，例如：哑铃、跑步机" />
+                <div id="equipment-options" class="selector-grid is-collapsed"></div>
+              </section>
+              <section class="preference-subcard">
+                <div class="subcard-head"><h3>身体限制</h3><span class="info-hint" title="身体限制只用于筛选动作，不能替代专业医疗建议。">i</span></div>
+                <div id="limitation-options" class="selector-grid selector-grid-limits"></div>
+              </section>
+              <section class="preference-subcard">
+                <div class="subcard-head"><h3>重点训练部位</h3><span>可多选</span></div>
+                <div id="muscle-options" class="selector-grid selector-grid-muscles"></div>
+              </section>
+            </div>
+
+            <div class="preference-footer">
+              <div>
+                <h3>用户偏好</h3>
+                <div id="style-options" class="preference-pill-row"></div>
+              </div>
+              <label class="disliked-field">排除动作<input id="disliked-exercises" type="text" placeholder="例如：跑步、杠铃深蹲、开合跳" /></label>
+              <div id="training-error" class="form-error"></div>
+              <button id="generate-workout-button" class="generate-workout-button" type="submit"><span class="button-icon icon-flash" aria-hidden="true"></span>生成训练计划</button>
+            </div>
+          </form>
+
+          <section id="training-results" class="training-results fitness-dashboard" aria-live="polite">
+            <div class="fitness-empty-card">
+              <div class="skeleton-hero"></div>
+              <div>
+                <span class="pill">Ready</span>
+                <h2>生成后，这里会显示本周训练计划。</h2>
+                <p>你会先看到 7 天概览，再进入当前训练日详情和动作记录。</p>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
 
       <div id="exercise-sheet" class="bottom-sheet" aria-hidden="true">
