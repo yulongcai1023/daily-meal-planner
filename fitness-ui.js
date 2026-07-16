@@ -270,11 +270,13 @@ function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
             <span>${escapeHtml(exercise.category)}</span>
           </div>
         </div>
-        <label class="exercise-complete-control">
-          <input class="exercise-done" type="checkbox" data-exercise-done="${dayIndex}:${exerciseIndex}">
-          <span>完成</span>
-        </label>
-        <button class="exercise-menu" type="button" data-open-sheet="${dayIndex}:${exerciseIndex}" aria-label="更换 ${escapeHtml(exercise.name)}">更换动作</button>
+        <div class="exercise-head-actions">
+          <label class="exercise-complete-control">
+            <input class="exercise-done" type="checkbox" data-exercise-done="${dayIndex}:${exerciseIndex}">
+            <span>完成</span>
+          </label>
+          <button class="exercise-menu" type="button" data-open-sheet="${dayIndex}:${exerciseIndex}" aria-label="更换 ${escapeHtml(exercise.name)}">更换</button>
+        </div>
       </header>
       <div class="exercise-card-body">
         ${renderExerciseMedia(exercise)}

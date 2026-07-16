@@ -442,17 +442,18 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .warmup-card p { margin: 6px 0 0; color: var(--fit-text-secondary); font-size: 14px; line-height: 22px; }
 .exercise-stack { display: grid; gap: 14px; }
 .exercise-card { padding: 14px; overflow: hidden; }
-.exercise-card-head { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto auto; gap: 12px; align-items: start; margin-bottom: 12px; }
+.exercise-card-head { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: start; margin-bottom: 12px; }
 .exercise-index { width: 30px; height: 30px; display: grid; place-items: center; color: var(--fit-warning); background: var(--fit-warning-light); border-radius: 50%; font-weight: 750; }
 .exercise-title-block h3 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 750; }
 .exercise-title-block p { margin: 2px 0 0; color: var(--fit-text-secondary); font-size: 12px; line-height: 18px; }
 .exercise-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .exercise-tags span { min-height: 24px; padding: 0 8px; display: inline-flex; align-items: center; color: var(--fit-primary); background: var(--fit-primary-light); border-radius: 999px; font-size: 12px; }
-.exercise-complete-control { min-height: 34px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--fit-text-secondary); border: 1px solid var(--fit-border); border-radius: 999px; cursor: pointer; font-size: 13px; }
+.exercise-head-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: nowrap; }
+.exercise-complete-control { min-height: 34px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--fit-text-secondary); border: 1px solid var(--fit-border); border-radius: 999px; cursor: pointer; font-size: 13px; white-space: nowrap; }
 .exercise-complete-control span::before { content: "○"; margin-right: 5px; color: var(--fit-text-secondary); }
 .exercise-complete-control input:checked + span { color: var(--fit-primary); font-weight: 750; }
 .exercise-complete-control input:checked + span::before { content: "✓"; color: var(--fit-primary); }
-.exercise-menu { min-height: 34px; padding: 0 12px; color: var(--fit-warning); background: var(--fit-warning-light); border: 1px solid #F1DDC7; border-radius: 999px; cursor: pointer; font: inherit; font-size: 13px; }
+.exercise-menu { min-height: 34px; padding: 0 12px; color: var(--fit-warning); background: var(--fit-warning-light); border: 1px solid #F1DDC7; border-radius: 999px; cursor: pointer; font: inherit; font-size: 13px; white-space: nowrap; }
 .exercise-card-body { display: grid; grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); gap: 14px; align-items: stretch; }
 .exercise-media { margin: 0; }
 .media-figure { height: 142px; position: relative; display: grid; place-items: center; background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 12px; overflow: hidden; }
@@ -460,7 +461,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .media-figure::after { width: 130px; height: 4px; background: currentColor; opacity: .16; }
 .exercise-media figcaption { margin-top: 6px; color: var(--fit-text-secondary); font-size: 12px; text-align: center; }
 .exercise-core { min-width: 0; display: grid; gap: 10px; }
-.exercise-metrics { display: grid; grid-template-columns: repeat(4, minmax(78px, 1fr)); gap: 8px; }
+.exercise-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); gap: 8px; }
 .exercise-metrics div { min-height: 70px; padding: 10px; display: grid; align-content: center; text-align: center; background: #FBFAF7; border: 1px solid var(--fit-border); border-radius: 10px; }
 .exercise-metrics strong { color: var(--fit-text-primary); font-size: 18px; line-height: 24px; }
 .exercise-metrics span { color: var(--fit-text-secondary); font-size: 12px; line-height: 18px; }
@@ -500,12 +501,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, .selector-tile:focus-within, .preference-pill:focus-within { outline: 3px solid rgba(47,107,60,.22); outline-offset: 2px; }
 [hidden] { display: none !important; }
 @media (max-width: 1380px) {
-  .exercise-card-head { grid-template-columns: 34px minmax(0, 1fr); }
-  .exercise-complete-control, .exercise-menu { min-width: 104px; justify-self: start; }
-  .exercise-complete-control { grid-column: 2; }
-  .exercise-menu { grid-column: 2; }
   .exercise-card-body { grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); }
-  .exercise-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 1080px) {
   .exercise-card-body { grid-template-columns: 1fr; }
@@ -574,7 +570,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .preference-card { padding: 13px; border-radius: 14px; }
   .preference-head, .workout-detail-head { flex-direction: column; align-items: stretch; }
   .plan-cycle-pill { width: fit-content; }
-  .preference-controls, .preference-grid, .preference-footer, .segment-row, .exercise-card-head, .exercise-card-body, .exercise-metrics { grid-template-columns: 1fr; }
+  .preference-controls, .preference-grid, .preference-footer, .segment-row, .exercise-card-body { grid-template-columns: 1fr; }
   .segment-row { align-items: stretch; }
   .segment-group { width: 100%; }
   .selector-grid, .selector-grid-limits, .selector-grid-muscles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -587,8 +583,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .day-actions { justify-content: flex-start; }
   .warmup-card { padding: 13px; }
   .exercise-card { padding: 12px; }
-  .exercise-card-head { gap: 10px; }
-  .exercise-complete-control, .exercise-menu { width: 100%; }
+  .exercise-card-head { grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
+  .exercise-head-actions { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; }
   .exercise-media .media-figure { height: 150px; }
   .exercise-metrics { grid-template-columns: repeat(2, 1fr); }
   .set-header { display: none; }
