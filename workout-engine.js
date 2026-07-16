@@ -34,12 +34,8 @@ const ex = ({
   suitableLocations,
   contraindications,
   alternatives,
-  instructions: instructions.length ? instructions : [
-    "收紧核心，保持动作轨迹稳定。",
-    "按目标次数完成，保留规定 RIR，不借力抢动作。",
-    "出现尖锐疼痛、眩晕或异常不适时立即停止。"
-  ],
-  commonMistakes: commonMistakes.length ? commonMistakes : ["动作过快", "耸肩或塌腰", "为了重量牺牲动作幅度"],
+  instructions: instructions.length ? instructions : defaultInstructions({ name, movementPattern, category }),
+  commonMistakes: commonMistakes.length ? commonMistakes : defaultMistakes({ movementPattern, category }),
   videoUrl: "",
   imageUrl: "",
   defaultRepRange,
@@ -48,6 +44,26 @@ const ex = ({
   isUnilateral,
   tags
 });
+
+function defaultInstructions({ name, movementPattern, category }) {
+  const sharedStop = "出现尖锐疼痛、眩晕或异常不适时立即停止。";
+  if (/水平推|垂直推/.test(movementPattern)) return ["肩胛保持稳定，推起时不要耸肩。", "按目标次数完成，保留规定 RIR，避免反弹借力。", sharedStop];
+  if (/水平拉|垂直拉/.test(movementPattern)) return ["先稳定肩胛，再带动手臂完成拉动。", "控制还原速度，感受背部或目标肌群发力。", sharedStop];
+  if (/深蹲|弓步|膝伸|膝屈/.test(movementPattern)) return ["脚掌稳定踩实，膝盖方向与脚尖大致一致。", "保持躯干稳定，在可控范围内完成目标次数。", sharedStop];
+  if (/髋铰链|髋伸|髋外展/.test(movementPattern)) return ["以髋部发力为主，保持脊柱中立。", "顶峰短暂停顿，避免用腰部代偿。", sharedStop];
+  if (/抗|躯干|骨盆|核心/.test(`${movementPattern}${category}`)) return ["保持呼吸稳定，先收紧核心再开始动作。", "动作过程中避免腰椎塌陷或身体晃动。", sharedStop];
+  if (/有氧|循环|稳态/.test(`${movementPattern}${category}`)) return ["从低强度开始，逐步进入目标节奏。", "保持可控呼吸，动作幅度以舒适安全为先。", sharedStop];
+  return [`完成 ${name} 时保持节奏稳定。`, "按目标次数完成，保留规定 RIR。", sharedStop];
+}
+
+function defaultMistakes({ movementPattern, category }) {
+  if (/水平推|垂直推/.test(movementPattern)) return ["耸肩代偿", "下放过快", "为了重量牺牲动作幅度"];
+  if (/水平拉|垂直拉/.test(movementPattern)) return ["只用手臂拉", "身体大幅后仰借力", "还原阶段失控"];
+  if (/深蹲|弓步/.test(movementPattern)) return ["膝盖内扣", "脚跟离地", "下蹲深度超过可控范围"];
+  if (/髋铰链|髋伸/.test(movementPattern)) return ["弓背", "用腰硬顶", "重量离身体过远"];
+  if (/核心/.test(category)) return ["憋气过久", "腰部塌陷", "动作速度过快"];
+  return ["动作过快", "目标肌群失去控制", "为了完成次数牺牲动作质量"];
+}
 
 const chest = ["胸"];
 const back = ["背"];
@@ -147,6 +163,43 @@ export const EXERCISES = [
 
 const exerciseById = new Map(EXERCISES.map(item => [item.id, item]));
 
+const normalizeText = value => String(value || "")
+  .trim()
+  .toLowerCase()
+  .replace(/\s+/g, "")
+  .replace(/[·_\-—–]/g, "");
+
+const EXERCISE_ALIASES = {
+  push_up: ["伏地挺身"],
+  barbell_squat: ["深蹲", "杠铃蹲"],
+  bodyweight_squat: ["徒手深蹲", "深蹲"],
+  goblet_squat: ["壶铃深蹲", "哑铃深蹲"],
+  rdl: ["硬拉", "罗马尼亚硬拉"],
+  db_rdl: ["哑铃硬拉", "硬拉"],
+  running: ["跑步机跑步", "慢跑"],
+  lat_pulldown: ["下拉"],
+  seated_row: ["绳索划船", "划船"],
+  triceps_pushdown: ["绳索臂屈伸", "绳索下拉"],
+  cable_curl: ["绳索二头弯举"]
+};
+
+function exerciseSearchTerms(exercise) {
+  return [
+    exercise.id,
+    exercise.name,
+    exercise.englishName,
+    ...(EXERCISE_ALIASES[exercise.id] || [])
+  ].map(normalizeText).filter(Boolean);
+}
+
+function isDislikedExercise(exercise, dislikedExercises = []) {
+  const terms = exerciseSearchTerms(exercise);
+  return dislikedExercises
+    .map(normalizeText)
+    .filter(Boolean)
+    .some(token => terms.some(term => term.includes(token) || token.includes(term)));
+}
+
 export const SPLITS = {
   fullBody: { name: "全身训练", minDays: 2, maxDays: 4, sequence: ["全身A", "全身B", "全身C", "全身D"] },
   upperLower: { name: "上肢 / 下肢", minDays: 3, maxDays: 4, sequence: ["上肢A", "下肢A", "上肢B", "下肢B"] },
@@ -156,26 +209,63 @@ export const SPLITS = {
   six: { name: "六天循环", minDays: 5, maxDays: 6, sequence: ["推", "拉", "腿", "推", "拉", "腿"] }
 };
 
-function equipmentAllowed(exercise, settings) {
-  const available = new Set([...(LOCATION_EQUIPMENT[settings.trainingLocation] || []), ...(settings.availableEquipment || [])]);
-  return exercise.equipment.every(item => available.has(item) || item === "无器械");
+export function equipmentAllowed(exercise, settings) {
+  const available = new Set(settings.availableEquipment || []);
+  if (available.size === 1 && available.has("无器械")) return exercise.equipment.every(item => item === "无器械");
+  const equipment = exercise.equipment || [];
+  if (equipment.includes("无器械") && available.has("无器械")) return true;
+  const hasAny = items => items.some(item => available.has(item));
+  const dumbbells = ["可调哑铃", "固定哑铃"];
+  if (equipment.includes("卧推凳") && equipment.some(item => dumbbells.includes(item))) {
+    return available.has("卧推凳") && hasAny(dumbbells);
+  }
+  if (equipment.includes("杠铃") && (equipment.includes("卧推凳") || equipment.includes("深蹲架"))) {
+    return equipment.every(item => available.has(item));
+  }
+  if (equipment.length > 1 && !equipment.includes("杠铃")) return hasAny(equipment);
+  return equipment.every(item => available.has(item));
 }
 
-function isExerciseAllowed(exercise, settings) {
+export function isExerciseAllowed(exercise, settings) {
   const level = DIFFICULTY_ORDER[settings.experienceLevel] ?? 1;
   const exerciseLevel = DIFFICULTY_ORDER[exercise.difficulty] ?? 1;
   const limitations = new Set(settings.limitations || []);
-  const disliked = new Set((settings.dislikedExercises || []).map(item => item.trim()).filter(Boolean));
   if (!exercise.suitableLocations.includes(settings.trainingLocation)) return false;
   if (!equipmentAllowed(exercise, settings)) return false;
   if (exerciseLevel > level + 1) return false;
-  if (disliked.has(exercise.name) || disliked.has(exercise.englishName) || disliked.has(exercise.id)) return false;
+  if (isDislikedExercise(exercise, settings.dislikedExercises)) return false;
   if (exercise.contraindications.some(item => limitations.has(item))) return false;
   if (limitations.has("肩部不适") && exercise.movementPattern === "垂直推") return false;
+  if (limitations.has("腰部不适") && /髋铰链|背伸|负重行走/.test(exercise.movementPattern)) return false;
+  if (limitations.has("不能做深蹲类动作") && exercise.movementPattern === "深蹲") return false;
+  if (limitations.has("不能做硬拉类动作") && /髋铰链|硬拉/.test(`${exercise.movementPattern}${exercise.name}`)) return false;
+  if (limitations.has("手腕不适") && /俯卧撑|平板|支撑|登山跑/.test(exercise.name)) return false;
+  if (limitations.has("肘部不适") && /弯举|下压|臂屈伸|引体/.test(exercise.name)) return false;
   if ((limitations.has("膝盖不适") || limitations.has("不适合高冲击")) && (exercise.tags.includes("jump") || /跑步|开合跳|高抬腿|跳绳/.test(exercise.name))) return false;
   if ((settings.preferredStyles || []).includes("不喜欢跑步") && /跑步/.test(exercise.name)) return false;
   if ((settings.preferredStyles || []).includes("不喜欢高强度间歇训练") && exercise.tags.includes("hiit")) return false;
   return true;
+}
+
+export function validateSplitCompatibility(settings = {}) {
+  const days = Number(settings.weeklyTrainingDays) || 3;
+  const splitType = settings.selectedSplit || "fullBody";
+  const recommendations = {
+    2: ["fullBody"],
+    3: ["fullBody", "ppl"],
+    4: ["upperLower", "four"],
+    5: ["five", "four", "ppl"],
+    6: ["ppl", "six"]
+  };
+  const allowed = recommendations[days] || ["fullBody"];
+  const recommended = allowed[0];
+  if (allowed.includes(splitType)) return { ok: true, recommended, allowed };
+  return {
+    ok: false,
+    recommended,
+    allowed,
+    message: `每周 ${days} 练更适合${allowed.map(item => SPLITS[item]?.name || item).join("或")}，当前选择的${SPLITS[splitType]?.name || splitType}容易造成排程和恢复不合理。`
+  };
 }
 
 function splitByDays(splitType, days) {
@@ -198,7 +288,7 @@ function categoriesForTheme(theme) {
 }
 
 function targetExerciseCount(settings) {
-  const byDuration = settings.sessionDuration <= 35 ? 4 : settings.sessionDuration <= 50 ? 5 : 6;
+  const byDuration = settings.sessionDuration <= 25 ? 2 : settings.sessionDuration <= 35 ? 3 : settings.sessionDuration <= 50 ? 4 : 5;
   if (settings.experienceLevel === "beginner0" && settings.weeklyTrainingDays >= 5) return 3;
   return settings.experienceLevel === "beginner0" ? Math.min(4, byDuration) : byDuration;
 }
@@ -206,12 +296,39 @@ function targetExerciseCount(settings) {
 function prescription(exercise, settings) {
   const strength = settings.primaryGoal === "strength" && !["beginner0", "beginner"].includes(settings.experienceLevel) && exercise.isCompound;
   const fatLoss = settings.primaryGoal === "fatLoss" || settings.primaryGoal === "conditioning";
-  const setsBase = settings.experienceLevel === "beginner0" ? 2 : settings.experienceLevel === "intermediate" || settings.experienceLevel === "advanced" ? 4 : 3;
+  const setsBase = settings.sessionDuration <= 25 ? 2 : settings.experienceLevel === "beginner0" ? 2 : settings.experienceLevel === "intermediate" || settings.experienceLevel === "advanced" ? 4 : 3;
   return {
     sets: exercise.category === "有氧" ? 1 : setsBase,
     reps: exercise.category === "有氧" ? exercise.defaultRepRange : strength ? "3–6次" : fatLoss ? "10–15次" : exercise.defaultRepRange,
     restSeconds: exercise.category === "有氧" ? 0 : strength ? 180 : fatLoss ? Math.min(75, exercise.defaultRestSeconds) : exercise.defaultRestSeconds,
     intensity: ["beginner0", "beginner"].includes(settings.experienceLevel) ? "RIR 2–4" : strength ? "RIR 1–3" : "RIR 1–2"
+  };
+}
+
+function estimateExerciseMinutes(row) {
+  if (row.category === "有氧") return 8;
+  const perSetSeconds = 45;
+  const transitionSeconds = 60;
+  const totalSeconds = row.sets * perSetSeconds + Math.max(0, row.sets - 1) * Number(row.restSeconds || 0) + transitionSeconds;
+  return Math.ceil(totalSeconds / 60);
+}
+
+function estimateWorkoutDuration(exercises, settings, cardio) {
+  const warmup = settings.sessionDuration <= 25 ? 4 : 6;
+  const cooldown = settings.sessionDuration <= 25 ? 3 : 5;
+  const strength = exercises.reduce((sum, row) => sum + estimateExerciseMinutes(row), 0);
+  const cardioMinutes = cardio && settings.cardioPreference === "after" ? Math.min(10, Math.max(6, Math.round(settings.sessionDuration * 0.2))) : 0;
+  return warmup + strength + cardioMinutes + cooldown;
+}
+
+function calorieRange(duration, settings, userProfile = {}) {
+  const weight = clamp(Number(userProfile.weight) || 70, 40, 160);
+  const met = settings.primaryGoal === "conditioning" ? 6.2 : settings.primaryGoal === "strength" ? 5.4 : 5.8;
+  const kcal = met * 3.5 * weight / 200 * duration;
+  return {
+    min: Math.round(kcal * 0.82 / 10) * 10,
+    max: Math.round(kcal * 1.12 / 10) * 10,
+    basis: "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
   };
 }
 
@@ -245,6 +362,11 @@ function pickExercises(theme, settings, usedGlobal) {
     }
   }
 
+  if (theme.includes("全身") && count >= 4 && !picked.some(item => item.category === "核心")) {
+    const coreCandidate = pool.find(item => item.category === "核心" && !picked.some(row => row.id === item.id));
+    if (coreCandidate) picked[Math.max(0, picked.length - 1)] = coreCandidate;
+  }
+
   picked.forEach(item => usedGlobal.add(item.id));
   return picked;
 }
@@ -257,8 +379,8 @@ function cardioFor(settings) {
   return { ...preferred, ...prescription(preferred, settings), note: settings.cardioPreference === "after" ? "力量训练后完成，保持可说完整句子的强度。" : "可与力量训练分开到另一时段完成。" };
 }
 
-function buildDay(theme, index, settings, usedGlobal) {
-  const exercises = pickExercises(theme, settings, usedGlobal).map(item => ({
+function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
+  let exercises = pickExercises(theme, settings, usedGlobal).map(item => ({
     exerciseId: item.id,
     name: item.name,
     englishName: item.englishName,
@@ -268,11 +390,38 @@ function buildDay(theme, index, settings, usedGlobal) {
     instructions: item.instructions,
     commonMistakes: item.commonMistakes,
     alternatives: getExerciseAlternatives(item.id, settings).map(alt => ({ id: alt.id, name: alt.name })),
+    movementPattern: item.movementPattern,
+    isCompound: item.isCompound,
     ...prescription(item, settings),
     completed: false
   }));
-  const cardio = cardioFor(settings);
-  const estimatedDuration = clamp(10 + exercises.length * 8 + (cardio && settings.cardioPreference === "after" ? 12 : 0), 25, settings.sessionDuration + 15);
+  let cardio = cardioFor(settings);
+  let estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
+  while (estimatedDuration > settings.sessionDuration && exercises.length > 2) {
+    const removeIndex = exercises.findLastIndex(row => !row.isCompound && !(theme.includes("全身") && row.category === "核心"));
+    if (removeIndex < 0) break;
+    exercises.splice(removeIndex >= 0 ? removeIndex : exercises.length - 1, 1);
+    estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
+  }
+  if (estimatedDuration > settings.sessionDuration && exercises.length) {
+    let guard = 0;
+    while (estimatedDuration > settings.sessionDuration + 5 && guard < 8) {
+      const reduceIndex = exercises.findLastIndex((row, rowIndex) => rowIndex > 0 && row.sets > 2);
+      if (reduceIndex < 0) break;
+      exercises[reduceIndex] = { ...exercises[reduceIndex], sets: exercises[reduceIndex].sets - 1 };
+      estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
+      guard += 1;
+    }
+    if (estimatedDuration > settings.sessionDuration + 5) {
+      exercises = exercises.map((row, rowIndex) => rowIndex === 0 ? row : { ...row, sets: Math.max(2, row.sets - 1) });
+    }
+    estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
+  }
+  if (estimatedDuration > settings.sessionDuration && cardio) {
+    cardio = null;
+    estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
+  }
+  const calories = calorieRange(estimatedDuration, settings, userProfile);
   return {
     id: `day_${index + 1}`,
     day: `第 ${index + 1} 天`,
@@ -280,7 +429,8 @@ function buildDay(theme, index, settings, usedGlobal) {
     focus: dayFocus(theme),
     isRest: false,
     estimatedDuration,
-    estimatedCalories: Math.round(estimatedDuration * (settings.primaryGoal === "conditioning" ? 7 : 5.5)),
+    estimatedCalories: calories.max,
+    estimatedCaloriesRange: calories,
     warmup: ["5分钟低强度热身", "目标关节动态活动", "第一个复合动作先做1–2组轻重量热身组"],
     exercises,
     cardio: settings.cardioPreference === "after" ? cardio : null,
@@ -288,19 +438,75 @@ function buildDay(theme, index, settings, usedGlobal) {
   };
 }
 
+function preferredTrainingSlots(count) {
+  return {
+    1: [0],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [0, 1, 3, 5],
+    5: [0, 1, 2, 4, 5],
+    6: [0, 1, 2, 3, 4, 5]
+  }[count] || [0, 2, 4];
+}
+
 function addRestDays(trainingDays) {
-  const week = [];
+  const slots = preferredTrainingSlots(trainingDays.length);
+  const week = Array.from({ length: 7 }, (_, i) => ({
+    id: `rest_${i + 1}`,
+    day: `第 ${i + 1} 天`,
+    theme: "休息 / 恢复",
+    isRest: true,
+    recovery: ["轻松步行20–40分钟", "保证睡眠和饮水", "如果酸痛明显，下一次同肌群训练降低一组"]
+  }));
   for (let i = 0; i < 7; i++) {
-    if (i < trainingDays.length) week.push(trainingDays[i]);
-    else week.push({
-      id: `rest_${i + 1}`,
-      day: `第 ${i + 1} 天`,
-      theme: "休息 / 恢复",
-      isRest: true,
-      recovery: ["轻松步行20–40分钟", "保证睡眠和饮水", "如果酸痛明显，下一次同肌群训练降低一组"]
-    });
+    const slotIndex = slots.indexOf(i);
+    if (slotIndex >= 0 && trainingDays[slotIndex]) week[i] = { ...trainingDays[slotIndex], day: `第 ${i + 1} 天`, weekDayIndex: i };
   }
   return week;
+}
+
+export function scoreWeeklySchedule(days = []) {
+  const trainingIndexes = days.map((day, index) => day?.isRest ? null : index).filter(index => index !== null);
+  let score = 100;
+  let maxConsecutiveTraining = 0;
+  let maxConsecutiveRest = 0;
+  let runTrain = 0;
+  let runRest = 0;
+  for (const day of days) {
+    if (day?.isRest) {
+      runRest += 1;
+      runTrain = 0;
+    } else {
+      runTrain += 1;
+      runRest = 0;
+    }
+    maxConsecutiveTraining = Math.max(maxConsecutiveTraining, runTrain);
+    maxConsecutiveRest = Math.max(maxConsecutiveRest, runRest);
+  }
+  if (trainingIndexes.length <= 4 && maxConsecutiveTraining > 3) score -= 25;
+  if (maxConsecutiveRest > 3 && trainingIndexes.length >= 3) score -= 25;
+  for (let i = 1; i < trainingIndexes.length; i++) {
+    const gap = trainingIndexes[i] - trainingIndexes[i - 1];
+    if (gap === 1 && trainingIndexes.length <= 3) score -= 15;
+  }
+  return { score, trainingIndexes, maxConsecutiveTraining, maxConsecutiveRest };
+}
+
+export function validateWeeklySchedule(days = [], settings = {}) {
+  const errors = [];
+  const trainingDays = days.filter(day => !day.isRest);
+  const expected = Number(settings.weeklyTrainingDays) || trainingDays.length;
+  const schedule = scoreWeeklySchedule(days);
+  if (trainingDays.length !== expected) errors.push("周计划训练日数量与设置不一致。");
+  if (expected <= 4 && schedule.maxConsecutiveTraining > 3) errors.push("连续训练天数过多。");
+  if (schedule.maxConsecutiveRest > 3 && expected >= 3) errors.push("训练日过于集中，导致连续休息过长。");
+  if (expected === 3 && schedule.trainingIndexes.join(",") === "0,1,2") errors.push("每周3练不应集中在前三天。");
+  for (let i = 1; i < days.length; i++) {
+    const prev = days[i - 1];
+    const cur = days[i];
+    if (!prev.isRest && !cur.isRest && /腿|臀/.test(prev.theme) && /腿|臀/.test(cur.theme)) errors.push("同一高疲劳肌群恢复时间不足。");
+  }
+  return { ok: errors.length === 0, errors, ...schedule };
 }
 
 function safetyNotes(settings) {
@@ -329,7 +535,7 @@ export function splitWarnings(settings) {
   return warnings;
 }
 
-export function generateWorkoutPlan(settings, userProfile = {}) {
+function normalizeSettings(settings) {
   const normalized = {
     primaryGoal: "muscleGain",
     secondaryGoal: "health",
@@ -337,23 +543,38 @@ export function generateWorkoutPlan(settings, userProfile = {}) {
     weeklyTrainingDays: 3,
     sessionDuration: 45,
     trainingLocation: "homeSimple",
-    availableEquipment: ["瑜伽垫", "可调哑铃"],
+    availableEquipment: ["无器械", "瑜伽垫", "可调哑铃"],
     limitations: ["无明显限制"],
     priorityMuscles: ["全身均衡"],
     dislikedExercises: [],
     preferredStyles: [],
     selectedSplit: "fullBody",
     cardioPreference: "after",
+    allowRollingSplit: false,
     ...settings
   };
   normalized.weeklyTrainingDays = clamp(Number(normalized.weeklyTrainingDays) || 3, 1, 6);
   normalized.sessionDuration = clamp(Number(normalized.sessionDuration) || 45, 20, 120);
   normalized.limitations = (normalized.limitations || []).filter(item => item !== "无明显限制");
   if (!normalized.limitations.length) normalized.limitations = ["无明显限制"];
+  normalized.availableEquipment = [...new Set(normalized.availableEquipment || [])];
+  normalized.dislikedExercises = (normalized.dislikedExercises || []).map(item => item.trim()).filter(Boolean);
+  return normalized;
+}
+
+export function generateWorkoutPlan(settings, userProfile = {}) {
+  const normalized = normalizeSettings(settings);
+  if (normalized.primaryGoal && normalized.secondaryGoal && normalized.primaryGoal === normalized.secondaryGoal) {
+    return { plan: null, errors: ["主要目标和次要目标不能相同。"], warnings: [] };
+  }
+  const compatibility = validateSplitCompatibility(normalized);
+  if (!compatibility.ok && !normalized.allowRollingSplit) {
+    return { plan: null, errors: [compatibility.message], warnings: [`推荐改为：${SPLITS[compatibility.recommended]?.name || compatibility.recommended}`] };
+  }
 
   const themes = splitByDays(normalized.selectedSplit, normalized.weeklyTrainingDays);
   const usedGlobal = new Set();
-  const trainingDays = themes.map((theme, index) => buildDay(theme, index, normalized, usedGlobal));
+  const trainingDays = themes.map((theme, index) => buildDay(theme, index, normalized, usedGlobal, userProfile));
   const plan = {
     id: `plan_${Date.now()}`,
     userSnapshot: {
@@ -367,7 +588,7 @@ export function generateWorkoutPlan(settings, userProfile = {}) {
     splitType: normalized.selectedSplit,
     goal: normalized.primaryGoal,
     settings: normalized,
-    warnings: splitWarnings(normalized),
+    warnings: [...splitWarnings(normalized), ...(!compatibility.ok ? [compatibility.message] : [])],
     days: addRestDays(trainingDays),
     progression: [
       "双进阶法：同一重量下所有工作组都达到目标次数上限，且动作质量稳定，下次小幅加重。",
@@ -389,9 +610,13 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
   const errors = [];
   if (!plan || !Array.isArray(plan.days)) return { ok: false, errors: ["计划结构无效。"] };
   const trainingDays = plan.days.filter(day => !day.isRest);
+  const normalized = normalizeSettings(settings);
+  if (normalized.primaryGoal && normalized.secondaryGoal && normalized.primaryGoal === normalized.secondaryGoal) errors.push("主要目标和次要目标不能相同。");
   if (trainingDays.length !== Number(settings.weeklyTrainingDays)) errors.push("每周训练天数不符合用户设置。");
+  const schedule = validateWeeklySchedule(plan.days, normalized);
+  errors.push(...schedule.errors);
   for (const day of trainingDays) {
-    if (day.estimatedDuration > Number(settings.sessionDuration) + 15) errors.push(`${day.day} 预计时长超出过多。`);
+    if (day.estimatedDuration > Number(settings.sessionDuration) + 5) errors.push(`${day.day} 预计时长超出过多。`);
     if (!day.exercises.length) errors.push(`${day.day} 没有可用动作。`);
     const seen = new Set();
     for (const row of day.exercises) {
@@ -400,7 +625,7 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
         errors.push(`动作不存在：${row.exerciseId}`);
         continue;
       }
-      if (!isExerciseAllowed(exercise, settings)) errors.push(`动作不适合当前器械、地点、经验或限制：${exercise.name}`);
+      if (!isExerciseAllowed(exercise, normalized)) errors.push(`动作不适合当前器械、地点、经验或限制：${exercise.name}`);
       if (seen.has(exercise.id)) errors.push(`${day.day} 重复安排动作：${exercise.name}`);
       seen.add(exercise.id);
       if (!row.sets || !row.reps || row.restSeconds === undefined || !row.intensity) errors.push(`${row.name} 缺少组数、次数、休息或强度。`);
@@ -421,18 +646,12 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
 export function getExerciseAlternatives(exerciseId, settings = {}) {
   const original = exerciseById.get(exerciseId);
   if (!original) return [];
-  const normalized = {
-    trainingLocation: "homeSimple",
-    availableEquipment: ["瑜伽垫", "可调哑铃"],
-    experienceLevel: "beginner",
-    limitations: ["无明显限制"],
-    dislikedExercises: [],
-    preferredStyles: [],
-    ...settings
-  };
+  const normalized = normalizeSettings(settings);
   return EXERCISES
     .filter(item => item.id !== exerciseId)
-    .filter(item => item.movementPattern === original.movementPattern || item.primaryMuscles.some(muscle => original.primaryMuscles.includes(muscle)))
+    .filter(item => item.movementPattern === original.movementPattern)
+    .filter(item => item.primaryMuscles.some(muscle => original.primaryMuscles.includes(muscle)))
+    .filter(item => Math.abs((DIFFICULTY_ORDER[item.difficulty] ?? 1) - (DIFFICULTY_ORDER[original.difficulty] ?? 1)) <= 1)
     .filter(item => isExerciseAllowed(item, normalized))
     .slice(0, 5);
 }

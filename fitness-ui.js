@@ -136,11 +136,12 @@ function musclesText(day) {
 }
 
 function renderProgressSummary(day, completion = 0) {
+  const calories = day?.estimatedCaloriesRange ? `${day.estimatedCaloriesRange.min}–${day.estimatedCaloriesRange.max}` : day?.estimatedCalories || 0;
   return `
     <section class="progress-summary">
       <div>
         <span>今日消耗（预计）</span>
-        <strong><b>${day?.estimatedCalories || 0}</b> kcal</strong>
+        <strong>约 <b>${calories}</b> kcal</strong>
       </div>
       <div>
         <span>完成进度</span>
@@ -181,11 +182,12 @@ function renderWeeklyPlanSidebar(plan, activeIndex) {
 }
 
 function renderWorkoutDayHeader(day, index) {
+  const calories = day.estimatedCaloriesRange ? `${day.estimatedCaloriesRange.min}–${day.estimatedCaloriesRange.max}` : day.estimatedCalories;
   return `
     <header class="workout-detail-head">
       <div>
         <h2>${dayLabels[index] || day.day} · ${escapeHtml(day.isRest ? "休息" : day.theme)}</h2>
-        <p>${day.isRest ? escapeHtml((day.recovery || []).join(" · ")) : `${escapeHtml(day.focus)} · 约 ${day.estimatedDuration} 分钟 · ${day.estimatedCalories} kcal`}</p>
+        <p>${day.isRest ? escapeHtml((day.recovery || []).join(" · ")) : `${escapeHtml(day.focus)} · 约 ${day.estimatedDuration} 分钟 · 约 ${calories} kcal`}</p>
       </div>
       <div class="day-actions">
         <button class="outline-action" type="button" data-next-day>更换训练日</button>

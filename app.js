@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateWorkoutPlan } from "./workout-engine.js?v=20260715-workout1";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui9";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-audit1";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-audit1";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -448,6 +448,7 @@ const goalLabelMap = {
   conditioning: "体能提升",
   health: "健康活动"
 };
+const secondaryGoalDefault = "health";
 const WORKOUT_PLAN_STORAGE_KEY = "dailyMealPlanner.latestWorkoutPlan.v1";
 const WORKOUT_LOG_STORAGE_KEY = "dailyMealPlanner.workoutLogs.v1";
 
@@ -517,7 +518,7 @@ function collectTrainingSettings() {
   if (limitations.includes("无明显限制") && limitations.length > 1) limitations = limitations.filter(item => item !== "无明显限制");
   return {
     primaryGoal: document.querySelector("#training-primary-goal").value,
-    secondaryGoal: document.querySelector("#training-secondary-goal").value,
+    secondaryGoal: document.querySelector("#training-secondary-goal").value || "",
     experienceLevel: document.querySelector("#experience-level").value,
     weeklyTrainingDays: Number(document.querySelector("#weekly-training-days").value),
     sessionDuration: Number(document.querySelector("#session-duration").value),
@@ -532,13 +533,36 @@ function collectTrainingSettings() {
   };
 }
 
+function syncSecondaryGoalOptions() {
+  const primary = document.querySelector("#training-primary-goal")?.value;
+  const secondary = document.querySelector("#training-secondary-goal");
+  if (!secondary) return;
+  Array.from(secondary.options).forEach(option => {
+    option.disabled = Boolean(option.value && option.value === primary);
+  });
+  if (secondary.value && secondary.value === primary) secondary.value = "";
+}
+
+function validateTrainingSettings(settings) {
+  const errors = [];
+  if (settings.primaryGoal && settings.secondaryGoal && settings.primaryGoal === settings.secondaryGoal) {
+    errors.push("主要目标和次要目标不能相同，请重新选择。");
+  }
+  if (!settings.availableEquipment.length && settings.trainingLocation !== "homeNone") {
+    errors.push("请至少选择一种可用器械；如果没有器械，请选择“无器械”。");
+  }
+  const compatibility = validateSplitCompatibility(settings);
+  if (!compatibility.ok) errors.push(`${compatibility.message} 建议改为「${SPLITS[compatibility.recommended]?.name || compatibility.recommended}」。`);
+  return errors;
+}
+
 function applyTrainingSettings(settings = {}) {
   const setValue = (id, value) => {
     const element = document.querySelector(id);
     if (element && value !== undefined) element.value = value;
   };
   setValue("#training-primary-goal", settings.primaryGoal);
-  setValue("#training-secondary-goal", settings.secondaryGoal);
+  setValue("#training-secondary-goal", settings.secondaryGoal ?? secondaryGoalDefault);
   setValue("#experience-level", settings.experienceLevel);
   setValue("#weekly-training-days", settings.weeklyTrainingDays);
   setValue("#session-duration", settings.sessionDuration);
@@ -552,9 +576,9 @@ function applyTrainingSettings(settings = {}) {
   renderTagOptions("#muscle-options", TRAINING_OPTION_GROUPS.muscles, "training-muscles", settings.priorityMuscles || ["全身均衡"]);
   renderTagOptions("#style-options", TRAINING_OPTION_GROUPS.styles, "training-styles", settings.preferredStyles || ["喜欢力量训练"]);
   const experience = settings.experienceLevel || "beginner";
-  const segmentValue = experience === "novice" ? "beginner" : experience;
-  const segment = document.querySelector(`input[name="experience-segment"][value="${segmentValue}"]`);
+  const segment = document.querySelector(`input[name="experience-segment"][value="${experience}"]`);
   if (segment) segment.checked = true;
+  syncSecondaryGoalOptions();
 }
 
 function updateTrainingCompletion() {
@@ -608,6 +632,7 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
   const next = EXERCISES.find(item => item.id === altId);
   if (!next || !currentWorkoutPlan) return;
   const current = currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex];
+  const original = { ...current };
   currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex] = {
     ...current,
     exerciseId: next.id,
@@ -618,15 +643,19 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
     equipment: next.equipment,
     instructions: next.instructions,
     commonMistakes: next.commonMistakes,
+    movementPattern: next.movementPattern,
+    isCompound: next.isCompound,
     alternatives: getExerciseAlternatives(next.id, currentWorkoutPlan.settings).map(alt => ({ id: alt.id, name: alt.name }))
   };
   const validation = validateWorkoutPlan(currentWorkoutPlan, currentWorkoutPlan.settings);
   if (!validation.ok) {
+    currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex] = original;
     showToast(validation.errors[0] || "替换后校验未通过。");
     return;
   }
   closeExerciseSheet();
   renderWorkoutPlan(currentWorkoutPlan);
+  showToast("替换动作已通过器械、身体限制和训练量校验。");
 }
 
 function selectWorkoutDay(dayIndex) {
@@ -643,7 +672,8 @@ function selectWorkoutDay(dayIndex) {
   const activeDay = currentWorkoutPlan?.days?.[dayIndex];
   const summary = document.querySelector(".progress-summary");
   if (summary && activeDay) {
-    summary.querySelector("strong b").textContent = activeDay.estimatedCalories || 0;
+    const calories = activeDay.estimatedCaloriesRange ? `${activeDay.estimatedCaloriesRange.min}–${activeDay.estimatedCaloriesRange.max}` : activeDay.estimatedCalories || 0;
+    summary.querySelector("strong b").textContent = calories;
   }
 }
 
@@ -718,9 +748,51 @@ function renderWorkoutPlan(plan) {
   updateTrainingCompletion();
 }
 
+function renderFitnessPlaceholder(panel) {
+  const titles = {
+    library: "动作库",
+    logs: "训练记录",
+    body: "身体数据",
+    settings: "设置"
+  };
+  const descriptions = {
+    library: "动作库正在整理中；当前生成和替换动作已使用内置动作库和安全过滤规则。",
+    logs: "训练记录会先保存在当前设备，登录后的云端同步会继续完善。",
+    body: "身体数据目前来自首页的年龄、性别、身高、体重和运动量。",
+    settings: "更多健身设置后续会集中到这里；当前可在训练计划页调整偏好。"
+  };
+  document.querySelector("#training-form").hidden = panel !== "plan";
+  const resultsNode = document.querySelector("#training-results");
+  if (panel === "plan") {
+    const savedPlan = localStorage.getItem(WORKOUT_PLAN_STORAGE_KEY);
+    if (savedPlan && currentWorkoutPlan) renderWorkoutPlan(currentWorkoutPlan);
+    return;
+  }
+  resultsNode.innerHTML = `
+    <div class="fitness-empty-card">
+      <div class="skeleton-hero"></div>
+      <div>
+        <span class="pill">暂未开放</span>
+        <h2>${escapeHtml(titles[panel] || "健身功能")}</h2>
+        <p>${escapeHtml(descriptions[panel] || "该功能正在建设中。")}</p>
+      </div>
+    </div>
+  `;
+}
+
 function setupTrainingUI() {
   setupSectionTabs();
   applyTrainingSettings(loadTrainingSettings());
+  document.querySelector("#training-primary-goal")?.addEventListener("change", syncSecondaryGoalOptions);
+  document.querySelector("#training-secondary-goal")?.insertAdjacentHTML("afterbegin", `<option value="">不设置次要目标</option>`);
+  syncSecondaryGoalOptions();
+  document.querySelectorAll("[data-fitness-panel]").forEach(button => {
+    button.addEventListener("click", () => {
+      const panel = button.dataset.fitnessPanel;
+      document.querySelectorAll("[data-fitness-panel]").forEach(item => item.classList.toggle("is-active", item === button));
+      renderFitnessPlaceholder(panel);
+    });
+  });
   document.querySelectorAll('input[name="experience-segment"]').forEach(input => {
     input.addEventListener("change", () => {
       const select = document.querySelector("#experience-level");
@@ -766,8 +838,9 @@ function setupTrainingUI() {
     const settings = collectTrainingSettings();
     const error = document.querySelector("#training-error");
     setWorkoutLoading(true);
-    if (!settings.availableEquipment.length && settings.trainingLocation !== "homeNone") {
-      error.textContent = "请至少选择一种可用器械；如果没有器械，请选择“无器械”。";
+    const validationErrors = validateTrainingSettings(settings);
+    if (validationErrors.length) {
+      error.textContent = validationErrors.join("；");
       setWorkoutLoading(false);
       return;
     }

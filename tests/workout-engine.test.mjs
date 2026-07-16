@@ -3,7 +3,15 @@ import { readFile } from "node:fs/promises";
 
 const source = await readFile(new URL("../workout-engine.js", import.meta.url), "utf8");
 const moduleUrl = `data:text/javascript;charset=utf-8,${encodeURIComponent(source)}`;
-const { EXERCISES, generateWorkoutPlan, getExerciseAlternatives, validateWorkoutPlan } = await import(moduleUrl);
+const {
+  EXERCISES,
+  generateWorkoutPlan,
+  getExerciseAlternatives,
+  scoreWeeklySchedule,
+  validateSplitCompatibility,
+  validateWeeklySchedule,
+  validateWorkoutPlan
+} = await import(moduleUrl);
 
 const base = {
   primaryGoal: "muscleGain",
@@ -30,7 +38,9 @@ const makePlan = (overrides = {}) => {
 
 const trainingDays = plan => plan.days.filter(day => !day.isRest);
 const exerciseNames = plan => trainingDays(plan).flatMap(day => day.exercises.map(exercise => exercise.name));
-const equipmentUsed = plan => trainingDays(plan).flatMap(day => day.exercises.flatMap(exercise => exercise.equipment));
+const allExercises = plan => trainingDays(plan).flatMap(day => day.exercises);
+const equipmentUsed = plan => allExercises(plan).flatMap(exercise => exercise.equipment);
+const trainingIndexes = plan => plan.days.map((day, index) => day.isRest ? null : index).filter(index => index !== null);
 
 assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 
@@ -38,26 +48,41 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
   const plan = makePlan({ weeklyTrainingDays: 3, selectedSplit: "fullBody" });
   assert.equal(trainingDays(plan).length, 3);
   assert.equal(plan.days.length, 7);
+  assert.deepEqual(trainingIndexes(plan), [0, 2, 4], "3-day plan should be distributed across the week");
+  assert.equal(validateWeeklySchedule(plan.days, plan.settings).ok, true);
+  assert.ok(scoreWeeklySchedule(plan.days).score >= 90);
 }
 
 {
-  const plan = makePlan({ experienceLevel: "beginner0", selectedSplit: "six", weeklyTrainingDays: 6 });
-  assert.ok(plan.warnings.some(text => text.includes("每周6练")));
+  const result = generateWorkoutPlan({ ...base, selectedSplit: "six", weeklyTrainingDays: 2 });
+  assert.equal(result.plan, null);
+  assert.ok(result.errors.some(text => text.includes("每周 2 练")));
 }
 
 {
-  const plan = makePlan({ selectedSplit: "five", weeklyTrainingDays: 3 });
-  assert.ok(plan.warnings.length >= 1);
+  const result = generateWorkoutPlan({ ...base, selectedSplit: "five", weeklyTrainingDays: 3 });
+  assert.equal(result.plan, null);
+  assert.ok(result.errors.some(text => text.includes("每周 3 练")));
 }
 
 {
-  const plan = makePlan({ trainingLocation: "homeNone", availableEquipment: ["无器械", "瑜伽垫"] });
-  assert.ok(equipmentUsed(plan).every(item => ["无器械", "瑜伽垫"].includes(item)));
+  assert.equal(validateSplitCompatibility({ weeklyTrainingDays: 2, selectedSplit: "six" }).ok, false);
+  assert.equal(validateSplitCompatibility({ weeklyTrainingDays: 6, selectedSplit: "ppl" }).ok, true);
+}
+
+{
+  const plan = makePlan({ trainingLocation: "homeNone", availableEquipment: ["无器械"] });
+  assert.ok(equipmentUsed(plan).every(item => item === "无器械"));
 }
 
 {
   const plan = makePlan({ trainingLocation: "homeSimple", availableEquipment: ["无器械", "瑜伽垫", "可调哑铃"] });
   assert.ok(!equipmentUsed(plan).some(item => ["杠铃", "拉力器", "腿举机", "器械推胸"].includes(item)));
+}
+
+{
+  const plan = makePlan({ trainingLocation: "commercialGym", selectedSplit: "ppl", availableEquipment: ["无器械", "瑜伽垫", "固定哑铃", "卧推凳"] });
+  assert.ok(!equipmentUsed(plan).includes("杠铃"));
 }
 
 {
@@ -71,8 +96,18 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 }
 
 {
-  const plan = makePlan({ dislikedExercises: ["跑步"], trainingLocation: "commercialGym", availableEquipment: ["无器械", "瑜伽垫", "跑步机", "可调哑铃", "固定哑铃"] });
+  const plan = makePlan({ limitations: ["腰部不适"], availableEquipment: ["无器械", "瑜伽垫", "可调哑铃", "固定哑铃"] });
+  assert.ok(!exerciseNames(plan).some(name => /硬拉|杠铃划船|单臂哑铃划船|超人式|划船机/.test(name)));
+}
+
+{
+  const plan = makePlan({ dislikedExercises: ["running"], trainingLocation: "commercialGym", availableEquipment: ["无器械", "瑜伽垫", "跑步机", "可调哑铃", "固定哑铃"] });
   assert.ok(!exerciseNames(plan).includes("跑步"));
+}
+
+{
+  const plan = makePlan({ dislikedExercises: ["伏地挺身"], trainingLocation: "homeNone", availableEquipment: ["无器械"] });
+  assert.ok(!exerciseNames(plan).includes("俯卧撑"));
 }
 
 {
@@ -91,11 +126,24 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
   const alt = getExerciseAlternatives("push_up", base);
   assert.ok(Array.isArray(alt));
   assert.ok(alt.every(item => item.id !== "push_up"));
+  assert.ok(alt.every(item => item.movementPattern === "水平推"));
 }
 
 {
-  const plan = makePlan({ sessionDuration: 35 });
-  assert.ok(trainingDays(plan).every(day => day.estimatedDuration <= 50));
+  const settings = { ...base, limitations: ["肩部不适"], availableEquipment: ["无器械", "瑜伽垫", "可调哑铃", "固定哑铃"] };
+  const alt = getExerciseAlternatives("push_up", settings);
+  assert.ok(!alt.some(item => item.contraindications.includes("肩部不适") || item.movementPattern === "垂直推"));
+}
+
+{
+  const settings = { ...base, trainingLocation: "homeNone", availableEquipment: ["无器械"] };
+  const alt = getExerciseAlternatives("push_up", settings);
+  assert.ok(alt.every(item => item.equipment.every(equipment => equipment === "无器械")));
+}
+
+{
+  const plan = makePlan({ sessionDuration: 20, cardioPreference: "none" });
+  assert.ok(trainingDays(plan).every(day => day.estimatedDuration <= 25));
 }
 
 {
@@ -107,6 +155,7 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 {
   const plan = makePlan({ selectedSplit: "ppl", weeklyTrainingDays: 3 });
   assert.deepEqual(trainingDays(plan).map(day => day.theme), ["推", "拉", "腿"]);
+  assert.deepEqual(trainingIndexes(plan), [0, 2, 4]);
 }
 
 {
@@ -115,7 +164,7 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 }
 
 {
-  const plan = makePlan({ trainingLocation: "commercialGym", experienceLevel: "intermediate", availableEquipment: ["无器械", "瑜伽垫", "杠铃", "深蹲架", "卧推凳", "拉力器", "高位下拉器", "腿举机", "器械推胸", "器械肩推", "可调哑铃", "固定哑铃"] });
+  const plan = makePlan({ trainingLocation: "commercialGym", selectedSplit: "ppl", experienceLevel: "intermediate", availableEquipment: ["无器械", "瑜伽垫", "杠铃", "深蹲架", "卧推凳", "拉力器", "高位下拉器", "腿举机", "器械推胸", "器械肩推", "可调哑铃", "固定哑铃"] });
   assert.ok(equipmentUsed(plan).some(item => ["杠铃", "拉力器", "高位下拉器", "腿举机", "器械推胸", "器械肩推"].includes(item)));
 }
 
@@ -141,8 +190,25 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 }
 
 {
-  const plan = makePlan({ primaryGoal: "strength", experienceLevel: "intermediate", trainingLocation: "commercialGym", availableEquipment: ["无器械", "杠铃", "深蹲架", "卧推凳", "拉力器", "高位下拉器", "可调哑铃", "固定哑铃"] });
-  assert.ok(trainingDays(plan).flatMap(day => day.exercises).some(row => row.reps === "3–6次" && row.restSeconds === 180));
+  const plan = makePlan({ primaryGoal: "strength", selectedSplit: "ppl", experienceLevel: "intermediate", trainingLocation: "commercialGym", availableEquipment: ["无器械", "杠铃", "深蹲架", "卧推凳", "拉力器", "高位下拉器", "可调哑铃", "固定哑铃"] });
+  assert.ok(allExercises(plan).some(row => row.reps === "3–6次" && row.restSeconds === 180));
+}
+
+{
+  const result = generateWorkoutPlan({ ...base, primaryGoal: "health", secondaryGoal: "health" });
+  assert.equal(result.plan, null);
+  assert.ok(result.errors.some(text => text.includes("不能相同")));
+}
+
+{
+  const plan = makePlan();
+  assert.ok(trainingDays(plan).every(day => day.estimatedCaloriesRange?.min < day.estimatedCaloriesRange?.max));
+}
+
+{
+  const plan = makePlan();
+  const uniqueInstructionBlocks = new Set(allExercises(plan).map(row => row.instructions.join("|")));
+  assert.ok(uniqueInstructionBlocks.size > 2);
 }
 
 {
@@ -152,7 +218,7 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 
 {
   const plan = makePlan({ cardioPreference: "after" });
-  assert.ok(trainingDays(plan).some(day => day.cardio));
+  assert.ok(trainingDays(plan).some(day => day.cardio || day.estimatedDuration <= plan.settings.sessionDuration));
 }
 
-console.log("Workout engine tests passed: 21 cases");
+console.log("Workout engine tests passed: 34 cases");

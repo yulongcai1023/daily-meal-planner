@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="根据身体信息、活动量和目标估算每日营养需求并生成一日食谱。" />
   <title>今日食养 · 每日食谱推荐</title>
-  <link rel="stylesheet" href="styles.css?v=20260716-fitness-ui9" />
+  <link rel="stylesheet" href="styles.css?v=20260716-fitness-audit1" />
 </head>
 <body>
   <main class="page-shell">
@@ -92,11 +92,11 @@
     <section class="fitness-section app-section" id="fitness-section" hidden>
       <div class="fitness-shell">
         <aside class="fitness-sidebar" aria-label="健身功能导航">
-          <button class="fitness-side-link is-active" type="button"><span class="side-icon icon-plan" aria-hidden="true"></span>训练计划</button>
-          <button class="fitness-side-link" type="button"><span class="side-icon icon-library" aria-hidden="true"></span>动作库</button>
-          <button class="fitness-side-link" type="button"><span class="side-icon icon-log" aria-hidden="true"></span>训练记录</button>
-          <button class="fitness-side-link" type="button"><span class="side-icon icon-body-data" aria-hidden="true"></span>身体数据</button>
-          <button class="fitness-side-link" type="button"><span class="side-icon icon-settings" aria-hidden="true"></span>设置</button>
+          <button class="fitness-side-link is-active" type="button" data-fitness-panel="plan"><span class="side-icon icon-plan" aria-hidden="true"></span>训练计划</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="library"><span class="side-icon icon-library" aria-hidden="true"></span>动作库</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="logs"><span class="side-icon icon-log" aria-hidden="true"></span>训练记录</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="body"><span class="side-icon icon-body-data" aria-hidden="true"></span>身体数据</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="settings"><span class="side-icon icon-settings" aria-hidden="true"></span>设置</button>
         </aside>
 
         <main class="fitness-main">
@@ -122,12 +122,13 @@
             <div class="segment-row" aria-label="训练经验">
               <span>训练经验</span>
               <div class="segment-group">
-                <label><input type="radio" name="experience-segment" value="beginner0"><span>新手</span></label>
-                <label><input type="radio" name="experience-segment" value="beginner" checked><span>初级</span></label>
+                <label><input type="radio" name="experience-segment" value="beginner0"><span>完全新手</span></label>
+                <label><input type="radio" name="experience-segment" value="beginner" checked><span>新手</span></label>
+                <label><input type="radio" name="experience-segment" value="novice"><span>初级</span></label>
                 <label><input type="radio" name="experience-segment" value="intermediate"><span>中级</span></label>
                 <label><input type="radio" name="experience-segment" value="advanced"><span>高级</span></label>
               </div>
-              <select id="experience-level" hidden><option value="beginner0">完全新手</option><option value="beginner" selected>新手</option><option value="novice">初级</option><option value="intermediate">中级</option><option value="advanced">高级</option></select>
+              <input id="experience-level" type="hidden" value="beginner">
             </div>
 
             <div class="preference-grid">
@@ -161,7 +162,7 @@
             <div class="fitness-empty-card">
               <div class="skeleton-hero"></div>
               <div>
-                <span class="pill">Ready</span>
+                <span class="pill">待生成</span>
                 <h2>生成后，这里会显示本周训练计划。</h2>
                 <p>你会先看到 7 天概览，再进入当前训练日详情和动作记录。</p>
               </div>
@@ -239,6 +240,6 @@
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script type="module" src="app.js?v=20260716-fitness-ui9"></script>
+  <script type="module" src="app.js?v=20260716-fitness-audit1"></script>
 </body>
 </html>
