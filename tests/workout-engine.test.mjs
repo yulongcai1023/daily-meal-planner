@@ -156,6 +156,16 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
   const plan = makePlan({ selectedSplit: "ppl", weeklyTrainingDays: 3 });
   assert.deepEqual(trainingDays(plan).map(day => day.theme), ["推", "拉", "腿"]);
   assert.deepEqual(trainingIndexes(plan), [0, 2, 4]);
+  const byTheme = Object.fromEntries(trainingDays(plan).map(day => [day.theme, day.exercises.map(row => row.name)]));
+  assert.ok(!byTheme["拉"].some(name => /俯卧撑|深蹲|箭步蹲/.test(name)));
+  assert.ok(!byTheme["腿"].some(name => /俯卧撑|下拉|引体|面拉/.test(name)));
+  assert.equal(new Set(trainingDays(plan).map(day => day.exercises[0]?.name)).size, 3);
+}
+
+{
+  const result = generateWorkoutPlan({ ...base, selectedSplit: "ppl", trainingLocation: "homeNone", availableEquipment: ["无器械"], cardioPreference: "none" });
+  assert.equal(result.plan, null);
+  assert.ok(result.errors.some(text => text.includes("没有可用动作")));
 }
 
 {

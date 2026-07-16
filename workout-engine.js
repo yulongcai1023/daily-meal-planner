@@ -287,6 +287,29 @@ function categoriesForTheme(theme) {
   return ["全身", "核心"];
 }
 
+function exerciseMatchesTheme(exercise, theme) {
+  const text = `${exercise.category}${exercise.movementPattern}${exercise.name}${exercise.primaryMuscles.join("")}`;
+  if (theme.includes("全身")) return true;
+  if (theme.includes("推") || theme.includes("胸")) return /胸|水平推|垂直推|夹胸|肩外展|肩屈|肘伸|推胸|卧推|俯卧撑|臂屈伸/.test(text);
+  if (theme.includes("拉") || theme.includes("背")) return /背|水平拉|垂直拉|肘屈|下拉|划船|引体|弯举|面拉|飞鸟/.test(text);
+  if (theme.includes("腿") || theme.includes("下肢")) return /腿|臀|深蹲|弓步|髋|膝|踝|提踵|静蹲|臀桥/.test(text);
+  if (theme.includes("上肢")) return /胸|背|肩|手臂|水平推|垂直推|水平拉|垂直拉|肘/.test(text);
+  if (theme.includes("肩")) return /肩|肩外展|肩屈|垂直推|面拉|飞鸟/.test(text);
+  if (theme.includes("手臂")) return /手臂|肘屈|肘伸|弯举|下压|臂屈伸/.test(text);
+  return true;
+}
+
+function themeFamily(theme) {
+  if (theme.includes("全身")) return "全身";
+  if (theme.includes("推") || theme.includes("胸")) return "推";
+  if (theme.includes("拉") || theme.includes("背")) return "拉";
+  if (theme.includes("腿") || theme.includes("臀") || theme.includes("下肢")) return "腿";
+  if (theme.includes("上肢")) return "上肢";
+  if (theme.includes("肩")) return "肩";
+  if (theme.includes("手臂")) return "手臂";
+  return theme;
+}
+
 function targetExerciseCount(settings) {
   const byDuration = settings.sessionDuration <= 25 ? 2 : settings.sessionDuration <= 35 ? 3 : settings.sessionDuration <= 50 ? 4 : 5;
   if (settings.experienceLevel === "beginner0" && settings.weeklyTrainingDays >= 5) return 3;
@@ -344,10 +367,11 @@ function pickExercises(theme, settings, usedGlobal) {
   const categories = categoriesForTheme(theme);
   const count = targetExerciseCount(settings);
   const pool = EXERCISES.filter(item => item.category !== "有氧" && isExerciseAllowed(item, settings));
+  const themePool = pool.filter(item => exerciseMatchesTheme(item, theme));
   const picked = [];
 
   for (const category of categories) {
-    const candidates = pool
+    const candidates = themePool
       .filter(item => item.category === category || item.primaryMuscles.includes(category))
       .sort((a, b) => Number(usedGlobal.has(a.id)) - Number(usedGlobal.has(b.id)) || Number(b.isCompound) - Number(a.isCompound));
     const next = candidates.find(item => !picked.some(row => row.id === item.id));
@@ -356,14 +380,14 @@ function pickExercises(theme, settings, usedGlobal) {
   }
 
   if (picked.length < count) {
-    for (const item of pool.sort((a, b) => Number(usedGlobal.has(a.id)) - Number(usedGlobal.has(b.id)))) {
+    for (const item of themePool.sort((a, b) => Number(usedGlobal.has(a.id)) - Number(usedGlobal.has(b.id)) || Number(b.isCompound) - Number(a.isCompound))) {
       if (!picked.some(row => row.id === item.id)) picked.push(item);
       if (picked.length >= count) break;
     }
   }
 
   if (theme.includes("全身") && count >= 4 && !picked.some(item => item.category === "核心")) {
-    const coreCandidate = pool.find(item => item.category === "核心" && !picked.some(row => row.id === item.id));
+    const coreCandidate = themePool.find(item => item.category === "核心" && !picked.some(row => row.id === item.id));
     if (coreCandidate) picked[Math.max(0, picked.length - 1)] = coreCandidate;
   }
 
@@ -626,11 +650,17 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
         continue;
       }
       if (!isExerciseAllowed(exercise, normalized)) errors.push(`动作不适合当前器械、地点、经验或限制：${exercise.name}`);
+      if (!exerciseMatchesTheme(exercise, day.theme)) errors.push(`${day.day} 的动作不符合「${day.theme}」主题：${exercise.name}`);
       if (seen.has(exercise.id)) errors.push(`${day.day} 重复安排动作：${exercise.name}`);
       seen.add(exercise.id);
       if (!row.sets || !row.reps || row.restSeconds === undefined || !row.intensity) errors.push(`${row.name} 缺少组数、次数、休息或强度。`);
     }
   }
+  const firstByTheme = trainingDays
+    .map(day => ({ theme: themeFamily(day.theme), name: day.exercises[0]?.name }))
+    .filter(item => item.name);
+  const firstNamesOnDifferentThemes = firstByTheme.filter((item, index, arr) => arr.findIndex(other => other.name === item.name) !== index && arr.some(other => other.name === item.name && other.theme !== item.theme));
+  if (firstNamesOnDifferentThemes.length) errors.push("不同训练主题使用了相同的首个动作。");
   for (let i = 1; i < plan.days.length; i++) {
     const prev = plan.days[i - 1];
     const cur = plan.days[i];
