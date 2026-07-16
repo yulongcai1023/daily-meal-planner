@@ -355,16 +355,37 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .selector-limit input:checked ~ .selector-icon { color: var(--fit-danger); background: #F7DEDD; }
 .icon-dumbbell::before, .icon-barbell::before { width: 22px; height: 4px; background: currentColor; border-radius: 4px; }
 .icon-dumbbell::after, .icon-barbell::after { width: 5px; height: 15px; border-left: 4px solid currentColor; border-right: 4px solid currentColor; }
+.icon-kettlebell::before { width: 19px; height: 16px; border: 3px solid currentColor; border-radius: 50% 50% 45% 45%; bottom: 7px; }
+.icon-kettlebell::after { width: 12px; height: 8px; border: 3px solid currentColor; border-bottom: 0; border-radius: 8px 8px 0 0; top: 7px; }
 .icon-band::before { width: 22px; height: 15px; border: 3px solid currentColor; border-radius: 50%; transform: rotate(-18deg); }
 .icon-bar::before { width: 26px; height: 3px; background: currentColor; top: 9px; }
 .icon-bar::after { width: 3px; height: 20px; background: currentColor; left: 7px; box-shadow: 14px 0 0 currentColor; }
 .icon-mat::before { width: 24px; height: 15px; border: 2px solid currentColor; border-radius: 4px; }
 .icon-machine::before { width: 20px; height: 17px; border: 2px solid currentColor; border-radius: 4px; }
 .icon-machine::after { width: 18px; height: 3px; background: currentColor; bottom: 8px; }
+.icon-rack::before { width: 24px; height: 20px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
+.icon-rack::after { width: 24px; height: 3px; background: currentColor; top: 8px; }
+.icon-smith::before { width: 22px; height: 20px; border: 2px solid currentColor; border-radius: 3px; }
+.icon-smith::after { width: 16px; height: 3px; background: currentColor; transform: rotate(-18deg); }
+.icon-bench::before { width: 23px; height: 4px; background: currentColor; border-radius: 3px; transform: rotate(-18deg); }
+.icon-bench::after { width: 3px; height: 12px; background: currentColor; bottom: 7px; left: 9px; box-shadow: 12px 0 0 currentColor; }
+.icon-cable::before { width: 20px; height: 20px; border-top: 3px solid currentColor; border-right: 3px solid currentColor; transform: rotate(45deg); }
+.icon-cable::after { width: 8px; height: 8px; border: 2px solid currentColor; border-radius: 50%; bottom: 7px; }
+.icon-pulldown::before { width: 24px; height: 3px; background: currentColor; top: 7px; }
+.icon-pulldown::after { width: 12px; height: 15px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; bottom: 6px; }
 .icon-body::before, .icon-balance::before { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; }
 .icon-run::before, .icon-leg::before { width: 17px; height: 20px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-20deg); }
+.icon-elliptical::before { width: 24px; height: 12px; border: 3px solid currentColor; border-radius: 50%; transform: rotate(-18deg); }
+.icon-elliptical::after { width: 3px; height: 20px; background: currentColor; right: 9px; transform: rotate(18deg); }
 .icon-bike::before { width: 24px; height: 13px; border: 2px solid currentColor; border-radius: 50%; }
 .icon-row::before { width: 24px; height: 3px; background: currentColor; transform: rotate(-22deg); }
+.icon-parallel::before { width: 22px; height: 3px; background: currentColor; top: 10px; box-shadow: 0 8px 0 currentColor; }
+.icon-parallel::after { width: 3px; height: 20px; background: currentColor; left: 9px; box-shadow: 9px 0 0 currentColor; }
+.icon-preacher::before { width: 20px; height: 5px; background: currentColor; border-radius: 4px; transform: rotate(-25deg); top: 11px; }
+.icon-preacher::after { width: 3px; height: 16px; background: currentColor; bottom: 6px; right: 11px; }
+.icon-stairs::before { width: 22px; height: 16px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; box-shadow: inset 7px -5px 0 -3px currentColor, inset 14px -10px 0 -6px currentColor; }
+.icon-rope::before { width: 22px; height: 18px; border: 3px solid currentColor; border-top: 0; border-radius: 0 0 14px 14px; }
+.icon-rope::after { width: 18px; height: 3px; background: currentColor; top: 7px; }
 .icon-limit::before { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; }
 .icon-limit::after { width: 2px; height: 12px; background: currentColor; transform: rotate(45deg); }
 .icon-chest::before, .icon-back::before, .icon-shoulder::before, .icon-arm::before, .icon-glute::before, .icon-core::before { width: 18px; height: 20px; border: 2px solid currentColor; border-radius: 9px 9px 5px 5px; }

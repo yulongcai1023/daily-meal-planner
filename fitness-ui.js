@@ -1,18 +1,28 @@
 const dayLabels = ["第 1 天", "第 2 天", "第 3 天", "第 4 天", "第 5 天", "第 6 天", "第 7 天"];
 
-const equipmentShortNames = {
-  "可调哑铃": "哑铃",
-  "固定哑铃": "哑铃",
-  "弹力带": "弹力带",
-  "引体向上杆": "引体向上杆",
-  "瑜伽垫": "瑜伽垫",
-  "器械推胸": "固定器械",
-  "器械肩推": "固定器械",
-  "腿举机": "固定器械",
-  "腿屈伸机": "固定器械",
-  "腿弯举机": "固定器械",
-  "高位下拉器": "固定器械"
-};
+const equipmentGroups = [
+  { name: "无器械", icon: "icon-body", values: ["无器械"] },
+  { name: "瑜伽垫", icon: "icon-mat", values: ["瑜伽垫"] },
+  { name: "弹力带", icon: "icon-band", values: ["弹力带"] },
+  { name: "哑铃", icon: "icon-dumbbell", values: ["可调哑铃", "固定哑铃"] },
+  { name: "壶铃", icon: "icon-kettlebell", values: ["壶铃"] },
+  { name: "杠铃", icon: "icon-barbell", values: ["杠铃"] },
+  { name: "深蹲架", icon: "icon-rack", values: ["深蹲架"] },
+  { name: "史密斯机", icon: "icon-smith", values: ["史密斯机"] },
+  { name: "卧推凳", icon: "icon-bench", values: ["卧推凳"] },
+  { name: "拉力器", icon: "icon-cable", values: ["拉力器"] },
+  { name: "高位下拉器", icon: "icon-pulldown", values: ["高位下拉器"] },
+  { name: "固定器械", icon: "icon-machine", values: ["器械推胸", "器械肩推", "腿举机", "腿屈伸机", "腿弯举机", "髋外展机"] },
+  { name: "跑步机", icon: "icon-run", values: ["跑步机"] },
+  { name: "椭圆机", icon: "icon-elliptical", values: ["椭圆机"] },
+  { name: "单车", icon: "icon-bike", values: ["单车"] },
+  { name: "划船机", icon: "icon-row", values: ["划船机"] },
+  { name: "引体向上杆", icon: "icon-bar", values: ["引体向上杆"] },
+  { name: "双杠", icon: "icon-parallel", values: ["双杠"] },
+  { name: "牧师椅", icon: "icon-preacher", values: ["牧师椅"] },
+  { name: "爬楼机", icon: "icon-stairs", values: ["爬楼机"] },
+  { name: "跳绳", icon: "icon-rope", values: ["跳绳"] }
+];
 
 const equipmentIconClass = {
   "哑铃": "icon-dumbbell",
@@ -22,9 +32,20 @@ const equipmentIconClass = {
   "固定器械": "icon-machine",
   "无器械": "icon-body",
   "杠铃": "icon-barbell",
+  "壶铃": "icon-kettlebell",
+  "深蹲架": "icon-rack",
+  "史密斯机": "icon-smith",
+  "卧推凳": "icon-bench",
+  "拉力器": "icon-cable",
+  "高位下拉器": "icon-pulldown",
   "跑步机": "icon-run",
+  "椭圆机": "icon-elliptical",
   "单车": "icon-bike",
-  "划船机": "icon-row"
+  "划船机": "icon-row",
+  "双杠": "icon-parallel",
+  "牧师椅": "icon-preacher",
+  "爬楼机": "icon-stairs",
+  "跳绳": "icon-rope"
 };
 
 const limitationShortNames = {
@@ -72,20 +93,20 @@ export function renderTrainingOptionList(id, values, name, selected = []) {
   }
 
   const variant = name === "training-limitations" ? "limit" : name === "training-muscles" ? "muscle" : "equipment";
-  return values.map((value, index) => {
-    const display = name === "training-equipment"
-      ? (equipmentShortNames[value] || value)
-      : name === "training-limitations"
+  const options = name === "training-equipment"
+    ? equipmentGroups.filter(group => group.values.some(item => values.includes(item)))
+    : values.map(value => ({ name: value, icon: name === "training-muscles" ? (muscleIconClass[value] || "icon-dot") : "icon-limit", values: [value] }));
+
+  return options.map((option, index) => {
+    const value = option.values[0];
+    const display = name === "training-limitations"
         ? (limitationShortNames[value] || value)
-        : value;
-    const iconClass = name === "training-equipment"
-      ? (equipmentIconClass[display] || equipmentIconClass[value] || "icon-dot")
-      : name === "training-muscles"
-        ? (muscleIconClass[value] || "icon-dot")
-        : "icon-limit";
+        : option.name;
+    const iconClass = option.icon || equipmentIconClass[display] || "icon-dot";
+    const checked = option.values.some(item => selectedSet.has(item));
     return `
       <label class="selector-tile selector-${variant} ${index > 5 ? "is-extra" : ""}" data-chip-label="${escapeHtml(value)}">
-        <input type="checkbox" name="${name}" value="${escapeHtml(value)}" ${selectedSet.has(value) ? "checked" : ""}>
+        <input type="checkbox" name="${name}" value="${escapeHtml(value)}" data-values="${escapeHtml(option.values.join("|"))}" ${checked ? "checked" : ""}>
         <span class="selector-icon ${iconClass}" aria-hidden="true"></span>
         <span class="selector-name">${escapeHtml(display)}</span>
         <span class="selector-check" aria-hidden="true">✓</span>

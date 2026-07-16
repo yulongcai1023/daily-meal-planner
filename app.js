@@ -15,7 +15,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
 import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateWorkoutPlan } from "./workout-engine.js?v=20260715-workout1";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui3";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui8";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -476,7 +476,10 @@ function renderTagOptions(id, values, name, selected = []) {
 }
 
 function checkedValues(name) {
-  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).flatMap(input => {
+    if (input.dataset.values) return input.dataset.values.split("|").filter(Boolean);
+    return [input.value];
+  });
 }
 
 function loadTrainingSettings() {
