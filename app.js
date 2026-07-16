@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui17";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui17";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui18";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui18";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -675,31 +675,6 @@ function closeExerciseSheet() {
   document.body.classList.remove("modal-open");
 }
 
-function openExercisePreview(button) {
-  const modal = document.querySelector("#exercise-preview-modal");
-  const media = document.querySelector("#preview-modal-media");
-  const title = document.querySelector("#preview-modal-title");
-  const subtitle = document.querySelector("#preview-modal-subtitle");
-  if (!modal || !media || !button) return;
-  media.innerHTML = button.innerHTML;
-  media.querySelectorAll(".preview-zoom-hint").forEach(item => item.remove());
-  title.textContent = button.dataset.previewTitle || "动作预览";
-  subtitle.textContent = button.dataset.previewSubtitle || "";
-  modal.classList.add("is-open");
-  modal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("modal-open");
-  document.querySelector("[data-close-preview]")?.focus();
-}
-
-function closeExercisePreview() {
-  const modal = document.querySelector("#exercise-preview-modal");
-  if (!modal) return;
-  modal.classList.remove("is-open");
-  modal.setAttribute("aria-hidden", "true");
-  document.querySelector("#preview-modal-media").innerHTML = "";
-  document.body.classList.remove("modal-open");
-}
-
 function replaceExercise(dayIndex, exerciseIndex, altId) {
   const next = EXERCISES.find(item => item.id === altId);
   if (!next || !currentWorkoutPlan) return;
@@ -816,13 +791,6 @@ function renderWorkoutPlan(plan) {
       openExerciseSheet(dayIndex, exerciseIndex);
     });
   });
-  document.querySelectorAll("[data-preview-open]").forEach(button => {
-    button.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopPropagation();
-      openExercisePreview(button);
-    });
-  });
   document.querySelectorAll(".save-set-button, .exercise-actions .solid-action").forEach(button => button.addEventListener("click", () => showToast("训练记录已保存在当前页面。")));
   updateTrainingCompletion();
 }
@@ -893,12 +861,8 @@ function setupTrainingUI() {
     });
   });
   document.querySelectorAll("[data-close-sheet]").forEach(item => item.addEventListener("click", closeExerciseSheet));
-  document.querySelectorAll("[data-close-preview]").forEach(item => item.addEventListener("click", closeExercisePreview));
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      closeExerciseSheet();
-      closeExercisePreview();
-    }
+    if (event.key === "Escape") closeExerciseSheet();
   });
   document.querySelector("#sheet-options")?.addEventListener("click", event => {
     const option = event.target.closest(".sheet-option");

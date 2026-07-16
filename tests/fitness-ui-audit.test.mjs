@@ -21,12 +21,10 @@ assert.ok(html.includes('data-fitness-panel="library"'), "fitness sidebar items 
 assert.ok(app.includes("syncSecondaryGoalOptions"), "primary/secondary goal sync should be implemented");
 assert.ok(app.includes("validateTrainingSettings"), "submit-time training validation should be implemented");
 assert.ok(ui.includes("estimatedCaloriesRange"), "calorie display should use an estimate range");
-assert.ok(ui.includes("renderExercisePreviewSvg") && ui.includes("data-preview-type"), "exercise cards should render real local SVG previews");
-assert.ok(css.includes(".media-figure.has-preview") && css.includes(".exercise-preview-svg"), "exercise preview SVG styles should be present");
-assert.ok(html.includes("exercise-preview-modal") && app.includes("openExercisePreview") && ui.includes("data-preview-open"), "exercise previews should open an enlarged centered modal");
-assert.ok(css.includes(".preview-modal.is-open") && css.includes(".preview-panel"), "exercise preview modal styles should be present");
-assert.ok(ui.includes("assets/exercises/") && ui.includes("exercise-preview-img"), "exercise previews should prefer real image assets");
-assert.ok(build.includes("fs.cpSync") && build.includes("\"assets\""), "static build should copy image assets");
-assert.ok(html.includes("fitness-ui17") && app.includes("fitness-ui17"), "cache-busting asset versions should be updated");
+assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open"), "exercise image previews should not render in workout cards");
+assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
+assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
+assert.ok(!build.includes("fs.cpSync") && !build.includes("\"assets\""), "static build should no longer copy exercise image assets");
+assert.ok(html.includes("fitness-ui18") && app.includes("fitness-ui18"), "cache-busting asset versions should be updated");
 
-console.log("Fitness UI audit tests passed: 14 cases");
+console.log("Fitness UI audit tests passed: 12 cases");

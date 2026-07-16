@@ -12,9 +12,4 @@ for (const file of files) {
   fs.copyFileSync(path.join(root, file), path.join(outDir, file));
 }
 
-const assetsDir = path.join(root, "assets");
-if (fs.existsSync(assetsDir)) {
-  fs.cpSync(assetsDir, path.join(outDir, "assets"), { recursive: true });
-}
-
 console.log(`Built static site in ${path.relative(root, outDir)}`);

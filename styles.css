@@ -299,8 +299,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .fitness-side-link.is-active { background: var(--fit-primary-light); color: var(--fit-primary); }
 .side-icon, .selector-icon, .button-icon, .calendar-icon, .day-icon { width: 24px; height: 24px; display: inline-grid; place-items: center; position: relative; flex: 0 0 auto; border-radius: 8px; color: currentColor; }
 .side-icon::before, .selector-icon::before, .button-icon::before, .calendar-icon::before, .day-icon::before,
-.side-icon::after, .selector-icon::after, .button-icon::after, .calendar-icon::after, .day-icon::after,
-.media-figure::before, .media-figure::after { content: ""; position: absolute; box-sizing: border-box; }
+.side-icon::after, .selector-icon::after, .button-icon::after, .calendar-icon::after, .day-icon::after { content: ""; position: absolute; box-sizing: border-box; }
 .icon-plan::before { width: 14px; height: 15px; border: 2px solid currentColor; border-radius: 4px; }
 .icon-plan::after { width: 8px; height: 2px; background: currentColor; top: 8px; }
 .icon-library::before { width: 15px; height: 15px; border: 2px solid currentColor; border-radius: 50%; }
@@ -459,34 +458,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .exercise-complete-control input:checked + span { color: var(--fit-primary); font-weight: 750; }
 .exercise-complete-control input:checked + span::before { content: "✓"; color: var(--fit-primary); }
 .exercise-menu { min-width: 64px; min-height: 36px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; color: var(--fit-warning); background: var(--fit-warning-light); border: 1px solid #F1DDC7; border-radius: 999px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 750; line-height: 1; white-space: nowrap; writing-mode: horizontal-tb; }
-.exercise-card-body { display: grid; grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); gap: 14px; align-items: stretch; }
-.exercise-media { margin: 0; }
-.media-figure { height: 142px; width: 100%; position: relative; display: grid; place-items: center; background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 12px; overflow: hidden; font: inherit; cursor: zoom-in; }
-.media-figure::before { width: 92px; height: 58px; border: 4px solid currentColor; border-radius: 50%; opacity: .16; }
-.media-figure::after { width: 130px; height: 4px; background: currentColor; opacity: .16; }
-.media-figure.has-preview { padding: 0; color: var(--fit-primary); background: linear-gradient(135deg, #FCFBF8, #F1F5EE); transition: transform .18s, border-color .18s, box-shadow .18s; }
-.media-figure.has-preview:hover { transform: translateY(-1px); border-color: #BFD9BD; box-shadow: 0 10px 24px rgba(30,45,35,.08); }
-.media-figure.has-preview::before, .media-figure.has-preview::after { content: none; }
-.exercise-preview-img { width: 100%; height: 100%; display: block; object-fit: contain; background: #fff; }
-.exercise-preview-fallback { width: 100%; height: 100%; display: block; }
-.exercise-preview-fallback[hidden] { display: none; }
-.exercise-preview-svg { width: 100%; height: 100%; display: block; }
-.preview-bg { fill: #FAFAF8; }
-.preview-floor { fill: none; stroke: #D8DED4; stroke-width: 3; stroke-linecap: round; }
-.preview-body { fill: none; stroke: currentColor; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
-.preview-body circle, .preview-body ellipse { fill: #fff; stroke: currentColor; }
-.preview-body path:nth-child(even) { stroke: #D9A46F; }
-.preview-title { fill: var(--fit-text-primary); font: 700 13px Inter, "Noto Sans SC", system-ui, sans-serif; }
-.preview-meta, .preview-equipment { fill: var(--fit-text-secondary); font: 500 10px Inter, "Noto Sans SC", system-ui, sans-serif; }
-.preview-chest, .preview-horizontal-push, .preview-vertical-push { color: #2F6B3C; }
-.preview-back, .preview-horizontal-pull, .preview-vertical-pull { color: #315F7D; }
-.preview-squat, .preview-lunge, .preview-hinge, .preview-calf { color: #6B5B2F; }
-.preview-hip-bridge, .preview-abduction { color: #7A4D77; }
-.preview-core-stability, .preview-core-flexion { color: #386A68; }
-.preview-run, .preview-cardio, .preview-bike, .preview-rower, .preview-rope { color: #8A5A2B; }
-.preview-zoom-hint { position: absolute; right: 10px; bottom: 10px; min-height: 24px; padding: 0 8px; display: inline-flex; align-items: center; color: var(--fit-primary); background: rgba(255,255,255,.86); border: 1px solid #DDE8D7; border-radius: 999px; font-size: 11px; font-weight: 750; opacity: 0; transform: translateY(4px); transition: opacity .18s, transform .18s; pointer-events: none; }
-.media-figure:hover .preview-zoom-hint, .media-figure:focus-visible .preview-zoom-hint { opacity: 1; transform: translateY(0); }
-.exercise-media figcaption { margin-top: 6px; color: var(--fit-text-secondary); font-size: 12px; text-align: center; }
+.exercise-card-body { display: block; }
 .exercise-core { min-width: 0; display: grid; gap: 10px; }
 .exercise-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); gap: 8px; }
 .exercise-metrics div { min-height: 70px; padding: 10px; display: grid; align-content: center; text-align: center; background: #FBFAF7; border: 1px solid var(--fit-border); border-radius: 10px; }
@@ -524,18 +496,6 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .sheet-option { min-height: 58px; padding: 10px; display: flex; align-items: center; gap: 12px; text-align: left; color: var(--fit-text-primary); background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 12px; cursor: pointer; font: inherit; }
 .sheet-option:hover { background: var(--fit-primary-light); border-color: #BFD9BD; }
 .sheet-option small { display: block; margin-top: 3px; color: var(--fit-text-secondary); }
-.preview-modal { position: fixed; inset: 0; z-index: 80; display: none; }
-.preview-modal.is-open { display: block; }
-.preview-backdrop { position: absolute; inset: 0; background: rgba(29,40,33,.42); backdrop-filter: blur(7px); }
-.preview-panel { position: absolute; left: 50%; top: 50%; width: min(860px, calc(100% - 32px)); max-height: min(88vh, 760px); padding: 18px; display: grid; gap: 14px; background: var(--fit-surface); border: 1px solid rgba(255,255,255,.72); border-radius: 22px; box-shadow: 0 24px 80px rgba(30,45,35,.22); transform: translate(-50%, -50%); animation: modalIn .18s ease; }
-.preview-close { position: absolute; top: 14px; right: 14px; z-index: 2; width: 40px; height: 40px; display: grid; place-items: center; color: var(--fit-text-primary); background: rgba(243,245,239,.94); border: 0; border-radius: 50%; cursor: pointer; font: inherit; font-size: 24px; line-height: 1; }
-.preview-modal-media { min-height: 360px; display: grid; place-items: center; overflow: hidden; background: linear-gradient(135deg, #FCFBF8, #EEF5EA); border: 1px solid var(--fit-border); border-radius: 18px; }
-.preview-modal-media .exercise-preview-img { width: min(100%, 820px); height: min(62vh, 520px); object-fit: contain; }
-.preview-modal-media .exercise-preview-fallback { width: min(100%, 760px); height: min(62vh, 520px); }
-.preview-modal-media .exercise-preview-svg { width: 100%; height: 100%; }
-.preview-modal-copy { padding: 0 4px 2px; }
-.preview-modal-copy h3 { margin: 0; color: var(--fit-text-primary); font-size: 20px; line-height: 28px; font-weight: 750; }
-.preview-modal-copy p { margin: 4px 0 0; color: var(--fit-text-secondary); font-size: 14px; line-height: 22px; }
 .mobile-workout-actions { display: none; }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, .selector-tile:focus-within, .preference-pill:focus-within { outline: 3px solid rgba(47,107,60,.22); outline-offset: 2px; }
 [hidden] { display: none !important; }
@@ -544,7 +504,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 }
 @media (max-width: 1080px) {
   .exercise-card-body { grid-template-columns: 1fr; }
-  .exercise-media .media-figure { height: 160px; }
 }
 @media (max-width: 980px) {
   .hero-mark { display: none; }
@@ -627,7 +586,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .exercise-card { padding: 12px; }
   .exercise-card-head { grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
   .exercise-head-actions { grid-column: 1 / -1; min-width: 0; justify-content: flex-start; flex-wrap: wrap; }
-  .exercise-media .media-figure { height: 150px; }
   .exercise-metrics { grid-template-columns: repeat(2, 1fr); }
   .set-header { display: none; }
   .set-row { grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
@@ -641,7 +599,4 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .mobile-workout-actions span { min-width: 48px; color: var(--fit-primary); font-weight: 750; text-align: right; }
   .sheet-panel { top: 50%; bottom: auto; width: min(560px, calc(100% - 24px)); border-radius: 16px; transform: translate(-50%, -50%); }
   .preview-panel { width: calc(100% - 22px); max-height: 86vh; padding: 12px; border-radius: 18px; }
-  .preview-modal-media { min-height: 260px; }
-  .preview-modal-media .exercise-preview-svg { height: min(56vh, 420px); }
-  .preview-modal-copy h3 { font-size: 18px; line-height: 26px; }
 }
