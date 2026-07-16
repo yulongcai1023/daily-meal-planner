@@ -300,11 +300,13 @@ function renderExerciseMetrics(exercise) {
 
 function renderExerciseMedia(exercise) {
   const previewType = previewTypeForExercise(exercise);
+  const previewMarkup = renderExercisePreviewSvg(exercise);
   return `
     <figure class="exercise-media">
-      <div class="media-figure has-preview ${exerciseFamilyClass(exercise)}" data-preview-type="${escapeHtml(previewType)}">
-        ${renderExercisePreviewSvg(exercise)}
-      </div>
+      <button class="media-figure has-preview ${exerciseFamilyClass(exercise)}" type="button" data-preview-type="${escapeHtml(previewType)}" data-preview-open data-preview-title="${escapeHtml(exercise.name)}" data-preview-subtitle="${escapeHtml(`${exercise.englishName || ""} · ${exercise.movementPattern || exercise.category || ""}`)}" aria-label="放大查看 ${escapeHtml(exercise.name)} 动作预览">
+        ${previewMarkup}
+        <span class="preview-zoom-hint" aria-hidden="true">点击放大</span>
+      </button>
       <figcaption>${escapeHtml(exercise.movementPattern || "动作预览")}</figcaption>
     </figure>
   `;

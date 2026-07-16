@@ -22,6 +22,8 @@ assert.ok(app.includes("validateTrainingSettings"), "submit-time training valida
 assert.ok(ui.includes("estimatedCaloriesRange"), "calorie display should use an estimate range");
 assert.ok(ui.includes("renderExercisePreviewSvg") && ui.includes("data-preview-type"), "exercise cards should render real local SVG previews");
 assert.ok(css.includes(".media-figure.has-preview") && css.includes(".exercise-preview-svg"), "exercise preview SVG styles should be present");
-assert.ok(html.includes("fitness-ui15") && app.includes("fitness-ui15"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("exercise-preview-modal") && app.includes("openExercisePreview") && ui.includes("data-preview-open"), "exercise previews should open an enlarged centered modal");
+assert.ok(css.includes(".preview-modal.is-open") && css.includes(".preview-panel"), "exercise preview modal styles should be present");
+assert.ok(html.includes("fitness-ui16") && app.includes("fitness-ui16"), "cache-busting asset versions should be updated");
 
-console.log("Fitness UI audit tests passed: 10 cases");
+console.log("Fitness UI audit tests passed: 12 cases");

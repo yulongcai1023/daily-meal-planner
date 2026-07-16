@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="根据身体信息、活动量和目标估算每日营养需求并生成一日食谱。" />
   <title>今日食养 · 每日食谱推荐</title>
-  <link rel="stylesheet" href="styles.css?v=20260716-fitness-ui15" />
+  <link rel="stylesheet" href="styles.css?v=20260716-fitness-ui16" />
 </head>
 <body>
   <main class="page-shell">
@@ -179,6 +179,18 @@
           <div id="sheet-options" class="sheet-options"></div>
         </section>
       </div>
+
+      <div id="exercise-preview-modal" class="preview-modal" aria-hidden="true">
+        <div class="preview-backdrop" data-close-preview></div>
+        <section class="preview-panel" role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
+          <button class="preview-close" type="button" data-close-preview aria-label="关闭动作预览">×</button>
+          <div id="preview-modal-media" class="preview-modal-media"></div>
+          <div class="preview-modal-copy">
+            <h3 id="preview-modal-title">动作预览</h3>
+            <p id="preview-modal-subtitle"></p>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section class="app-section placeholder-section" id="progress-section" hidden><h2>进度</h2><p>训练和饮食记录功能可在后续继续扩展。</p></section>
@@ -240,6 +252,6 @@
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script type="module" src="app.js?v=20260716-fitness-ui15"></script>
+  <script type="module" src="app.js?v=20260716-fitness-ui16"></script>
 </body>
 </html>
