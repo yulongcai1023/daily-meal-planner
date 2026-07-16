@@ -431,7 +431,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .exercise-complete-control input:checked + span { color: var(--fit-primary); font-weight: 750; }
 .exercise-complete-control input:checked + span::before { content: "✓"; color: var(--fit-primary); }
 .exercise-menu { min-height: 34px; padding: 0 12px; color: var(--fit-warning); background: var(--fit-warning-light); border: 1px solid #F1DDC7; border-radius: 999px; cursor: pointer; font: inherit; font-size: 13px; }
-.exercise-card-body { display: grid; grid-template-columns: 220px minmax(0, 1fr) 160px; gap: 14px; align-items: stretch; }
+.exercise-card-body { display: grid; grid-template-columns: minmax(180px, 220px) minmax(320px, 1fr) minmax(140px, 160px); gap: 14px; align-items: stretch; }
 .exercise-media { margin: 0; }
 .media-figure { height: 142px; position: relative; display: grid; place-items: center; background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 12px; overflow: hidden; }
 .media-figure::before { width: 92px; height: 58px; border: 4px solid currentColor; border-radius: 50%; opacity: .16; }
@@ -452,6 +452,11 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .alternative-box > span { display: block; margin-bottom: 8px; color: var(--fit-warning); font-size: 12px; font-weight: 750; }
 .alternative-box ul { margin: 0; padding-left: 17px; color: var(--fit-text-primary); font-size: 13px; line-height: 22px; }
 .alternative-box p { color: var(--fit-text-secondary); font-size: 13px; }
+@media (max-width: 1320px) {
+  .exercise-card-body { grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); }
+  .alternative-box { grid-column: 1 / -1; }
+  .alternative-box ul { display: flex; flex-wrap: wrap; gap: 8px 18px; padding-left: 16px; }
+}
 .set-tracker { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--fit-border); display: grid; gap: 8px; }
 .set-header, .set-row { display: grid; grid-template-columns: 70px 86px 96px 96px 74px 74px; gap: 8px; align-items: center; }
 .set-header { color: var(--fit-text-secondary); font-size: 12px; }
