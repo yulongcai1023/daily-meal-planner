@@ -86,6 +86,18 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 }
 
 {
+  const plan = makePlan({
+    trainingLocation: "homeSimple",
+    selectedSplit: "ppl",
+    availableEquipment: ["无器械", "瑜伽垫", "器械推胸", "器械肩推", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机"]
+  });
+  assert.deepEqual(trainingDays(plan).map(day => day.theme), ["推", "拉", "腿"]);
+  assert.ok(equipmentUsed(plan).some(item => ["器械推胸", "器械肩推", "高位下拉器", "腿举机"].includes(item)));
+  const pullDay = trainingDays(plan).find(day => day.theme === "拉");
+  assert.ok(!pullDay.exercises.some(row => /腿|臀/.test(row.category)));
+}
+
+{
   const plan = makePlan({ limitations: ["膝盖不适", "不适合高冲击"] });
   assert.ok(!exerciseNames(plan).some(name => /跑步|开合跳|高抬腿|跳绳/.test(name)));
 }

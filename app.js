@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui11";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui11";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui12";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui12";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -556,6 +556,21 @@ function validateTrainingSettings(settings) {
   return errors;
 }
 
+function formatWorkoutGenerationError(errors = [], warnings = [], settings = {}) {
+  const messages = errors.map(error => {
+    if (/没有可用动作/.test(error)) {
+      const dayMatch = error.match(/第\s*(\d+)\s*天/);
+      const dayNumber = dayMatch?.[1] || "";
+      const themes = { 1: "推类", 2: "拉类", 3: "腿臀", 4: "全身/辅助", 5: "全身/辅助", 6: "全身/辅助" };
+      const themeHint = themes[dayNumber] || "对应主题";
+      return `当前器械、地点或身体限制下，第 ${dayNumber || "某"} 天缺少${themeHint}可用动作。建议补充弹力带、哑铃、引体向上杆或固定器械，或者把训练分化改为「全身训练」。`;
+    }
+    return error;
+  });
+  if (!messages.length && warnings.length) messages.push(...warnings);
+  return messages.join("；") || "当前设置暂时无法生成安全计划，请减少限制或增加可用器械。";
+}
+
 function applyTrainingSettings(settings = {}) {
   const setValue = (id, value) => {
     const element = document.querySelector(id);
@@ -848,7 +863,7 @@ function setupTrainingUI() {
     saveTrainingSettings(settings);
     const { plan, errors, warnings } = generateWorkoutPlan(settings, latestProfile || currentUserProfile || {});
     if (!plan) {
-      error.textContent = `暂时无法生成安全计划：${(errors || warnings || []).join("；")}`;
+      error.textContent = formatWorkoutGenerationError(errors, warnings, settings);
       setWorkoutLoading(false);
       return;
     }

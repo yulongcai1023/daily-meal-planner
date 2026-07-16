@@ -230,7 +230,7 @@ export function isExerciseAllowed(exercise, settings) {
   const level = DIFFICULTY_ORDER[settings.experienceLevel] ?? 1;
   const exerciseLevel = DIFFICULTY_ORDER[exercise.difficulty] ?? 1;
   const limitations = new Set(settings.limitations || []);
-  if (!exercise.suitableLocations.includes(settings.trainingLocation)) return false;
+  if (settings.trainingLocation === "homeNone" && !exercise.equipment.every(item => item === "无器械" || item === "瑜伽垫")) return false;
   if (!equipmentAllowed(exercise, settings)) return false;
   if (exerciseLevel > level + 1) return false;
   if (isDislikedExercise(exercise, settings.dislikedExercises)) return false;
@@ -290,8 +290,10 @@ function categoriesForTheme(theme) {
 function exerciseMatchesTheme(exercise, theme) {
   const text = `${exercise.category}${exercise.movementPattern}${exercise.name}${exercise.primaryMuscles.join("")}`;
   if (theme.includes("全身")) return true;
-  if (theme.includes("推") || theme.includes("胸")) return /胸|水平推|垂直推|夹胸|肩外展|肩屈|肘伸|推胸|卧推|俯卧撑|臂屈伸/.test(text);
-  if (theme.includes("拉") || theme.includes("背")) return /背|水平拉|垂直拉|肘屈|下拉|划船|引体|弯举|面拉|飞鸟/.test(text);
+  if ((theme.includes("推") || theme.includes("胸")) && /腿|臀/.test(exercise.category)) return false;
+  if ((theme.includes("拉") || theme.includes("背")) && /腿|臀/.test(exercise.category)) return false;
+  if (theme.includes("推") || theme.includes("胸")) return /胸|肩|手臂|水平推|垂直推|夹胸|肩外展|肩屈|肘伸|推胸|卧推|俯卧撑|臂屈伸/.test(text);
+  if (theme.includes("拉") || theme.includes("背")) return /背|手臂|水平拉|垂直拉|肘屈|下拉|划船|引体|弯举|面拉|飞鸟|背伸/.test(text);
   if (theme.includes("腿") || theme.includes("下肢")) return /腿|臀|深蹲|弓步|髋|膝|踝|提踵|静蹲|臀桥/.test(text);
   if (theme.includes("上肢")) return /胸|背|肩|手臂|水平推|垂直推|水平拉|垂直拉|肘/.test(text);
   if (theme.includes("肩")) return /肩|肩外展|肩屈|垂直推|面拉|飞鸟/.test(text);

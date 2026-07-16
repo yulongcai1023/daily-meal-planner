@@ -19,6 +19,6 @@ assert.ok(html.includes('data-fitness-panel="library"'), "fitness sidebar items 
 assert.ok(app.includes("syncSecondaryGoalOptions"), "primary/secondary goal sync should be implemented");
 assert.ok(app.includes("validateTrainingSettings"), "submit-time training validation should be implemented");
 assert.ok(ui.includes("estimatedCaloriesRange"), "calorie display should use an estimate range");
-assert.ok(html.includes("fitness-ui11") && app.includes("fitness-ui11"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("fitness-ui12") && app.includes("fitness-ui12"), "cache-busting asset versions should be updated");
 
 console.log("Fitness UI audit tests passed: 8 cases");
