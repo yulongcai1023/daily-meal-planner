@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui13";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui13";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui14";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui14";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -556,14 +556,46 @@ function validateTrainingSettings(settings) {
   return errors;
 }
 
+function calendarSlotsForTrainingCount(count) {
+  return {
+    1: [0],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [0, 1, 3, 5],
+    5: [0, 1, 2, 4, 5],
+    6: [0, 1, 2, 3, 4, 5]
+  }[Number(count)] || [0, 2, 4];
+}
+
+function themeForCalendarDay(settings = {}, dayNumber = 1) {
+  const split = SPLITS[settings.selectedSplit] || SPLITS.fullBody;
+  const slots = calendarSlotsForTrainingCount(settings.weeklyTrainingDays);
+  const slotIndex = slots.indexOf(Number(dayNumber) - 1);
+  if (slotIndex < 0) return "";
+  return split.sequence[slotIndex % split.sequence.length] || "";
+}
+
+function readableThemeHint(theme) {
+  if (/推|胸/.test(theme)) return "推类";
+  if (/拉|背/.test(theme)) return "拉类/背部";
+  if (/腿|臀|下肢/.test(theme)) return "腿臀";
+  if (/全身/.test(theme)) return "全身";
+  if (/肩/.test(theme)) return "肩部";
+  if (/手臂/.test(theme)) return "手臂";
+  return theme || "对应主题";
+}
+
 function formatWorkoutGenerationError(errors = [], warnings = [], settings = {}) {
   const messages = errors.map(error => {
     if (/没有可用动作/.test(error)) {
       const dayMatch = error.match(/第\s*(\d+)\s*天/);
       const dayNumber = dayMatch?.[1] || "";
-      const themes = { 1: "推类", 2: "拉类", 3: "腿臀", 4: "全身/辅助", 5: "全身/辅助", 6: "全身/辅助" };
-      const themeHint = themes[dayNumber] || "对应主题";
-      return `当前器械、地点或身体限制下，第 ${dayNumber || "某"} 天缺少${themeHint}可用动作。建议补充弹力带、哑铃、引体向上杆或固定器械，或者把训练分化改为「全身训练」。`;
+      const themeHint = readableThemeHint(themeForCalendarDay(settings, dayNumber));
+      const noEquipment = (settings.availableEquipment || []).length === 1 && (settings.availableEquipment || []).includes("无器械");
+      const suggestion = noEquipment
+        ? "家中无器械也可以训练腿部；如果缺少的是拉类/背部动作，建议选择弹力带或引体向上杆，或者改为「全身训练」让动作分布更均衡。"
+        : "建议减少相关身体限制、补充对应器械，或者把训练分化改为「全身训练」。";
+      return `当前器械、地点或身体限制下，第 ${dayNumber || "某"} 天缺少${themeHint}可用动作。${suggestion}`;
     }
     return error;
   });

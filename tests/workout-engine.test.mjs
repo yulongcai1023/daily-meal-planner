@@ -176,8 +176,22 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 
 {
   const result = generateWorkoutPlan({ ...base, selectedSplit: "ppl", trainingLocation: "homeNone", availableEquipment: ["无器械"], cardioPreference: "none" });
-  assert.equal(result.plan, null);
-  assert.ok(result.errors.some(text => text.includes("没有可用动作")));
+  assert.deepEqual(result.errors, []);
+  assert.ok(result.plan);
+  const days = trainingDays(result.plan);
+  assert.deepEqual(days.map(day => day.theme), ["推", "拉", "腿"]);
+  assert.ok(days.find(day => day.theme === "拉").exercises.length > 0);
+  assert.ok(days.find(day => day.theme === "腿").exercises.some(row => ["自重深蹲", "臀桥", "提踵", "靠墙静蹲", "箭步蹲", "台阶踏步"].includes(row.name)));
+  assert.ok(equipmentUsed(result.plan).every(item => item === "无器械"));
+}
+
+{
+  const result = generateWorkoutPlan({ ...base, selectedSplit: "ppl", trainingLocation: "homeNone", availableEquipment: ["无器械"], limitations: ["腰部不适"], cardioPreference: "none" });
+  assert.deepEqual(result.errors, []);
+  assert.ok(result.plan);
+  const days = trainingDays(result.plan);
+  assert.ok(days.find(day => day.theme === "拉").exercises.every(row => row.equipment.every(item => item === "无器械")));
+  assert.ok(days.find(day => day.theme === "腿").exercises.length > 0);
 }
 
 {
