@@ -464,6 +464,22 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .media-figure { height: 142px; position: relative; display: grid; place-items: center; background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 12px; overflow: hidden; }
 .media-figure::before { width: 92px; height: 58px; border: 4px solid currentColor; border-radius: 50%; opacity: .16; }
 .media-figure::after { width: 130px; height: 4px; background: currentColor; opacity: .16; }
+.media-figure.has-preview { padding: 0; color: var(--fit-primary); background: linear-gradient(135deg, #FCFBF8, #F1F5EE); }
+.media-figure.has-preview::before, .media-figure.has-preview::after { content: none; }
+.exercise-preview-svg { width: 100%; height: 100%; display: block; }
+.preview-bg { fill: #FAFAF8; }
+.preview-floor { fill: none; stroke: #D8DED4; stroke-width: 3; stroke-linecap: round; }
+.preview-body { fill: none; stroke: currentColor; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.preview-body circle, .preview-body ellipse { fill: #fff; stroke: currentColor; }
+.preview-body path:nth-child(even) { stroke: #D9A46F; }
+.preview-title { fill: var(--fit-text-primary); font: 700 13px Inter, "Noto Sans SC", system-ui, sans-serif; }
+.preview-meta, .preview-equipment { fill: var(--fit-text-secondary); font: 500 10px Inter, "Noto Sans SC", system-ui, sans-serif; }
+.preview-chest, .preview-horizontal-push, .preview-vertical-push { color: #2F6B3C; }
+.preview-back, .preview-horizontal-pull, .preview-vertical-pull { color: #315F7D; }
+.preview-squat, .preview-lunge, .preview-hinge, .preview-calf { color: #6B5B2F; }
+.preview-hip-bridge, .preview-abduction { color: #7A4D77; }
+.preview-core-stability, .preview-core-flexion { color: #386A68; }
+.preview-run, .preview-cardio, .preview-bike, .preview-rower, .preview-rope { color: #8A5A2B; }
 .exercise-media figcaption { margin-top: 6px; color: var(--fit-text-secondary); font-size: 12px; text-align: center; }
 .exercise-core { min-width: 0; display: grid; gap: 10px; }
 .exercise-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(74px, 1fr)); gap: 8px; }
