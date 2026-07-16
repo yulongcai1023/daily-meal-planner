@@ -313,14 +313,15 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .fitness-main { min-width: 0; padding: 16px; display: grid; gap: 16px; }
 .fitness-main > *, .preference-card, .fitness-dashboard { min-width: 0; max-width: 100%; width: 100%; }
 .preference-card, .weekly-plan-card, .workout-detail-card, .fitness-empty-card, .exercise-card, .preference-subcard { background: var(--fit-surface); border: 1px solid var(--fit-border); border-radius: 16px; box-shadow: var(--fit-shadow); }
-.preference-card { padding: 16px; display: grid; gap: 14px; }
-.preference-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.preference-card { padding: 16px; display: grid; gap: 14px; overflow: hidden; }
+.preference-card > *, .preference-head > *, .preference-controls > * { min-width: 0; max-width: 100%; }
+.preference-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .preference-head h2 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 750; letter-spacing: -.02em; }
 .preference-head p { margin: 6px 0 0; color: var(--fit-text-secondary); font-size: 14px; line-height: 22px; }
-.plan-cycle-pill { min-height: 36px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; color: var(--fit-text-primary); border: 1px solid var(--fit-border); border-radius: 999px; background: #fff; font-size: 14px; white-space: nowrap; }
+.plan-cycle-pill { min-height: 36px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; color: var(--fit-text-primary); border: 1px solid var(--fit-border); border-radius: 999px; background: #fff; font-size: 14px; white-space: nowrap; flex: 0 0 auto; }
 .calendar-icon::before { width: 15px; height: 15px; border: 2px solid currentColor; border-radius: 4px; }
 .calendar-icon::after { width: 9px; height: 2px; top: 8px; background: currentColor; }
-.preference-controls { display: grid; grid-template-columns: repeat(7, minmax(116px, 1fr)); gap: 10px; padding: 10px; background: #FBFAF7; border: 1px solid var(--fit-border); border-radius: 12px; }
+.preference-controls { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; padding: 10px; background: #FBFAF7; border: 1px solid var(--fit-border); border-radius: 12px; }
 .preference-controls label, .disliked-field { color: var(--fit-text-secondary); font-size: 12px; line-height: 18px; font-weight: 650; }
 .preference-controls select, .disliked-field input, .chip-search { min-height: 42px; width: 100%; margin-top: 6px; padding: 0 12px; color: var(--fit-text-primary); background: var(--fit-surface); border: 1px solid var(--fit-border); border-radius: 10px; outline: none; font: inherit; font-size: 14px; transition: border-color .18s, box-shadow .18s; }
 .preference-controls select:focus, .disliked-field input:focus, .chip-search:focus, .set-row input:focus, .exercise-note input:focus { border-color: var(--fit-primary); box-shadow: 0 0 0 3px rgba(47,107,60,.14); }
