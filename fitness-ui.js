@@ -216,18 +216,6 @@ function renderExerciseInstructions(exercise) {
   `;
 }
 
-function renderExerciseAlternatives(exercise) {
-  const alternatives = exercise.alternatives || [];
-  return `
-    <aside class="alternative-box">
-      <span>替代动作</span>
-      ${alternatives.length
-        ? `<ul>${alternatives.slice(0, 4).map(item => `<li>${escapeHtml(item.name)}</li>`).join("")}</ul>`
-        : `<p>暂无推荐替代</p>`}
-    </aside>
-  `;
-}
-
 function renderExerciseSetTracker(exercise, dayIndex, exerciseIndex) {
   const rows = Array.from({ length: Math.max(1, exercise.sets || 1) }, (_, index) => `
     <div class="set-row" data-set-index="${index}">
@@ -273,7 +261,6 @@ function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
           ${renderExerciseMetrics(exercise)}
           ${renderExerciseInstructions(exercise)}
         </div>
-        ${renderExerciseAlternatives(exercise)}
       </div>
       ${renderExerciseSetTracker(exercise, dayIndex, exerciseIndex)}
       <footer class="exercise-actions">
