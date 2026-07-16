@@ -393,12 +393,16 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .icon-core::after { width: 2px; height: 16px; background: currentColor; box-shadow: -5px 0 0 currentColor, 5px 0 0 currentColor; }
 .icon-rest::before { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; opacity: .6; }
 .icon-flash::before { width: 10px; height: 18px; background: currentColor; clip-path: polygon(58% 0, 100% 0, 62% 45%, 100% 45%, 35% 100%, 48% 58%, 0 58%); }
-.preference-footer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, .55fr) auto; align-items: end; gap: 14px; padding: 12px; border: 1px solid var(--fit-border); border-radius: 12px; }
-.preference-pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.preference-pill { cursor: pointer; }
-.preference-pill span { min-height: 34px; padding: 0 12px; display: inline-flex; align-items: center; color: var(--fit-text-secondary); background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 999px; font-size: 13px; transition: background .18s, color .18s, border-color .18s; }
+.preference-footer { display: grid; grid-template-columns: minmax(360px, 1fr) minmax(260px, .72fr) minmax(160px, auto); grid-template-areas: "styles disliked action" "styles error error"; align-items: end; gap: 14px; padding: 12px; border: 1px solid var(--fit-border); border-radius: 12px; }
+.preference-footer > div:first-child { grid-area: styles; min-width: 0; }
+.preference-footer .disliked-field { grid-area: disliked; min-width: 0; }
+.preference-footer #training-error { grid-area: error; min-height: 18px; margin: 0; overflow-wrap: break-word; }
+.preference-footer #generate-workout-button { grid-area: action; justify-self: end; }
+.preference-pill-row { min-width: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.preference-pill { flex: 0 0 auto; cursor: pointer; }
+.preference-pill span { min-height: 34px; padding: 0 12px; display: inline-flex; align-items: center; color: var(--fit-text-secondary); background: #FAFAF8; border: 1px solid var(--fit-border); border-radius: 999px; font-size: 13px; white-space: nowrap; word-break: keep-all; transition: background .18s, color .18s, border-color .18s; }
 .preference-pill input:checked + span { color: var(--fit-primary); background: var(--fit-primary-light); border-color: #BFD9BD; }
-.generate-workout-button { min-width: 148px; min-height: 46px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: #fff; background: var(--fit-primary); border: 0; border-radius: 10px; cursor: pointer; font: inherit; font-size: 14px; font-weight: 750; box-shadow: none; transition: background .18s, transform .18s; }
+.generate-workout-button { min-width: 148px; min-height: 46px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: #fff; background: var(--fit-primary); border: 0; border-radius: 10px; cursor: pointer; font: inherit; font-size: 14px; font-weight: 750; white-space: nowrap; box-shadow: none; transition: background .18s, transform .18s; }
 .generate-workout-button:hover { background: var(--fit-primary-hover); transform: translateY(-1px); box-shadow: var(--fit-shadow); }
 .generate-workout-button:disabled { opacity: .72; cursor: wait; transform: none; }
 .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.45); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
@@ -551,6 +555,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .preference-controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .preference-grid { grid-template-columns: 1fr 1fr; }
   .preference-subcard:first-child { grid-column: 1 / -1; }
+  .preference-footer { grid-template-columns: minmax(0, 1fr) minmax(220px, .7fr); grid-template-areas: "styles styles" "disliked action" "error error"; }
+  .preference-footer #generate-workout-button { justify-self: stretch; }
   .fitness-plan-grid { grid-template-columns: 1fr; }
   .weekly-plan-list { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); overflow-x: auto; }
   .exercise-card-body { grid-template-columns: 180px minmax(0, 1fr); }
@@ -572,6 +578,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .preference-head, .workout-detail-head { flex-direction: column; align-items: stretch; }
   .plan-cycle-pill { width: fit-content; }
   .preference-controls, .preference-grid, .preference-footer, .exercise-card-body { grid-template-columns: 1fr; }
+  .preference-footer { grid-template-areas: "styles" "disliked" "error" "action"; }
   .segment-row { grid-template-columns: 1fr; align-items: stretch; }
   .segment-group { width: 100%; }
   .selector-grid, .selector-grid-limits, .selector-grid-muscles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
