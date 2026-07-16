@@ -478,6 +478,18 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .mobile-workout-actions { display: none; }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, .selector-tile:focus-within, .preference-pill:focus-within { outline: 3px solid rgba(47,107,60,.22); outline-offset: 2px; }
 [hidden] { display: none !important; }
+@media (max-width: 1380px) {
+  .exercise-card-head { grid-template-columns: 34px minmax(0, 1fr); }
+  .exercise-complete-control, .exercise-menu { min-width: 104px; justify-self: start; }
+  .exercise-complete-control { grid-column: 2; }
+  .exercise-menu { grid-column: 2; }
+  .exercise-card-body { grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); }
+  .exercise-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1080px) {
+  .exercise-card-body { grid-template-columns: 1fr; }
+  .exercise-media .media-figure { height: 160px; }
+}
 @media (max-width: 980px) {
   .hero-mark { display: none; }
   .workspace, .fitness-app-layout, .workout-overview-card, .exercise-detail { grid-template-columns: 1fr; }
