@@ -2,12 +2,15 @@
 
 - 动作数量：106
 - 进退阶图校验：通过
+- 动作库完整性校验：通过
 - 超出 1～5 的难度值：0
 - 器械组合缺少 AND/OR 语义：0
 - 名称包含 weighted 但没有负重器械：0
 - programRole 与 exerciseRole 冲突：0
-- skill_drill 仍计入有效组：0
-- cardio 被标记为 compound/accessory：0
+- 统计语义异常：0
+- warmup / activation / skill_drill 仍计入有效组：0
+- cardio 被错误标记或计入肌肉有效组：0
+- 弃用动作迁移异常：0
 - 组合器械不完整：0
 - 需要安全条件但字段缺失：0
 - 无效动作 ID：0

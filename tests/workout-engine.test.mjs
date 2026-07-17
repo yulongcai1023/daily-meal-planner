@@ -9,6 +9,7 @@ const {
   getExerciseAlternatives,
   isExerciseAllowed,
   validateExerciseProgressionGraph,
+  validateExerciseLibrary,
   scoreWeeklySchedule,
   shouldProgressExercise,
   shouldRegressExercise,
@@ -54,10 +55,16 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.contraindications) 
 assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && Array.isArray(exercise.progressionIds)), "all exercises should have progression and regression arrays");
 assert.ok(EXERCISES.every(exercise => exercise.difficultyScore >= 1 && exercise.difficultyScore <= 5), "difficultyScore must stay within 1-5");
 assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) && exercise.equipmentOptions.every(option => Array.isArray(option) && option.length)), "all exercises should have AND/OR equipmentOptions");
+assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && exercise.countsTowardMuscleVolume !== undefined), "all exercises should expose split counting semantics");
 
 {
   const graph = validateExerciseProgressionGraph();
   assert.equal(graph.ok, true, graph.errors.join("\n"));
+}
+
+{
+  const library = validateExerciseLibrary();
+  assert.equal(library.ok, true, library.errors.join("\n"));
 }
 
 {
@@ -73,6 +80,10 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.ok(byId.cable_kickback.difficultyScore <= 3);
   assert.ok(byId.lying_leg_raise.difficultyScore >= 3);
   assert.equal(byId.superman.beginnerFriendly, false);
+  assert.equal(byId.dip.difficultyScore, 4);
+  assert.equal(byId.weighted_dip.difficultyScore, 5);
+  assert.equal(byId.bodyweight_single_leg_hinge.difficultyScore, 3.5);
+  assert.equal(byId.single_leg_rdl.difficultyScore, 4.5);
 }
 
 {
@@ -115,6 +126,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.ok(byId.machine_chest_press.suggestedNextIds.includes("db_bench"));
   assert.equal(byId.incline_db_bench.difficultyScore, 2.5);
   assert.equal(byId.barbell_row.difficultyLevel, "intermediate");
+  assert.ok(byId.db_shoulder_press.equipmentOptions.every(option => option.includes("bench")), "seated dumbbell shoulder press must require a bench");
   assert.equal(byId.standing_db_shoulder_press.spinalLoad > byId.db_shoulder_press.spinalLoad, true);
   assert.ok(byId.cable_kickback.coordinationDemand <= 3);
   assert.ok(!byId.step_up.progressionIds.includes("lunge"));
@@ -170,12 +182,15 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.equal(byId.assisted_dip_machine.equipment.includes("辅助臂屈伸机"), true);
   assert.deepEqual(byId.band_assisted_dip.progressionIds, ["dip"]);
   assert.deepEqual(byId.dip.progressionIds, ["weighted_dip"]);
+  assert.equal(byId.dip.difficultyScore < byId.weighted_dip.difficultyScore, true);
   assert.equal(byId.barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.incline_barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.close_grip_bench.requiresSpotterOrSafetyArms, true);
   assert.ok(byId.leg_curl.alternativeDetails.some(item => item.id === "db_rdl" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
   assert.ok(byId.db_rdl.alternativeDetails.some(item => item.id === "glute_bridge" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
   assert.equal(byId.incline_push_up.autoCandidate, false);
+  assert.deepEqual(byId.incline_push_up.replacedBy, ["high_incline_push_up", "low_incline_push_up"]);
+  assert.ok(byId.incline_push_up.replacedBy.every(id => byId[id] && byId[id].programRole !== "deprecated"));
   assert.equal(byId.chair_sit_to_stand.alternativeIds.includes("bodyweight_squat"), false);
   assert.equal(byId.hip_hinge_drill.alternativeIds.includes("db_rdl"), false);
   assert.equal(byId.lateral_raise.programRole, "workset");
@@ -189,7 +204,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.ok(byId.weighted_pull_up.equipmentOptions.some(option => option.includes("pull_up_bar") && option.includes("weighted_vest")));
   assert.ok(byId.weighted_pull_up.equipmentOptions.some(option => option.includes("pull_up_bar") && option.includes("dip_belt") && option.includes("weight_plate")));
   assert.deepEqual(byId.chair_sit_to_stand.equipmentOptions, [["chair"], ["bench"], ["stable_platform"]]);
-  assert.ok(byId.weighted_push_up.equipmentOptionSafety.some(item => item.option.includes("weight_plate") && item.requiresSpotter));
+  assert.equal(byId.weighted_push_up.equipmentOptions.some(option => option.includes("weight_plate")), false);
   assert.ok(byId.weighted_plank.equipmentOptionSafety.some(item => item.option.includes("secured_sandbag") && item.requiresSecuredLoad));
   assert.equal(byId.hip_hinge_drill.exerciseRole, "skill_drill");
   assert.equal(byId.hip_hinge_drill.programRole, "activation");
@@ -197,6 +212,15 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.equal(byId.single_leg_rdl.equipment.includes("杠铃片"), false);
   assert.equal(byId.barbell_squat.requiresRack, true);
   assert.equal(byId.barbell_squat.requiresSafetyArmsOrSpotterForHeavySets, true);
+  assert.equal(byId.farmer_carry.exerciseRole, "loaded_carry");
+  assert.equal(byId.box_squat.name, "徒手箱式深蹲");
+  assert.ok(byId.box_squat.aliases.includes("箱式深蹲"));
+  assert.equal(byId.pallof_press.name, "帕洛夫抗旋转推");
+  assert.ok(byId.pallof_press.aliases.includes("Pallof Press"));
+  assert.ok(byId.preacher_curl.equipmentOptions.every(option => option.includes("preacher_bench") && option.some(id => ["adjustable_dumbbells", "fixed_dumbbells", "barbell"].includes(id))));
+  const cardioIds = ["mountain_climber", "jumping_jack", "high_knee", "brisk_walk", "running", "elliptical", "bike", "rowing_machine", "stair_climber", "jump_rope", "low_impact_circuit"];
+  assert.ok(cardioIds.every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false));
+  assert.ok(["standing_scapular_retraction", "wall_angel", "hip_hinge_drill", "superman"].every(id => byId[id].countsAsWorkSet === false && byId[id].countsTowardMuscleVolume === false));
   assert.equal(byId.barbell_squat.alternativeIds.includes("leg_press"), false);
   const squatAlternatives = getExerciseAlternatives("barbell_squat", {
     ...base,
@@ -213,6 +237,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) &
   assert.ok(!exerciseIds(plan).includes("standing_reverse_fly"));
   assert.ok(!exerciseIds(plan).includes("standing_scapular_retraction"));
   assert.ok(!exerciseIds(plan).includes("wall_angel"));
+  assert.ok(trainingDays(plan).every(day => !["推", "拉", "腿"].includes(day.theme) || day.exercises[0]?.exerciseId !== "farmer_carry"), "farmer carry must not be the sole leading compound for push/pull/leg days");
 }
 
 {

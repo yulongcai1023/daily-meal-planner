@@ -8,7 +8,7 @@ if (process.stderr.setDefaultEncoding) process.stderr.setDefaultEncoding("utf8")
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const source = readFileSync(resolve(root, "workout-engine.js"), "utf8");
 const moduleUrl = `data:text/javascript;charset=utf-8,${encodeURIComponent(source)}`;
-const { EXERCISES, validateExerciseProgressionGraph } = await import(moduleUrl);
+const { EXERCISES, validateExerciseProgressionGraph, validateExerciseLibrary } = await import(moduleUrl);
 
 const byId = new Map(EXERCISES.map(item => [item.id, item]));
 const knownEquipmentIds = new Set([
@@ -22,7 +22,7 @@ const knownEquipmentIds = new Set([
 ]);
 const weightedEquipmentIds = new Set(["weighted_vest", "secured_sandbag", "weight_plate", "dip_belt", "adjustable_dumbbells", "fixed_dumbbells", "kettlebell", "barbell"]);
 const programRoles = new Set(["workset", "warmup", "activation", "deprecated"]);
-const exerciseRoles = new Set(["primary_compound", "secondary_compound", "isolation", "accessory", "core", "cardio", "skill_drill", "activation", "warmup"]);
+const exerciseRoles = new Set(["primary_compound", "secondary_compound", "isolation", "accessory", "loaded_carry", "core", "cardio", "skill_drill", "activation", "warmup"]);
 
 const text = value => {
   if (value === true) return "是";
@@ -37,7 +37,8 @@ const relationIds = exercise => [
   ...(exercise.suggestedNextIds || []),
   ...(exercise.progressionIds || []),
   ...(exercise.regressionIds || []),
-  ...(exercise.prerequisites || [])
+  ...(exercise.prerequisites || []),
+  ...(exercise.replacedBy || [])
 ];
 const optionKey = option => (option || []).join("+");
 const hasOption = (exercise, predicate) => (exercise.equipmentOptions || []).some(predicate);
@@ -48,12 +49,14 @@ const outOfRangeDifficulty = [];
 const missingEquipmentOptionSemantics = [];
 const weightedWithoutLoadEquipment = [];
 const programRoleExerciseRoleConflicts = [];
+const invalidCountingSemantics = [];
 const skillDrillEffectiveSets = [];
 const cardioMarkedCompoundOrAccessory = [];
 const incompleteEquipmentCombinations = [];
 const missingSafetyRequirements = [];
 const invalidActionIds = [];
 const unreachableEquipmentIds = [];
+const deprecatedReplacementIssues = [];
 
 for (const exercise of EXERCISES) {
   if (!(exercise.difficultyScore >= 1 && exercise.difficultyScore <= 5)) {
@@ -80,8 +83,11 @@ for (const exercise of EXERCISES) {
   if (!exerciseRoles.has(exercise.exerciseRole)) {
     programRoleExerciseRoleConflicts.push(`${exercise.id}: exerciseRole=${text(exercise.exerciseRole)} 非法`);
   }
-  if (["warmup", "activation", "deprecated"].includes(exercise.programRole) && exercise.countsTowardEffectiveSets) {
-    programRoleExerciseRoleConflicts.push(`${exercise.id}: programRole=${exercise.programRole} 但仍计入有效组`);
+  if (["warmup", "activation", "deprecated"].includes(exercise.programRole) && (exercise.countsAsWorkSet || exercise.countsTowardMuscleVolume)) {
+    invalidCountingSemantics.push(`${exercise.id}: programRole=${exercise.programRole} 但仍计入工作组或肌肉有效组`);
+  }
+  if (["warmup", "activation", "skill_drill"].includes(exercise.exerciseRole) && (exercise.countsAsWorkSet || exercise.countsTowardMuscleVolume)) {
+    skillDrillEffectiveSets.push(`${exercise.id}: ${exercise.exerciseRole} 仍计入工作组或肌肉有效组`);
   }
   if (exercise.exerciseRole === "cardio" && exercise.category !== "有氧") {
     programRoleExerciseRoleConflicts.push(`${exercise.id}: exerciseRole=cardio 但 category=${text(exercise.category)}`);
@@ -89,13 +95,33 @@ for (const exercise of EXERCISES) {
   if (exercise.category === "有氧" && exercise.exerciseRole !== "cardio") {
     cardioMarkedCompoundOrAccessory.push(`${exercise.id}: 有氧动作 exerciseRole=${text(exercise.exerciseRole)}`);
   }
-  if (exercise.category === "有氧" && ["primary_compound", "secondary_compound", "accessory"].includes(exercise.exerciseRole)) {
-    cardioMarkedCompoundOrAccessory.push(`${exercise.id}: 有氧动作错误标记为 ${exercise.exerciseRole}`);
+  if (exercise.exerciseRole === "cardio" && exercise.countsTowardMuscleVolume) {
+    cardioMarkedCompoundOrAccessory.push(`${exercise.id}: 有氧动作错误计入肌肉有效组`);
   }
-  if (exercise.exerciseRole === "skill_drill" && exercise.countsTowardEffectiveSets) {
-    skillDrillEffectiveSets.push(`${exercise.id}: skill_drill 仍计入有效训练组`);
+  if (exercise.countsAsWorkSet === undefined || exercise.countsTowardMuscleVolume === undefined) {
+    invalidCountingSemantics.push(`${exercise.id}: 新统计字段为 undefined`);
   }
 
+  if (exercise.programRole === "deprecated") {
+    if (exercise.autoCandidate !== false) deprecatedReplacementIssues.push(`${exercise.id}: deprecated 动作仍可进入新计划候选池`);
+    for (const replacementId of exercise.replacedBy || []) {
+      const replacement = byId.get(replacementId);
+      if (!replacement) deprecatedReplacementIssues.push(`${exercise.id}: replacedBy 指向不存在动作 ${replacementId}`);
+      if (replacement?.programRole === "deprecated") deprecatedReplacementIssues.push(`${exercise.id}: replacedBy 指向弃用动作 ${replacementId}`);
+    }
+  }
+
+  if (exercise.id === "db_shoulder_press" && !hasOption(exercise, option => option.includes("bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
+    incompleteEquipmentCombinations.push("db_shoulder_press: 缺少 哑铃 + 卧推凳 AND 组合");
+  }
+  if (exercise.id === "preacher_curl") {
+    if (!hasOption(exercise, option => option.includes("preacher_bench") && option.includes("adjustable_dumbbells"))) incompleteEquipmentCombinations.push("preacher_curl: 缺少 preacher_bench + adjustable_dumbbells");
+    if (!hasOption(exercise, option => option.includes("preacher_bench") && option.includes("fixed_dumbbells"))) incompleteEquipmentCombinations.push("preacher_curl: 缺少 preacher_bench + fixed_dumbbells");
+    if (!hasOption(exercise, option => option.includes("preacher_bench") && option.includes("barbell"))) incompleteEquipmentCombinations.push("preacher_curl: 缺少 preacher_bench + barbell");
+  }
+  if (exercise.id === "weighted_push_up" && hasOption(exercise, option => option.length === 1 && option.includes("weight_plate"))) {
+    incompleteEquipmentCombinations.push("weighted_push_up: 不应单独使用 weight_plate 作为安全完整方案");
+  }
   if (exercise.id === "db_bench" && !hasOption(exercise, option => option.includes("bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
     incompleteEquipmentCombinations.push("db_bench: 缺少 哑铃 + 卧推凳 AND 组合");
   }
@@ -124,6 +150,11 @@ for (const exercise of EXERCISES) {
   if (exercise.id === "chair_sit_to_stand") {
     for (const required of ["chair", "bench", "stable_platform"]) {
       if (!hasOption(exercise, option => option.length === 1 && option[0] === required)) incompleteEquipmentCombinations.push(`chair_sit_to_stand: 缺少 OR option [${required}]`);
+    }
+  }
+  if (exercise.id === "box_squat") {
+    for (const required of ["box", "bench", "stable_platform"]) {
+      if (!hasOption(exercise, option => option.length === 1 && option[0] === required)) incompleteEquipmentCombinations.push(`box_squat: 缺少 OR option [${required}]`);
     }
   }
   if (exercise.id === "single_leg_rdl" && hasOption(exercise, option => option.includes("weight_plate"))) {
@@ -156,7 +187,8 @@ for (const exercise of EXERCISES) {
 }
 
 const graph = validateExerciseProgressionGraph();
-const encodingFiles = ["workout-engine.js", "tests/workout-engine.test.mjs", "workout-data-audit.md", "workout-difficulty-review.md", "workout-difficulty-summary.md"];
+const library = validateExerciseLibrary();
+const encodingFiles = ["workout-engine.js", "tests/workout-engine.test.mjs", "scripts/audit-workout-data.mjs", "workout-data-audit.md", "workout-difficulty-review.md", "workout-difficulty-summary.md"];
 const encodingAbnormalCharacterCount = encodingFiles.reduce((sum, file) => {
   try {
     return sum + abnormalCharacters(readFileSync(resolve(root, file), "utf8"));
@@ -169,13 +201,17 @@ const audit = {
   generatedAt: new Date().toISOString(),
   exerciseCount: EXERCISES.length,
   graphOk: graph.ok,
+  libraryOk: library.ok,
   graphErrors: graph.errors,
+  libraryErrors: library.errors,
   outOfRangeDifficulty,
   missingEquipmentOptionSemantics,
   weightedWithoutLoadEquipment,
   programRoleExerciseRoleConflicts,
+  invalidCountingSemantics,
   skillDrillEffectiveSets,
   cardioMarkedCompoundOrAccessory,
+  deprecatedReplacementIssues,
   incompleteEquipmentCombinations,
   missingSafetyRequirements,
   invalidActionIds: [...new Set(invalidActionIds)],
@@ -193,35 +229,42 @@ writeFileSync(jsonPath, `${JSON.stringify(audit, null, 2)}\n`, "utf8");
 const md = `# 健身动作数据结构收尾审计\n\n生成时间：${audit.generatedAt}\n\n`
   + `- 动作数量：${audit.exerciseCount}\n`
   + `- 进退阶图校验：${audit.graphOk ? "通过" : "失败"}\n`
+  + `- 动作库完整性校验：${audit.libraryOk ? "通过" : "失败"}\n`
   + `- 编码异常字符数量：${audit.encodingAbnormalCharacterCount}\n\n`
   + `## 超出 1～5 的难度值\n\n${lineItems(outOfRangeDifficulty)}\n\n`
   + `## 器械组合缺少 AND/OR 语义\n\n${lineItems(missingEquipmentOptionSemantics)}\n\n`
   + `## 名称包含 weighted 但没有负重器械的动作\n\n${lineItems(weightedWithoutLoadEquipment)}\n\n`
   + `## programRole 与 exerciseRole 冲突\n\n${lineItems(programRoleExerciseRoleConflicts)}\n\n`
-  + `## skill_drill 仍计入有效组的动作\n\n${lineItems(skillDrillEffectiveSets)}\n\n`
-  + `## cardio 被标记为 compound/accessory 的动作\n\n${lineItems(cardioMarkedCompoundOrAccessory)}\n\n`
+  + `## 统计语义异常\n\n${lineItems(invalidCountingSemantics)}\n\n`
+  + `## warmup / activation / skill_drill 仍计入有效组\n\n${lineItems(skillDrillEffectiveSets)}\n\n`
+  + `## cardio 被错误标记或计入肌肉有效组\n\n${lineItems(cardioMarkedCompoundOrAccessory)}\n\n`
+  + `## 弃用动作迁移异常\n\n${lineItems(deprecatedReplacementIssues)}\n\n`
   + `## 组合器械不完整的动作\n\n${lineItems(incompleteEquipmentCombinations)}\n\n`
   + `## 需要安全条件但字段缺失的动作\n\n${lineItems(missingSafetyRequirements)}\n\n`
   + `## 无效动作 ID\n\n${lineItems(audit.invalidActionIds)}\n\n`
   + `## 无法访问的器械 ID\n\n${lineItems(audit.unreachableEquipmentIds)}\n\n`
-  + `## 进退阶图错误\n\n${lineItems(graph.errors)}\n`;
+  + `## 进退阶图错误\n\n${lineItems(graph.errors)}\n\n`
+  + `## 动作库完整性错误\n\n${lineItems(library.errors)}\n`;
 writeFileSync(mdPath, md, "utf8");
 
 const rows = [
-  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 计入有效组 | equipmentOptions |",
-  "| --- | --- | --- | --- | --- | --- | --- |",
-  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsTowardEffectiveSets)} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
+  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | equipmentOptions |",
+  "| --- | --- | --- | --- | --- | --- | --- | --- |",
+  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
 ];
 writeFileSync(reviewPath, `# 健身动作结构报告\n\n生成时间：${audit.generatedAt}\n\n${rows.join("\n")}\n`, "utf8");
 writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
   + `- 动作数量：${audit.exerciseCount}\n`
   + `- 进退阶图校验：${audit.graphOk ? "通过" : "失败"}\n`
+  + `- 动作库完整性校验：${audit.libraryOk ? "通过" : "失败"}\n`
   + `- 超出 1～5 的难度值：${outOfRangeDifficulty.length}\n`
   + `- 器械组合缺少 AND/OR 语义：${missingEquipmentOptionSemantics.length}\n`
   + `- 名称包含 weighted 但没有负重器械：${weightedWithoutLoadEquipment.length}\n`
   + `- programRole 与 exerciseRole 冲突：${programRoleExerciseRoleConflicts.length}\n`
-  + `- skill_drill 仍计入有效组：${skillDrillEffectiveSets.length}\n`
-  + `- cardio 被标记为 compound/accessory：${cardioMarkedCompoundOrAccessory.length}\n`
+  + `- 统计语义异常：${invalidCountingSemantics.length}\n`
+  + `- warmup / activation / skill_drill 仍计入有效组：${skillDrillEffectiveSets.length}\n`
+  + `- cardio 被错误标记或计入肌肉有效组：${cardioMarkedCompoundOrAccessory.length}\n`
+  + `- 弃用动作迁移异常：${deprecatedReplacementIssues.length}\n`
   + `- 组合器械不完整：${incompleteEquipmentCombinations.length}\n`
   + `- 需要安全条件但字段缺失：${missingSafetyRequirements.length}\n`
   + `- 无效动作 ID：${audit.invalidActionIds.length}\n`
@@ -231,12 +274,15 @@ writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
 console.log(JSON.stringify({
   exerciseCount: audit.exerciseCount,
   graphOk: audit.graphOk,
+  libraryOk: audit.libraryOk,
   outOfRangeDifficulty: outOfRangeDifficulty.length,
   missingEquipmentOptionSemantics: missingEquipmentOptionSemantics.length,
   weightedWithoutLoadEquipment: weightedWithoutLoadEquipment.length,
   programRoleExerciseRoleConflicts: programRoleExerciseRoleConflicts.length,
+  invalidCountingSemantics: invalidCountingSemantics.length,
   skillDrillEffectiveSets: skillDrillEffectiveSets.length,
   cardioMarkedCompoundOrAccessory: cardioMarkedCompoundOrAccessory.length,
+  deprecatedReplacementIssues: deprecatedReplacementIssues.length,
   incompleteEquipmentCombinations: incompleteEquipmentCombinations.length,
   missingSafetyRequirements: missingSafetyRequirements.length,
   invalidActionIds: audit.invalidActionIds.length,
