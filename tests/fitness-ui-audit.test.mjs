@@ -25,7 +25,7 @@ assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open
 assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
 assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
 assert.ok(!build.includes("assets\", \"exercises") && build.includes("assets\", \"fitness-icons"), "static build should copy selector icons but not old exercise previews");
-assert.ok(html.includes("fitness-ui24") && app.includes("fitness-ui24"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("fitness-ui25") && app.includes("fitness-ui25"), "cache-busting asset versions should be updated");
 assert.ok(html.includes('id="equipment-subcard"') && app.includes("syncEquipmentVisibility"), "home no-equipment location should hide the equipment selector");
 assert.ok(app.includes('trainingLocation === "homeNone" ? ["无器械"]') || app.includes("trainingLocation === \"homeNone\" ? [\"无器械\"]"), "home no-equipment location should force bodyweight equipment");
 assert.ok(ui.includes("renderExercisePager") && ui.includes("data-exercise-page-step"), "workout exercises should render as paged panels");

@@ -2,10 +2,26 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 const DIFFICULTY_ORDER = {
   beginner0: 0,
+  novice: 0,
   beginner: 1,
-  novice: 2,
+  intermediate: 2,
+  advanced: 3
+};
+
+const DIFFICULTY_SCORE_BY_LEVEL = {
+  beginner0: 1,
+  novice: 1,
+  beginner: 2,
   intermediate: 3,
   advanced: 4
+};
+
+const EXPERIENCE_MAX_DIFFICULTY_SCORE = {
+  beginner0: 2,
+  novice: 2,
+  beginner: 3,
+  intermediate: 4,
+  advanced: 5
 };
 
 const LOCATION_EQUIPMENT = {
@@ -164,6 +180,107 @@ export const EXERCISES = [
   ex({ id: "low_impact_circuit", name: "低冲击循环训练", englishName: "Low-impact Circuit", category: "有氧", primaryMuscles: ["全身"], movementPattern: "循环训练", equipment: ["无器械"], difficulty: "beginner0", contraindications: ["膝盖不适"], defaultRepRange: "8–15分钟", defaultRestSeconds: 45, isCompound: false, tags: ["lowImpact"] })
 ];
 
+const PROGRESSION_CHAINS = [
+  ["incline_push_up", "kneeling_push_up", "push_up", "close_push_up"],
+  ["machine_chest_press", "db_bench", "incline_db_bench", "barbell_bench", "incline_barbell_bench"],
+  ["band_pulldown", "lat_pulldown", "assisted_pull_up", "pull_up"],
+  ["standing_scapular_retraction", "wall_angel", "face_pull", "reverse_fly"],
+  ["seated_row", "chest_supported_row", "one_arm_db_row", "barbell_row"],
+  ["bodyweight_squat", "goblet_squat", "smith_squat", "barbell_squat"],
+  ["wall_sit", "leg_press", "leg_extension"],
+  ["glute_bridge", "hip_abduction", "db_rdl", "rdl", "barbell_hip_thrust"],
+  ["step_up", "lunge", "bulgarian_split_squat"],
+  ["dead_bug", "bird_dog", "plank", "side_plank", "lying_leg_raise", "hanging_leg_raise"],
+  ["brisk_walk", "low_impact_circuit", "bike", "elliptical", "rowing_machine", "stair_climber", "jump_rope"]
+];
+
+const DIFFICULTY_OVERRIDES = {
+  push_up: { difficultyLevel: "intermediate", difficultyScore: 3, beginnerFriendly: false, stabilityDemand: 3, technicalComplexity: 3 },
+  kneeling_push_up: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true },
+  incline_push_up: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true },
+  machine_chest_press: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true, stabilityDemand: 1 },
+  db_bench: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true, stabilityDemand: 2 },
+  barbell_bench: { difficultyLevel: "intermediate", difficultyScore: 4, requiresSpotter: true, requiresSetupSkill: true },
+  incline_barbell_bench: { difficultyLevel: "intermediate", difficultyScore: 4, requiresSpotter: true, requiresSetupSkill: true },
+  pull_up: { difficultyLevel: "advanced", difficultyScore: 5, beginnerFriendly: false, fatigueCost: 4 },
+  assisted_pull_up: { difficultyLevel: "intermediate", difficultyScore: 3 },
+  one_arm_db_row: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3 },
+  barbell_row: { difficultyLevel: "advanced", difficultyScore: 4, spinalLoad: 4, requiresSetupSkill: true },
+  db_shoulder_press: { difficultyLevel: "beginner", difficultyScore: 2 },
+  barbell_press: { difficultyLevel: "advanced", difficultyScore: 4, spinalLoad: 3, requiresSetupSkill: true },
+  close_push_up: { difficultyLevel: "intermediate", difficultyScore: 4 },
+  dip: { difficultyLevel: "advanced", difficultyScore: 5, jointStress: 4 },
+  bodyweight_squat: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true },
+  goblet_squat: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true },
+  smith_squat: { difficultyLevel: "intermediate", difficultyScore: 3 },
+  barbell_squat: { difficultyLevel: "advanced", difficultyScore: 4, spinalLoad: 4, requiresSpotter: true, requiresSetupSkill: true },
+  bulgarian_split_squat: { difficultyLevel: "intermediate", difficultyScore: 4, stabilityDemand: 4, coordinationDemand: 4, beginnerFriendly: false },
+  lunge: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3 },
+  step_up: { difficultyLevel: "beginner", difficultyScore: 2, stabilityDemand: 2 },
+  rdl: { difficultyLevel: "advanced", difficultyScore: 4, spinalLoad: 4, requiresSetupSkill: true },
+  db_rdl: { difficultyLevel: "intermediate", difficultyScore: 3, spinalLoad: 3 },
+  barbell_hip_thrust: { difficultyLevel: "intermediate", difficultyScore: 4, requiresSetupSkill: true },
+  plank: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true },
+  side_plank: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3 },
+  dead_bug: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true },
+  bird_dog: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true },
+  hanging_leg_raise: { difficultyLevel: "advanced", difficultyScore: 5, stabilityDemand: 4 },
+  farmer_carry: { difficultyLevel: "intermediate", difficultyScore: 3 },
+  mountain_climber: { difficultyLevel: "intermediate", difficultyScore: 3, fatigueCost: 3 },
+  jumping_jack: { difficultyLevel: "beginner", difficultyScore: 2, jointStress: 3 },
+  high_knee: { difficultyLevel: "intermediate", difficultyScore: 3, jointStress: 3 },
+  jump_rope: { difficultyLevel: "intermediate", difficultyScore: 3, coordinationDemand: 4 },
+  rowing_machine: { difficultyLevel: "intermediate", difficultyScore: 3, technicalComplexity: 3 },
+  low_impact_circuit: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true }
+};
+
+function chainNeighbors(id) {
+  const chain = PROGRESSION_CHAINS.find(items => items.includes(id)) || [];
+  const index = chain.indexOf(id);
+  return {
+    regressionIds: index > 0 ? [chain[index - 1]] : [],
+    progressionIds: index >= 0 && index < chain.length - 1 ? [chain[index + 1]] : []
+  };
+}
+
+function inferExerciseMetadata(exercise) {
+  const baseLevel = exercise.difficulty === "beginner0" ? "novice" : exercise.difficulty;
+  const baseScore = DIFFICULTY_SCORE_BY_LEVEL[exercise.difficulty] || 2;
+  const technicalComplexity = clamp(baseScore + (exercise.isUnilateral ? 1 : 0) + (/杠铃|硬拉|深蹲|引体|悬垂/.test(`${exercise.name}${exercise.movementPattern}`) ? 1 : 0), 1, 5);
+  const stabilityDemand = clamp(baseScore + (exercise.isUnilateral ? 1 : 0) + (exercise.equipment.includes("无器械") && /俯卧撑|平板|弓步|登山/.test(exercise.name) ? 1 : 0), 1, 5);
+  const mobilityDemand = clamp((/深蹲|弓步|肩推|推举|悬垂/.test(`${exercise.name}${exercise.movementPattern}`) ? baseScore + 1 : baseScore), 1, 5);
+  const coordinationDemand = clamp(baseScore + (exercise.isUnilateral ? 1 : 0) + (exercise.tags.includes("jump") ? 1 : 0), 1, 5);
+  const spinalLoad = /杠铃|硬拉|划船|负重行走|深蹲/.test(`${exercise.name}${exercise.movementPattern}`) ? clamp(baseScore + 1, 1, 5) : clamp(baseScore - 1, 1, 5);
+  const jointStress = /跳|跑|深蹲|弓步|臂屈伸|引体/.test(`${exercise.name}${exercise.movementPattern}`) ? clamp(baseScore + 1, 1, 5) : baseScore;
+  const fatigueCost = exercise.isCompound ? clamp(baseScore + 1, 1, 5) : baseScore;
+  const overrides = DIFFICULTY_OVERRIDES[exercise.id] || {};
+  const merged = {
+    difficultyLevel: baseLevel,
+    difficultyScore: baseScore,
+    technicalComplexity,
+    stabilityDemand,
+    mobilityDemand,
+    coordinationDemand,
+    spinalLoad,
+    jointStress,
+    fatigueCost,
+    beginnerFriendly: baseScore <= 2 && !exercise.isUnilateral,
+    requiresSpotter: false,
+    requiresSetupSkill: /杠铃|深蹲架|史密斯|卧推/.test(exercise.equipment.join("")),
+    prerequisites: [],
+    contraindications: exercise.contraindications || [],
+    recommendedExperienceLevels: baseScore <= 1 ? ["novice", "beginner"] : baseScore <= 2 ? ["beginner", "intermediate"] : baseScore <= 3 ? ["intermediate", "advanced"] : ["advanced"],
+    alternativeIds: exercise.alternatives || [],
+    ...chainNeighbors(exercise.id),
+    ...overrides
+  };
+  if (merged.difficultyScore <= 2) merged.beginnerFriendly = true;
+  if (merged.difficultyScore >= 4) merged.beginnerFriendly = false;
+  return Object.assign(exercise, merged);
+}
+
+EXERCISES.forEach(inferExerciseMetadata);
+
 const exerciseById = new Map(EXERCISES.map(item => [item.id, item]));
 
 const normalizeText = value => String(value || "")
@@ -230,12 +347,14 @@ export function equipmentAllowed(exercise, settings) {
 }
 
 export function isExerciseAllowed(exercise, settings) {
-  const level = DIFFICULTY_ORDER[settings.experienceLevel] ?? 1;
-  const exerciseLevel = DIFFICULTY_ORDER[exercise.difficulty] ?? 1;
+  const experience = settings.experienceLevel || "beginner";
+  const maxDifficultyScore = EXPERIENCE_MAX_DIFFICULTY_SCORE[experience] ?? 3;
   const limitations = new Set(settings.limitations || []);
   if (settings.trainingLocation === "homeNone" && !exercise.equipment.every(item => item === "无器械" || item === "瑜伽垫")) return false;
   if (!equipmentAllowed(exercise, settings)) return false;
-  if (exerciseLevel > level + 1) return false;
+  if ((exercise.difficultyScore || 2) > maxDifficultyScore) return false;
+  if (["beginner0", "novice"].includes(experience) && !exercise.beginnerFriendly && (exercise.technicalComplexity >= 3 || exercise.stabilityDemand >= 3)) return false;
+  if (["beginner0", "novice", "beginner"].includes(experience) && (exercise.requiresSpotter || (exercise.requiresSetupSkill && exercise.difficultyScore >= 4))) return false;
   if (isDislikedExercise(exercise, settings.dislikedExercises)) return false;
   if (exercise.contraindications.some(item => limitations.has(item))) return false;
   if (limitations.has("肩部不适") && exercise.movementPattern === "垂直推") return false;
@@ -378,14 +497,14 @@ function pickExercises(theme, settings, usedGlobal) {
   for (const category of categories) {
     const candidates = themePool
       .filter(item => item.category === category || item.primaryMuscles.includes(category))
-      .sort((a, b) => Number(usedGlobal.has(a.id)) - Number(usedGlobal.has(b.id)) || Number(b.isCompound) - Number(a.isCompound));
+      .sort((a, b) => experienceSelectionScore(b, settings, usedGlobal) - experienceSelectionScore(a, settings, usedGlobal));
     const next = candidates.find(item => !picked.some(row => row.id === item.id));
     if (next) picked.push(next);
     if (picked.length >= count) break;
   }
 
   if (picked.length < count) {
-    for (const item of themePool.sort((a, b) => Number(usedGlobal.has(a.id)) - Number(usedGlobal.has(b.id)) || Number(b.isCompound) - Number(a.isCompound))) {
+    for (const item of themePool.sort((a, b) => experienceSelectionScore(b, settings, usedGlobal) - experienceSelectionScore(a, settings, usedGlobal))) {
       if (!picked.some(row => row.id === item.id)) picked.push(item);
       if (picked.length >= count) break;
     }
@@ -408,6 +527,69 @@ function cardioFor(settings) {
   return { ...preferred, ...prescription(preferred, settings), note: settings.cardioPreference === "after" ? "力量训练后完成，保持可说完整句子的强度。" : "可与力量训练分开到另一时段完成。" };
 }
 
+function equipmentPreferenceScore(exercise, settings) {
+  const text = exercise.equipment.join("");
+  const styles = settings.preferredStyles || [];
+  let score = 0;
+  if (styles.includes("喜欢固定器械") && /器械|腿举|腿屈伸|腿弯举|高位下拉|拉力器/.test(text)) score += 4;
+  if (styles.includes("喜欢自由重量") && /哑铃|杠铃|壶铃/.test(text)) score += 4;
+  if (styles.includes("喜欢自重训练") && exercise.equipment.includes("无器械")) score += 4;
+  if (settings.trainingLocation === "commercialGym" && /器械|杠铃|拉力器|高位下拉/.test(text)) score += 1;
+  return score;
+}
+
+function experienceSelectionScore(exercise, settings, usedGlobal) {
+  const experience = settings.experienceLevel || "beginner";
+  const difficultyScore = exercise.difficultyScore || 2;
+  const priorityMuscles = settings.priorityMuscles || [];
+  let score = 0;
+  if (usedGlobal.has(exercise.id)) score -= 20;
+  if (priorityMuscles.includes(exercise.category) || exercise.primaryMuscles.some(muscle => priorityMuscles.includes(muscle))) score += 4;
+  score += equipmentPreferenceScore(exercise, settings);
+  if (exercise.isCompound) score += settings.primaryGoal === "strength" || settings.primaryGoal === "muscleGain" ? 3 : 1;
+  if (exercise.category === "核心" && settings.primaryGoal === "health") score += 2;
+
+  if (["beginner0", "novice"].includes(experience)) {
+    score += exercise.beginnerFriendly ? 10 : -12;
+    score -= Math.max(0, difficultyScore - 1) * 6;
+    score -= exercise.isUnilateral ? 5 : 0;
+    score -= exercise.requiresSetupSkill ? 4 : 0;
+    if (/器械|高位下拉|腿举|腿屈伸|腿弯举|拉力器/.test(exercise.equipment.join(""))) score += 4;
+    if (/死虫|鸟狗|上斜|跪姿|器械|快走|固定单车|椭圆机|靠墙|臀桥|自重/.test(exercise.name)) score += 4;
+  } else if (experience === "beginner") {
+    score += difficultyScore <= 2 ? 8 : 0;
+    score += difficultyScore === 3 ? 2 : 0;
+    score -= difficultyScore >= 4 ? 12 : 0;
+    score -= exercise.requiresSpotter ? 8 : 0;
+    if (/哑铃|器械|弹力带|高位下拉|腿举/.test(exercise.equipment.join(""))) score += 3;
+  } else if (experience === "intermediate") {
+    score += difficultyScore === 3 ? 8 : difficultyScore === 4 ? 4 : 1;
+    score += /哑铃|杠铃|拉力器|高位下拉/.test(exercise.equipment.join("")) ? 4 : 0;
+    score += exercise.isUnilateral ? 3 : 0;
+    score -= difficultyScore <= 1 ? 3 : 0;
+    score -= difficultyScore >= 5 ? 8 : 0;
+  } else {
+    score += difficultyScore >= 3 ? 7 : 2;
+    score += difficultyScore === 5 ? 2 : 0;
+    score += /杠铃|引体|双杠|悬垂|罗马尼亚|保加利亚/.test(`${exercise.name}${exercise.equipment.join("")}`) ? 4 : 0;
+    score -= exercise.jointStress >= 5 ? 2 : 0;
+  }
+
+  score -= Math.max(0, exercise.fatigueCost - 3);
+  return score;
+}
+
+function recommendationReasons(exercise, settings) {
+  const reasons = [];
+  if (exercise.beginnerFriendly) reasons.push("动作学习成本较低，适合当前训练经验。");
+  if (exercise.difficultyScore >= 4) reasons.push("技术或稳定性要求较高，适合作为进阶训练刺激。");
+  if (exercise.technicalComplexity <= 2) reasons.push("动作轨迹和发力路径较容易控制。");
+  if (exercise.stabilityDemand >= 4) reasons.push("对平衡和核心稳定要求较高，建议保持动作质量。");
+  if (equipmentAllowed(exercise, settings)) reasons.push("使用你已选择的可用器械。");
+  if ((settings.priorityMuscles || []).includes(exercise.category)) reasons.push("匹配你设置的重点训练部位。");
+  return reasons.slice(0, 4);
+}
+
 function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
   let exercises = pickExercises(theme, settings, usedGlobal).map(item => ({
     exerciseId: item.id,
@@ -420,6 +602,11 @@ function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
     commonMistakes: item.commonMistakes,
     alternatives: getExerciseAlternatives(item.id, settings).map(alt => ({ id: alt.id, name: alt.name })),
     movementPattern: item.movementPattern,
+    difficultyLevel: item.difficultyLevel,
+    difficultyScore: item.difficultyScore,
+    technicalComplexity: item.technicalComplexity,
+    stabilityDemand: item.stabilityDemand,
+    recommendationReasons: recommendationReasons(item, settings),
     isCompound: item.isCompound,
     ...prescription(item, settings),
     completed: false
@@ -655,6 +842,10 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
         continue;
       }
       if (!isExerciseAllowed(exercise, normalized)) errors.push(`动作不适合当前器械、地点、经验或限制：${exercise.name}`);
+      if ((exercise.difficultyScore || 2) > (EXPERIENCE_MAX_DIFFICULTY_SCORE[normalized.experienceLevel] ?? 3)) errors.push(`动作难度超过当前训练经验：${exercise.name}`);
+      for (const linkedId of [...(exercise.regressionIds || []), ...(exercise.progressionIds || [])]) {
+        if (!exerciseById.has(linkedId)) errors.push(`${exercise.name} 的进阶/退阶动作不存在：${linkedId}`);
+      }
       if (!exerciseMatchesTheme(exercise, day.theme)) errors.push(`${day.day} 的动作不符合「${day.theme}」主题：${exercise.name}`);
       if (seen.has(exercise.id)) errors.push(`${day.day} 重复安排动作：${exercise.name}`);
       seen.add(exercise.id);
@@ -674,8 +865,17 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
   if (settings.experienceLevel === "beginner0") {
     const totalSets = trainingDays.reduce((sum, day) => sum + day.exercises.reduce((s, exercise) => s + exercise.sets, 0), 0);
     if (totalSets > 36) errors.push("新手总训练量过高。");
+    if (allRows(trainingDays).some(row => (exerciseById.get(row.exerciseId)?.difficultyScore || 2) >= 4)) errors.push("完全新手计划不应出现高难度动作。");
+  }
+  if (["beginner", "novice"].includes(settings.experienceLevel)) {
+    const highDifficulty = allRows(trainingDays).filter(row => (exerciseById.get(row.exerciseId)?.difficultyScore || 2) >= 4);
+    if (highDifficulty.length) errors.push("初级计划不应默认出现高级动作。");
   }
   return { ok: errors.length === 0, errors };
+}
+
+function allRows(trainingDays) {
+  return trainingDays.flatMap(day => day.exercises || []);
 }
 
 export function getExerciseAlternatives(exerciseId, settings = {}) {
@@ -686,14 +886,50 @@ export function getExerciseAlternatives(exerciseId, settings = {}) {
     .filter(item => item.id !== exerciseId)
     .filter(item => item.movementPattern === original.movementPattern)
     .filter(item => item.primaryMuscles.some(muscle => original.primaryMuscles.includes(muscle)))
-    .filter(item => Math.abs((DIFFICULTY_ORDER[item.difficulty] ?? 1) - (DIFFICULTY_ORDER[original.difficulty] ?? 1)) <= 1)
+    .filter(item => Math.abs((item.difficultyScore || 2) - (original.difficultyScore || 2)) <= (normalized.experienceLevel === "advanced" ? 2 : 1))
     .filter(item => isExerciseAllowed(item, normalized))
+    .sort((a, b) => {
+      const aChain = Number((original.regressionIds || []).includes(a.id) || (original.progressionIds || []).includes(a.id));
+      const bChain = Number((original.regressionIds || []).includes(b.id) || (original.progressionIds || []).includes(b.id));
+      return bChain - aChain || experienceSelectionScore(b, normalized, new Set()) - experienceSelectionScore(a, normalized, new Set());
+    })
     .slice(0, 5);
+}
+
+export function shouldProgressExercise(userExerciseProficiency = {}, exercise, logs = []) {
+  if (!exercise) return { shouldProgress: false, reason: "动作不存在。", nextExerciseIds: [] };
+  const completed = Number(userExerciseProficiency.sessionsCompleted || logs.length || 0);
+  const successful = Number(userExerciseProficiency.successfulSessions || logs.filter(log => log.completed !== false).length || 0);
+  const painReported = Boolean(userExerciseProficiency.painReported || logs.some(log => log.painReported));
+  const lowRir = logs.some(log => Number(log.rir) < 1);
+  const ready = Boolean(userExerciseProficiency.readyForProgression || (completed >= 3 && successful >= 3 && !painReported && !lowRir));
+  if (!ready) {
+    return { shouldProgress: false, reason: "当前动作尚未稳定完成足够次数，暂不建议进阶。", nextExerciseIds: exercise.progressionIds || [] };
+  }
+  return {
+    shouldProgress: Boolean((exercise.progressionIds || []).length),
+    reason: `你已稳定完成 ${exercise.name}，可以考虑尝试下一阶动作。`,
+    nextExerciseIds: exercise.progressionIds || []
+  };
+}
+
+export function shouldRegressExercise(userExerciseProficiency = {}, exercise, logs = []) {
+  if (!exercise) return { shouldRegress: false, reason: "动作不存在。", regressionExerciseIds: [] };
+  const painReported = Boolean(userExerciseProficiency.painReported || logs.some(log => log.painReported));
+  const failedSessions = logs.filter(log => log.completed === false || log.failedReps || Number(log.rir) < 0).length;
+  const tooHard = userExerciseProficiency.status === "regressed" || userExerciseProficiency.formConfidence === "low";
+  const shouldRegress = painReported || failedSessions >= 2 || tooHard;
+  return {
+    shouldRegress,
+    reason: shouldRegress ? `${exercise.name} 当前可能过难，建议先退阶巩固动作质量。` : "当前没有明显退阶信号。",
+    regressionExerciseIds: exercise.regressionIds || []
+  };
 }
 
 export const TRAINING_DATA_SHAPES = {
   trainingProfiles: ["userId", "primaryGoal", "secondaryGoal", "experienceLevel", "weeklyTrainingDays", "availableDays", "sessionDuration", "trainingLocation", "availableEquipment", "limitations", "priorityMuscles", "dislikedExercises", "preferredStyles", "selectedSplit", "createdAt", "updatedAt"],
   workoutPlans: ["id", "userId", "weekStart", "splitType", "goal", "days", "status", "version", "createdAt", "updatedAt"],
   workoutSessions: ["id", "planId", "userId", "date", "workoutDayId", "startedAt", "completedAt", "duration", "exercises", "notes", "perceivedDifficulty", "status"],
-  exerciseLogs: ["userId", "sessionId", "exerciseId", "setNumber", "targetReps", "actualReps", "targetWeight", "actualWeight", "rir", "completed", "createdAt"]
+  exerciseLogs: ["userId", "sessionId", "exerciseId", "setNumber", "targetReps", "actualReps", "targetWeight", "actualWeight", "rir", "completed", "createdAt"],
+  userExerciseProficiency: ["userId", "exerciseId", "status", "proficiencyLevel", "sessionsCompleted", "successfulSessions", "lastUsedAt", "averageRir", "formConfidence", "painReported", "readyForProgression"]
 };

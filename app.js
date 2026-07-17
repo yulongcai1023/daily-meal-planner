@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui24";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui24";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui25";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui25";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -720,6 +720,11 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
     instructions: next.instructions,
     commonMistakes: next.commonMistakes,
     movementPattern: next.movementPattern,
+    difficultyLevel: next.difficultyLevel,
+    difficultyScore: next.difficultyScore,
+    technicalComplexity: next.technicalComplexity,
+    stabilityDemand: next.stabilityDemand,
+    recommendationReasons: next.recommendationReasons || [],
     isCompound: next.isCompound,
     alternatives: getExerciseAlternatives(next.id, currentWorkoutPlan.settings).map(alt => ({ id: alt.id, name: alt.name }))
   };

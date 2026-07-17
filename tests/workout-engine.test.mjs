@@ -8,6 +8,8 @@ const {
   generateWorkoutPlan,
   getExerciseAlternatives,
   scoreWeeklySchedule,
+  shouldProgressExercise,
+  shouldRegressExercise,
   validateSplitCompatibility,
   validateWeeklySchedule,
   validateWorkoutPlan
@@ -41,8 +43,11 @@ const exerciseNames = plan => trainingDays(plan).flatMap(day => day.exercises.ma
 const allExercises = plan => trainingDays(plan).flatMap(day => day.exercises);
 const equipmentUsed = plan => allExercises(plan).flatMap(exercise => exercise.equipment);
 const trainingIndexes = plan => plan.days.map((day, index) => day.isRest ? null : index).filter(index => index !== null);
+const exerciseIds = plan => allExercises(plan).map(exercise => exercise.exerciseId);
 
 assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
+assert.ok(EXERCISES.every(exercise => exercise.difficultyScore && exercise.difficultyLevel), "all exercises should have expanded difficulty metadata");
+assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && Array.isArray(exercise.progressionIds)), "all exercises should have progression and regression arrays");
 
 {
   const plan = makePlan({ weeklyTrainingDays: 3, selectedSplit: "fullBody" });
@@ -257,4 +262,47 @@ assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
   assert.ok(trainingDays(plan).some(day => day.cardio || day.estimatedDuration <= plan.settings.sessionDuration));
 }
 
-console.log("Workout engine tests passed: 34 cases");
+{
+  const common = {
+    trainingLocation: "commercialGym",
+    selectedSplit: "ppl",
+    weeklyTrainingDays: 3,
+    availableEquipment: ["无器械", "瑜伽垫", "可调哑铃", "固定哑铃", "杠铃", "深蹲架", "卧推凳", "拉力器", "高位下拉器", "腿举机", "器械推胸", "器械肩推", "史密斯机", "双杠", "引体向上杆"]
+  };
+  const beginnerPlan = makePlan({ ...common, experienceLevel: "beginner" });
+  const intermediatePlan = makePlan({ ...common, experienceLevel: "intermediate" });
+  const advancedPlan = makePlan({ ...common, experienceLevel: "advanced" });
+  assert.notDeepEqual(exerciseIds(beginnerPlan), exerciseIds(intermediatePlan), "beginner and intermediate should not only differ by sets");
+  assert.notDeepEqual(exerciseIds(intermediatePlan), exerciseIds(advancedPlan), "intermediate and advanced should not only differ by sets");
+  assert.ok(allExercises(beginnerPlan).every(row => (EXERCISES.find(item => item.id === row.exerciseId)?.difficultyScore || 2) <= 3));
+  assert.ok(allExercises(intermediatePlan).some(row => (EXERCISES.find(item => item.id === row.exerciseId)?.difficultyScore || 2) >= 3));
+  assert.ok(allExercises(advancedPlan).some(row => (EXERCISES.find(item => item.id === row.exerciseId)?.difficultyScore || 2) >= 4));
+}
+
+{
+  const plan = makePlan({ experienceLevel: "beginner0", trainingLocation: "homeSimple", availableEquipment: ["无器械", "瑜伽垫", "弹力带", "引体向上杆"], selectedSplit: "fullBody" });
+  assert.ok(!exerciseNames(plan).includes("引体向上"), "complete novice should not get standard pull-up");
+  assert.ok(allExercises(plan).some(row => ["死虫", "鸟狗", "平板支撑"].includes(row.name)), "complete novice core should prioritize low-skill core drills");
+}
+
+{
+  const plan = makePlan({ experienceLevel: "beginner", selectedSplit: "ppl", trainingLocation: "commercialGym", availableEquipment: ["无器械", "瑜伽垫", "杠铃", "深蹲架", "卧推凳", "器械推胸", "高位下拉器", "腿举机"] });
+  assert.ok(!exerciseNames(plan).includes("杠铃深蹲"), "beginner should not default to high-load barbell squat");
+}
+
+{
+  const alt = getExerciseAlternatives("push_up", { ...base, experienceLevel: "beginner", trainingLocation: "commercialGym", availableEquipment: ["无器械", "瑜伽垫", "杠铃", "卧推凳", "器械推胸", "可调哑铃", "固定哑铃"] });
+  assert.ok(!alt.some(item => item.difficultyScore >= 4), "beginner replacement should not jump to advanced difficulty");
+}
+
+{
+  const pushUp = EXERCISES.find(item => item.id === "push_up");
+  const progress = shouldProgressExercise({ sessionsCompleted: 3, successfulSessions: 3, readyForProgression: true }, pushUp, [{ completed: true, rir: 3 }]);
+  assert.equal(progress.shouldProgress, true);
+  assert.ok(progress.nextExerciseIds.length);
+  const regress = shouldRegressExercise({ painReported: true }, pushUp, []);
+  assert.equal(regress.shouldRegress, true);
+  assert.ok(regress.regressionExerciseIds.length);
+}
+
+console.log("Workout engine tests passed: 41 cases");

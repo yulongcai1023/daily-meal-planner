@@ -309,6 +309,8 @@ function renderExerciseSetTracker(exercise, dayIndex, exerciseIndex) {
 }
 
 function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
+  const difficultyLabels = { novice: "完全新手", beginner0: "完全新手", beginner: "初级", intermediate: "中级", advanced: "高级" };
+  const difficultyLabel = difficultyLabels[exercise.difficultyLevel] || difficultyLabels[exercise.difficulty] || "初级";
   return `
     <article class="exercise-card exercise-page-panel ${exerciseIndex === 0 ? "is-active" : ""}" data-day-index="${dayIndex}" data-exercise-index="${exerciseIndex}" ${exerciseIndex === 0 ? "" : "hidden"}>
       <header class="exercise-card-head">
@@ -319,6 +321,7 @@ function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
           <div class="exercise-tags">
             ${(exercise.targetMuscles || []).slice(0, 3).map(item => `<span>${escapeHtml(item)}</span>`).join("")}
             <span>${escapeHtml(exercise.category)}</span>
+            <span title="${escapeHtml((exercise.recommendationReasons || []).join("；"))}">${escapeHtml(difficultyLabel)} · ${escapeHtml(exercise.difficultyScore || 2)}级</span>
           </div>
         </div>
         <div class="exercise-head-actions">
