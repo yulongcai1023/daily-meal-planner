@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-07-17T05:52:04.078Z",
+  "exerciseCount": 103,
+  "graphOk": true,
+  "graphErrors": [],
+  "invalidEquipmentConditions": [],
+  "duplicateRelations": [],
+  "crossPatternProgression": [],
+  "crossPatternAlternative": [
+    "standing_scapular_retraction -> band_pulldown: 水平拉 / 垂直拉; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "wall_angel -> face_pull: 肩胛控制 / 水平拉; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "front_raise -> db_shoulder_press: 肩屈 / 垂直推; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "triceps_pushdown -> close_push_up: 肘伸 / 水平推; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "close_push_up -> triceps_pushdown: 水平推 / 肘伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "close_grip_bench -> triceps_pushdown: 水平推 / 肘伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "bodyweight_squat -> wall_sit: 深蹲 / 静力; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "leg_extension -> leg_press: 膝伸 / 深蹲; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "rdl -> glute_bridge: 髋铰链 / 髋伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "db_rdl -> glute_bridge: 髋铰链 / 髋伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "leg_curl -> db_rdl: 膝屈 / 髋铰链; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "dead_bug -> bird_dog: 抗伸展 / 抗旋转; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "bird_dog -> dead_bug: 抗旋转 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "crunch -> dead_bug: 躯干屈曲 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "reverse_crunch -> dead_bug: 骨盆后倾 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true",
+    "lying_leg_raise -> reverse_crunch: 髋屈 / 骨盆后倾; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true"
+  ],
+  "missingPrerequisites": [],
+  "unreachableActionIds": [],
+  "invalidSuggestedNext": [],
+  "utf8Encoding": [
+    {
+      "file": "workout-engine.js",
+      "utf8Readable": true,
+      "hasReplacementChar": false,
+      "hasLikelyMojibake": false,
+      "ok": true
+    },
+    {
+      "file": "tests/workout-engine.test.mjs",
+      "utf8Readable": true,
+      "hasReplacementChar": false,
+      "hasLikelyMojibake": false,
+      "ok": true
+    },
+    {
+      "file": "workout-difficulty-review.md",
+      "utf8Readable": true,
+      "hasReplacementChar": false,
+      "hasLikelyMojibake": false,
+      "ok": true
+    },
+    {
+      "file": "workout-difficulty-summary.md",
+      "utf8Readable": true,
+      "hasReplacementChar": false,
+      "hasLikelyMojibake": false,
+      "ok": true
+    }
+  ]
+}

@@ -108,7 +108,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
   assert.deepEqual(byId.low_incline_push_up.progressionIds, ["push_up"]);
   assert.equal(byId.kneeling_push_up.progressionIds.length, 0, "kneeling push-up should not be the only linear progression");
   assert.ok(byId.kneeling_push_up.suggestedNextIds.includes("push_up"));
-  assert.ok(byId.kneeling_push_up.alternativeIds.includes("low_incline_push_up"));
+  assert.ok(byId.kneeling_push_up.alternativeIds.includes("high_incline_push_up"));
   assert.ok(!byId.machine_chest_press.progressionIds.includes("db_bench"));
   assert.ok(byId.machine_chest_press.suggestedNextIds.includes("db_bench"));
   assert.equal(byId.incline_db_bench.difficultyScore, 2.5);
@@ -148,6 +148,36 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
   const cardio = EXERCISES.filter(item => item.category === "有氧");
   assert.ok(cardio.length);
   assert.ok(cardio.every(item => item.impactLevel && item.intensityPrescription && item.duration && item.resistance && item.intervalStructure));
+  assert.ok(new Set(cardio.map(item => item.resistance)).size > 3, "cardio progression copy should vary by modality");
+}
+
+{
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  assert.ok(!byId.weighted_push_up.equipment.includes("无器械"));
+  assert.ok(!byId.weighted_plank.equipment.includes("无器械"));
+  assert.ok(!byId.weighted_side_plank.equipment.includes("无器械"));
+  assert.ok(byId.chair_sit_to_stand.equipment.some(item => ["椅子", "卧推凳", "稳定台面"].includes(item)));
+  assert.ok(byId.box_squat.equipment.some(item => ["箱子", "卧推凳", "稳定台面"].includes(item)));
+  assert.ok(!byId.hip_abduction.alternativeIds.includes("cable_kickback"));
+  assert.ok(!byId.cable_kickback.alternativeIds.includes("hip_abduction"));
+  assert.equal(byId.standing_reverse_fly.trainingRole, "activation");
+  assert.equal(byId.standing_scapular_retraction.trainingRole, "activation");
+  assert.equal(byId.wall_angel.trainingRole, "warmup");
+  assert.equal(byId.wall_angel.countsAsEffectiveSet, false);
+  assert.deepEqual(byId.band_assisted_dip.progressionIds, ["assisted_dip"]);
+  assert.deepEqual(byId.assisted_dip.progressionIds, ["dip"]);
+  assert.equal(byId.barbell_bench.requiresSpotterOrSafetyArms, true);
+  assert.equal(byId.incline_barbell_bench.requiresSpotterOrSafetyArms, true);
+  assert.equal(byId.close_grip_bench.requiresSpotterOrSafetyArms, true);
+  assert.ok(byId.leg_curl.alternativeDetails.some(item => item.id === "db_rdl" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
+  assert.ok(byId.db_rdl.alternativeDetails.some(item => item.id === "glute_bridge" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
+}
+
+{
+  const plan = makePlan({ selectedSplit: "ppl", trainingLocation: "homeSimple", availableEquipment: ["无器械", "瑜伽垫", "可调哑铃", "固定哑铃"], cardioPreference: "none" });
+  assert.ok(!exerciseIds(plan).includes("standing_reverse_fly"));
+  assert.ok(!exerciseIds(plan).includes("standing_scapular_retraction"));
+  assert.ok(!exerciseIds(plan).includes("wall_angel"));
 }
 
 {
@@ -178,7 +208,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
 
 {
   const plan = makePlan({ trainingLocation: "homeNone", availableEquipment: ["无器械"] });
-  assert.ok(equipmentUsed(plan).every(item => item === "无器械"));
+  assert.ok(equipmentUsed(plan).every(item => item === "无器械" || item === "瑜伽垫"));
 }
 
 {
@@ -288,7 +318,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
   assert.deepEqual(days.map(day => day.theme), ["推", "拉", "腿"]);
   assert.ok(days.find(day => day.theme === "拉").exercises.length > 0);
   assert.ok(days.find(day => day.theme === "腿").exercises.some(row => ["自重深蹲", "臀桥", "提踵", "靠墙静蹲", "箭步蹲", "台阶踏步"].includes(row.name)));
-  assert.ok(equipmentUsed(result.plan).every(item => item === "无器械"));
+  assert.ok(equipmentUsed(result.plan).every(item => item === "无器械" || item === "瑜伽垫"));
 }
 
 {
@@ -296,7 +326,7 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
   assert.deepEqual(result.errors, []);
   assert.ok(result.plan);
   const days = trainingDays(result.plan);
-  assert.ok(days.find(day => day.theme === "拉").exercises.every(row => row.equipment.every(item => item === "无器械")));
+  assert.ok(days.find(day => day.theme === "拉").exercises.every(row => row.equipment.every(item => item === "无器械" || item === "瑜伽垫")));
   assert.ok(days.find(day => day.theme === "腿").exercises.length > 0);
 }
 
