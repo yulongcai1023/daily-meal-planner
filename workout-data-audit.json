@@ -1,88 +1,17 @@
 {
-  "generatedAt": "2026-07-17T06:18:34.944Z",
-  "exerciseCount": 105,
+  "generatedAt": "2026-07-17T22:24:24.306Z",
+  "exerciseCount": 106,
   "graphOk": true,
   "graphErrors": [],
-  "invalidEquipmentCombinations": [],
-  "duplicateRelations": [],
-  "crossPatternProgression": [],
-  "crossPatternAlternatives": [
-    "db_rdl → glute_bridge: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "leg_curl → db_rdl: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "dead_bug → bird_dog: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "bird_dog → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "crunch → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "reverse_crunch → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是",
-    "lying_leg_raise → reverse_crunch: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是"
-  ],
-  "roleMismatchedAlternatives": [
-    "leg_curl(isolation) → db_rdl(compound)"
-  ],
-  "harderAlternatives": [],
-  "crossPatternHighFatigueAlternatives": [],
-  "missingPrerequisites": [],
-  "unreachableActionIds": [],
-  "invalidSuggestedNext": [],
-  "safetyFieldAudit": [
-    {
-      "id": "barbell_bench",
-      "exists": true,
-      "requiresSpotterOrSafetyArms": true,
-      "usedByFilter": true
-    },
-    {
-      "id": "incline_barbell_bench",
-      "exists": true,
-      "requiresSpotterOrSafetyArms": true,
-      "usedByFilter": true
-    },
-    {
-      "id": "close_grip_bench",
-      "exists": true,
-      "requiresSpotterOrSafetyArms": true,
-      "usedByFilter": true
-    }
-  ],
-  "missingSafetyFields": [],
-  "duplicateExerciseTemplates": [
-    "incline_push_up: 通用上斜俯卧撑已保留为兼容数据，但 autoCandidate=否，不进入自动候选"
-  ],
-  "encodingAudit": [
-    {
-      "file": "workout-engine.js",
-      "exists": true,
-      "replacementCharacters": 0,
-      "suspiciousMojibakeCharacters": 0,
-      "ok": true
-    },
-    {
-      "file": "tests/workout-engine.test.mjs",
-      "exists": true,
-      "replacementCharacters": 0,
-      "suspiciousMojibakeCharacters": 0,
-      "ok": true
-    },
-    {
-      "file": "workout-difficulty-review.md",
-      "exists": true,
-      "replacementCharacters": 0,
-      "suspiciousMojibakeCharacters": 0,
-      "ok": true
-    },
-    {
-      "file": "workout-difficulty-summary.md",
-      "exists": true,
-      "replacementCharacters": 0,
-      "suspiciousMojibakeCharacters": 0,
-      "ok": true
-    },
-    {
-      "file": "workout-data-audit.md",
-      "exists": true,
-      "replacementCharacters": 0,
-      "suspiciousMojibakeCharacters": 0,
-      "ok": true
-    }
-  ],
+  "outOfRangeDifficulty": [],
+  "missingEquipmentOptionSemantics": [],
+  "weightedWithoutLoadEquipment": [],
+  "programRoleExerciseRoleConflicts": [],
+  "skillDrillEffectiveSets": [],
+  "cardioMarkedCompoundOrAccessory": [],
+  "incompleteEquipmentCombinations": [],
+  "missingSafetyRequirements": [],
+  "invalidActionIds": [],
+  "unreachableEquipmentIds": [],
   "encodingAbnormalCharacterCount": 0
 }
