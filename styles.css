@@ -332,8 +332,8 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .segment-group span { min-height: 36px; padding: 0 12px; display: grid; place-items: center; color: var(--fit-text-secondary); border-radius: 999px; font-size: 13px; font-weight: 750; line-height: 1; white-space: nowrap; transition: background .18s, color .18s, box-shadow .18s, transform .18s; }
 .segment-group label:hover span { color: var(--fit-primary); background: rgba(232,242,229,.7); }
 .segment-group input:checked + span { color: #fff; background: var(--fit-primary); box-shadow: 0 8px 18px rgba(47,107,60,.16); transform: translateY(-1px); }
-.preference-grid { display: grid; grid-template-columns: minmax(360px, 1.35fr) minmax(250px, .9fr) minmax(210px, .78fr); gap: 14px; align-items: start; }
-.preference-subcard { min-width: 0; overflow: hidden; padding: 14px; display: grid; grid-template-rows: auto auto auto; align-content: start; gap: 12px; }
+.preference-grid { display: grid; grid-template-columns: minmax(360px, 1.35fr) minmax(250px, .9fr) minmax(210px, .78fr); gap: 14px; align-items: stretch; }
+.preference-subcard { min-width: 0; height: 100%; overflow: hidden; padding: 14px; display: grid; grid-template-rows: auto auto auto; align-content: start; gap: 12px; }
 .preference-subcard.is-hidden { display: none; }
 .preference-grid:has(#equipment-subcard.is-hidden) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .subcard-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -348,6 +348,7 @@ body { font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSys
 .selector-grid-muscles .selector-tile { min-height: 72px; }
 .selector-grid-muscles .selector-name { width: 100%; word-break: keep-all; overflow-wrap: anywhere; }
 .selector-grid.is-collapsed .selector-tile.is-extra { display: none; }
+.selector-tile.is-hidden-option { display: none; }
 .selector-tile { min-height: 72px; padding: 8px 7px; display: grid; justify-items: center; align-content: center; align-self: start; gap: 5px; position: relative; color: var(--fit-text-primary); background: #FAFAF8; border: 1px solid transparent; border-radius: 12px; cursor: pointer; text-align: center; transition: background .18s, border-color .18s, transform .18s; }
 .selector-tile:hover { transform: translateY(-1px); background: #fff; border-color: var(--fit-border); }
 .selector-tile input:focus-visible ~ .selector-icon { outline: 3px solid rgba(47,107,60,.2); outline-offset: 3px; }

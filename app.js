@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui21";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui21";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui22";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui22";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -487,17 +487,26 @@ function syncEquipmentVisibility() {
   const location = document.querySelector("#training-location")?.value;
   const equipmentCard = document.querySelector("#equipment-subcard");
   const search = document.querySelector("#equipment-search");
-  const noEquipmentInput = Array.from(document.querySelectorAll('input[name="training-equipment"]')).find(input => input.value === "无器械");
+  const equipmentInputs = Array.from(document.querySelectorAll('input[name="training-equipment"]'));
+  const noEquipmentInput = equipmentInputs.find(input => input.value === "无器械");
+  const noEquipmentTile = noEquipmentInput?.closest(".selector-tile");
   const isHomeNoEquipment = location === "homeNone";
   if (equipmentCard) {
     equipmentCard.classList.toggle("is-hidden", isHomeNoEquipment);
     equipmentCard.setAttribute("aria-hidden", String(isHomeNoEquipment));
   }
   if (search) search.disabled = isHomeNoEquipment;
+  if (noEquipmentTile) {
+    noEquipmentTile.classList.toggle("is-hidden-option", !isHomeNoEquipment);
+  }
   if (isHomeNoEquipment) {
-    document.querySelectorAll('input[name="training-equipment"]').forEach(input => {
+    equipmentInputs.forEach(input => {
       input.checked = input === noEquipmentInput;
     });
+  } else if (noEquipmentInput?.checked) {
+    noEquipmentInput.checked = false;
+    const fallbackInput = equipmentInputs.find(input => input !== noEquipmentInput);
+    if (fallbackInput && !equipmentInputs.some(input => input.checked)) fallbackInput.checked = true;
   }
 }
 
