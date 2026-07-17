@@ -102,6 +102,55 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
 }
 
 {
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  assert.deepEqual(byId.wall_push_up.progressionIds, ["high_incline_push_up"]);
+  assert.deepEqual(byId.high_incline_push_up.progressionIds, ["low_incline_push_up"]);
+  assert.deepEqual(byId.low_incline_push_up.progressionIds, ["push_up"]);
+  assert.equal(byId.kneeling_push_up.progressionIds.length, 0, "kneeling push-up should not be the only linear progression");
+  assert.ok(byId.kneeling_push_up.suggestedNextIds.includes("push_up"));
+  assert.ok(byId.kneeling_push_up.alternativeIds.includes("low_incline_push_up"));
+  assert.ok(!byId.machine_chest_press.progressionIds.includes("db_bench"));
+  assert.ok(byId.machine_chest_press.suggestedNextIds.includes("db_bench"));
+  assert.equal(byId.incline_db_bench.difficultyScore, 2.5);
+  assert.equal(byId.barbell_row.difficultyLevel, "intermediate");
+  assert.equal(byId.standing_db_shoulder_press.spinalLoad > byId.db_shoulder_press.spinalLoad, true);
+  assert.ok(byId.cable_kickback.coordinationDemand <= 3);
+  assert.ok(!byId.step_up.progressionIds.includes("lunge"));
+  assert.ok(byId.step_up.alternativeIds.includes("lunge"));
+  assert.ok(!byId.glute_bridge.alternativeIds.includes("barbell_hip_thrust"));
+  assert.deepEqual(byId.glute_bridge.progressionIds, ["weighted_glute_bridge"]);
+  assert.ok(byId.plank.regressionIds.includes("incline_plank"));
+  assert.ok(byId.plank.regressionIds.includes("knee_plank"));
+  assert.deepEqual(byId.plank.progressionIds, ["long_lever_plank"]);
+  assert.deepEqual(byId.side_plank_leg_raise.prerequisites, ["side_plank"]);
+}
+
+{
+  const commercialSettings = {
+    ...base,
+    experienceLevel: "advanced",
+    trainingLocation: "commercialGym",
+    availableEquipment: ["无器械", "瑜伽垫", "可调哑铃", "固定哑铃", "腿弯举机", "杠铃", "拉力器"]
+  };
+  assert.ok(!getExerciseAlternatives("leg_curl", commercialSettings).some(item => item.id === "db_rdl"), "leg curl alternatives shown in plan must preserve knee-flexion pattern");
+  assert.ok(!getExerciseAlternatives("db_rdl", commercialSettings).some(item => item.id === "leg_curl"), "RDL alternatives shown in plan must preserve hip-hinge pattern");
+}
+
+{
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  assert.equal(isExerciseAllowed(byId.side_plank_leg_raise, { ...base, masteredExerciseIds: [] }), false);
+  assert.equal(isExerciseAllowed(byId.side_plank_leg_raise, { ...base, experienceLevel: "advanced", masteredExerciseIds: ["side_plank"] }), true);
+  const progress = shouldProgressExercise({ sessionsCompleted: 3, successfulSessions: 3, readyForProgression: true }, byId.side_plank, [{ completed: true, rir: 3 }]);
+  assert.ok(progress.nextExerciseIds.includes("side_plank_leg_raise"));
+}
+
+{
+  const cardio = EXERCISES.filter(item => item.category === "有氧");
+  assert.ok(cardio.length);
+  assert.ok(cardio.every(item => item.impactLevel && item.intensityPrescription && item.duration && item.resistance && item.intervalStructure));
+}
+
+{
   const plan = makePlan({ weeklyTrainingDays: 3, selectedSplit: "fullBody" });
   assert.equal(trainingDays(plan).length, 3);
   assert.equal(plan.days.length, 7);
