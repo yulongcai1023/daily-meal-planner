@@ -7,6 +7,8 @@ const {
   EXERCISES,
   generateWorkoutPlan,
   getExerciseAlternatives,
+  isExerciseAllowed,
+  validateExerciseProgressionGraph,
   scoreWeeklySchedule,
   shouldProgressExercise,
   shouldRegressExercise,
@@ -47,7 +49,57 @@ const exerciseIds = plan => allExercises(plan).map(exercise => exercise.exercise
 
 assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 assert.ok(EXERCISES.every(exercise => exercise.difficultyScore && exercise.difficultyLevel), "all exercises should have expanded difficulty metadata");
+assert.ok(EXERCISES.every(exercise => exercise.skillDifficulty && exercise.strengthRequirement && exercise.fatigueCost), "all exercises should have multi-factor difficulty metadata");
+assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.contraindications) && Array.isArray(exercise.cautions) && Array.isArray(exercise.painSensitiveAreas)), "all exercises should split limitation metadata");
 assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && Array.isArray(exercise.progressionIds)), "all exercises should have progression and regression arrays");
+
+{
+  const graph = validateExerciseProgressionGraph();
+  assert.equal(graph.ok, true, graph.errors.join("\n"));
+}
+
+{
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  assert.equal(byId.push_up.difficultyLevel, "beginner");
+  assert.equal(byId.barbell_press.difficultyLevel, "intermediate");
+  assert.equal(byId.barbell_squat.difficultyLevel, "intermediate");
+  assert.equal(byId.rdl.difficultyLevel, "intermediate");
+  assert.equal(byId.pull_up.difficultyLevel, "intermediate");
+  assert.equal(byId.pull_up.strengthRequirement, 5);
+  assert.equal(byId.barbell_curl.difficultyLevel, "beginner");
+  assert.equal(byId.preacher_curl.difficultyLevel, "beginner");
+  assert.ok(byId.cable_kickback.difficultyScore <= 3);
+  assert.ok(byId.lying_leg_raise.difficultyScore >= 3);
+  assert.equal(byId.superman.beginnerFriendly, false);
+}
+
+{
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  const beginnerBarbellSettings = {
+    ...base,
+    experienceLevel: "beginner",
+    trainingLocation: "commercialGym",
+    availableEquipment: ["无器械", "杠铃", "牧师椅", "可调哑铃", "固定哑铃"]
+  };
+  assert.equal(isExerciseAllowed(byId.barbell_curl, beginnerBarbellSettings), true, "beginner with barbell should still allow basic barbell curls");
+  assert.equal(isExerciseAllowed(byId.preacher_curl, beginnerBarbellSettings), true, "beginner with equipment should still allow basic preacher curls");
+  assert.equal(isExerciseAllowed(byId.bodyweight_squat, { ...base, experienceLevel: "advanced" }), true, "advanced users should still be allowed to use foundational exercises");
+}
+
+{
+  const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
+  assert.ok(!byId.wall_sit.progressionIds.includes("leg_press"));
+  assert.ok(!byId.leg_press.progressionIds.includes("leg_extension"));
+  assert.ok(!byId.db_rdl.regressionIds.includes("hip_abduction"));
+  assert.ok(!byId.rdl.progressionIds.includes("barbell_hip_thrust"));
+  assert.ok(!byId.barbell_hip_thrust.regressionIds.includes("rdl"));
+  assert.ok(!byId.hip_abduction.progressionIds.includes("db_rdl"));
+  assert.ok(!byId.side_plank.progressionIds.includes("lying_leg_raise"));
+  assert.ok(!byId.lying_leg_raise.regressionIds.includes("side_plank"));
+  assert.ok(!byId.stair_climber.progressionIds.includes("jump_rope"));
+  assert.ok(!byId.rowing_machine.progressionIds.includes("stair_climber"));
+  assert.ok(!byId.bike.progressionIds.includes("elliptical"));
+}
 
 {
   const plan = makePlan({ weeklyTrainingDays: 3, selectedSplit: "fullBody" });
