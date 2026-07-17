@@ -25,7 +25,7 @@ assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open
 assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
 assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
 assert.ok(!build.includes("fs.cpSync") && !build.includes("\"assets\""), "static build should no longer copy exercise image assets");
-assert.ok(html.includes("fitness-ui22") && app.includes("fitness-ui22"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("fitness-ui23") && app.includes("fitness-ui23"), "cache-busting asset versions should be updated");
 assert.ok(html.includes('id="equipment-subcard"') && app.includes("syncEquipmentVisibility"), "home no-equipment location should hide the equipment selector");
 assert.ok(app.includes('trainingLocation === "homeNone" ? ["无器械"]') || app.includes("trainingLocation === \"homeNone\" ? [\"无器械\"]"), "home no-equipment location should force bodyweight equipment");
 assert.ok(ui.includes("renderExercisePager") && ui.includes("data-exercise-page-step"), "workout exercises should render as paged panels");
@@ -37,5 +37,7 @@ assert.ok(css.includes("align-content: start") && css.includes("grid-auto-rows: 
 assert.ok(css.includes("overflow: hidden") && css.includes("repeat(auto-fit"), "preference cards should contain auto-fit option grids without overlap");
 assert.ok(css.includes("align-items: stretch") && css.includes("height: 100%"), "preference cards should keep equal row height");
 assert.ok(app.includes("is-hidden-option") && app.includes('noEquipmentInput.checked = false'), "bodyweight equipment option should hide outside home no-equipment mode");
+assert.ok(ui.includes("limitationIconClass") && ui.includes("icon-limit-shoulder"), "body limitation options should use specific body-part icons");
+assert.ok(css.includes("--icon-mask") && css.includes("radial-gradient(circle") && css.includes(".selector-limit .selector-icon::after"), "selector icons should use line-art circle UI with limitation no-entry badge");
 
-console.log("Fitness UI audit tests passed: 23 cases");
+console.log("Fitness UI audit tests passed: 25 cases");

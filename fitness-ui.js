@@ -57,6 +57,18 @@ const limitationShortNames = {
   "不适合高冲击": "不适合高冲击"
 };
 
+const limitationIconClass = {
+  "无明显限制": "icon-limit-clear",
+  "肩部不适": "icon-limit-shoulder",
+  "腰部不适": "icon-limit-waist",
+  "膝盖不适": "icon-limit-knee",
+  "手腕不适": "icon-limit-wrist",
+  "肘部不适": "icon-limit-elbow",
+  "不能做深蹲类动作": "icon-limit-squat",
+  "不能做硬拉类动作": "icon-limit-deadlift",
+  "不适合高冲击": "icon-limit-impact"
+};
+
 const muscleIconClass = {
   "胸": "icon-chest",
   "背": "icon-back",
@@ -95,7 +107,11 @@ export function renderTrainingOptionList(id, values, name, selected = []) {
   const variant = name === "training-limitations" ? "limit" : name === "training-muscles" ? "muscle" : "equipment";
   const options = name === "training-equipment"
     ? equipmentGroups.filter(group => group.values.some(item => values.includes(item)))
-    : values.map(value => ({ name: value, icon: name === "training-muscles" ? (muscleIconClass[value] || "icon-dot") : "icon-limit", values: [value] }));
+    : values.map(value => ({
+        name: value,
+        icon: name === "training-muscles" ? (muscleIconClass[value] || "icon-dot") : (limitationIconClass[value] || "icon-limit-clear"),
+        values: [value]
+      }));
 
   return options.map((option, index) => {
     const value = option.values[0];
