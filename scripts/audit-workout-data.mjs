@@ -23,6 +23,7 @@ const knownEquipmentIds = new Set([
 const weightedEquipmentIds = new Set(["weighted_vest", "secured_sandbag", "weight_plate", "dip_belt", "adjustable_dumbbells", "fixed_dumbbells", "kettlebell", "barbell"]);
 const programRoles = new Set(["workset", "warmup", "activation", "deprecated"]);
 const exerciseRoles = new Set(["primary_compound", "secondary_compound", "isolation", "accessory", "loaded_carry", "core", "cardio", "skill_drill", "activation", "warmup"]);
+const raisedSupportEquipment = new Set(["bench", "chair", "box", "stable_platform"]);
 
 const text = value => {
   if (value === true) return "是";
@@ -159,6 +160,18 @@ for (const exercise of EXERCISES) {
   }
   if (exercise.id === "single_leg_rdl" && hasOption(exercise, option => option.includes("weight_plate"))) {
     incompleteEquipmentCombinations.push("single_leg_rdl: 不应默认使用 weight_plate");
+  }
+  if (exercise.id === "step_up" && !((exercise.equipmentOptions || []).every(option => option.some(id => raisedSupportEquipment.has(id))))) {
+    incompleteEquipmentCombinations.push("step_up: 每个器械方案都必须包含平台器械");
+  }
+  if (exercise.id === "bulgarian_split_squat" && !((exercise.equipmentOptions || []).every(option => option.some(id => raisedSupportEquipment.has(id))))) {
+    incompleteEquipmentCombinations.push("bulgarian_split_squat: 每个器械方案都必须包含后脚支撑器械");
+  }
+  if (exercise.id === "incline_plank" && !((exercise.equipmentOptions || []).every(option => option.some(id => raisedSupportEquipment.has(id))))) {
+    incompleteEquipmentCombinations.push("incline_plank: 每个器械方案都必须包含抬高支撑面");
+  }
+  if (exercise.id === "weighted_plank" && hasOption(exercise, option => option.includes("weight_plate"))) {
+    incompleteEquipmentCombinations.push("weighted_plank: 与 weighted_push_up 保持一致，不保留单独 weight_plate 方案");
   }
 
   if (["weighted_push_up", "weighted_plank", "weighted_side_plank"].includes(exercise.id)) {

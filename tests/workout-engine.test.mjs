@@ -131,10 +131,15 @@ assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && 
   assert.ok(byId.cable_kickback.coordinationDemand <= 3);
   assert.ok(!byId.step_up.progressionIds.includes("lunge"));
   assert.ok(byId.step_up.alternativeIds.includes("lunge"));
+  assert.ok(byId.step_up.equipmentOptions.every(option => option.some(id => ["box", "bench", "stable_platform"].includes(id))), "step-up must always include a stable platform");
+  assert.ok(byId.step_up.equipmentOptions.some(option => option.includes("adjustable_dumbbells") && option.includes("box")));
+  assert.ok(byId.bulgarian_split_squat.equipmentOptions.every(option => option.some(id => ["bench", "box", "stable_platform"].includes(id))), "Bulgarian split squat must always include rear-foot support");
+  assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.length === 1 && option.includes("bench")), "Bulgarian split squat should support bodyweight version with bench");
   assert.ok(!byId.glute_bridge.alternativeIds.includes("barbell_hip_thrust"));
   assert.deepEqual(byId.glute_bridge.progressionIds, ["weighted_glute_bridge"]);
   assert.ok(byId.plank.regressionIds.includes("incline_plank"));
   assert.ok(byId.plank.regressionIds.includes("knee_plank"));
+  assert.ok(byId.incline_plank.equipmentOptions.every(option => option.some(id => ["bench", "box", "chair", "stable_platform"].includes(id))), "incline plank must require raised support");
   assert.deepEqual(byId.plank.progressionIds, ["long_lever_plank"]);
   assert.deepEqual(byId.side_plank_leg_raise.prerequisites, ["side_plank"]);
 }
@@ -205,7 +210,11 @@ assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && 
   assert.ok(byId.weighted_pull_up.equipmentOptions.some(option => option.includes("pull_up_bar") && option.includes("dip_belt") && option.includes("weight_plate")));
   assert.deepEqual(byId.chair_sit_to_stand.equipmentOptions, [["chair"], ["bench"], ["stable_platform"]]);
   assert.equal(byId.weighted_push_up.equipmentOptions.some(option => option.includes("weight_plate")), false);
+  assert.equal(byId.weighted_plank.equipmentOptions.some(option => option.includes("weight_plate")), false);
+  assert.ok(byId.weighted_plank.equipmentOptions.some(option => option.includes("weighted_vest")));
+  assert.ok(byId.weighted_plank.equipmentOptions.some(option => option.includes("secured_sandbag")));
   assert.ok(byId.weighted_plank.equipmentOptionSafety.some(item => item.option.includes("secured_sandbag") && item.requiresSecuredLoad));
+  assert.ok(["plank", "side_plank", "dead_bug", "bird_dog", "crunch", "reverse_crunch", "lying_leg_raise", "superman", "glute_bridge"].every(id => byId[id].equipmentOptions.some(option => option.includes("bodyweight"))), "floor exercises must remain executable without yoga mat");
   assert.equal(byId.hip_hinge_drill.exerciseRole, "skill_drill");
   assert.equal(byId.hip_hinge_drill.programRole, "activation");
   assert.equal(byId.hip_hinge_drill.countsTowardEffectiveSets, false);
