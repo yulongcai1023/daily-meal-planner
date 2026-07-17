@@ -12,4 +12,9 @@ for (const file of files) {
   fs.copyFileSync(path.join(root, file), path.join(outDir, file));
 }
 
+const fitnessIconsDir = path.join(root, "assets", "fitness-icons");
+if (fs.existsSync(fitnessIconsDir)) {
+  fs.cpSync(fitnessIconsDir, path.join(outDir, "assets", "fitness-icons"), { recursive: true });
+}
+
 console.log(`Built static site in ${path.relative(root, outDir)}`);

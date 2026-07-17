@@ -80,6 +80,47 @@ const muscleIconClass = {
   "全身均衡": "icon-balance"
 };
 
+const selectorIconAssetByClass = {
+  "icon-body": "assets/fitness-icons/muscle-balance.png",
+  "icon-mat": "assets/fitness-icons/equipment-mat.png",
+  "icon-band": "assets/fitness-icons/equipment-band.png",
+  "icon-dumbbell": "assets/fitness-icons/equipment-dumbbell.png",
+  "icon-kettlebell": "assets/fitness-icons/equipment-kettlebell.png",
+  "icon-barbell": "assets/fitness-icons/equipment-barbell.png",
+  "icon-rack": "assets/fitness-icons/equipment-rack.png",
+  "icon-smith": "assets/fitness-icons/equipment-smith.png",
+  "icon-bench": "assets/fitness-icons/equipment-bench.png",
+  "icon-cable": "assets/fitness-icons/equipment-cable.png",
+  "icon-pulldown": "assets/fitness-icons/equipment-pulldown.png",
+  "icon-machine": "assets/fitness-icons/equipment-machine.png",
+  "icon-run": "assets/fitness-icons/equipment-run.png",
+  "icon-elliptical": "assets/fitness-icons/equipment-elliptical.png",
+  "icon-bike": "assets/fitness-icons/equipment-bike.png",
+  "icon-row": "assets/fitness-icons/equipment-row.png",
+  "icon-bar": "assets/fitness-icons/equipment-bar.png",
+  "icon-parallel": "assets/fitness-icons/equipment-parallel.png",
+  "icon-preacher": "assets/fitness-icons/equipment-preacher.png",
+  "icon-stairs": "assets/fitness-icons/equipment-stairs.png",
+  "icon-rope": "assets/fitness-icons/equipment-rope.png",
+  "icon-chest": "assets/fitness-icons/muscle-chest.png",
+  "icon-back": "assets/fitness-icons/muscle-back.png",
+  "icon-shoulder": "assets/fitness-icons/muscle-shoulder.png",
+  "icon-arm": "assets/fitness-icons/muscle-arm.png",
+  "icon-glute": "assets/fitness-icons/muscle-glute.png",
+  "icon-leg": "assets/fitness-icons/muscle-leg.png",
+  "icon-core": "assets/fitness-icons/muscle-core.png",
+  "icon-balance": "assets/fitness-icons/muscle-balance.png",
+  "icon-limit-clear": "assets/fitness-icons/limit-clear.png",
+  "icon-limit-shoulder": "assets/fitness-icons/limit-shoulder.png",
+  "icon-limit-waist": "assets/fitness-icons/limit-waist.png",
+  "icon-limit-knee": "assets/fitness-icons/limit-knee.png",
+  "icon-limit-wrist": "assets/fitness-icons/limit-wrist.png",
+  "icon-limit-elbow": "assets/fitness-icons/limit-elbow.png",
+  "icon-limit-squat": "assets/fitness-icons/limit-squat.png",
+  "icon-limit-deadlift": "assets/fitness-icons/limit-deadlift.png",
+  "icon-limit-impact": "assets/fitness-icons/limit-impact.png"
+};
+
 export function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
 }
@@ -119,11 +160,12 @@ export function renderTrainingOptionList(id, values, name, selected = []) {
         ? (limitationShortNames[value] || value)
         : option.name;
     const iconClass = option.icon || equipmentIconClass[display] || "icon-dot";
+    const iconAsset = selectorIconAssetByClass[iconClass];
     const checked = option.values.some(item => selectedSet.has(item));
     return `
       <label class="selector-tile selector-${variant} ${index > 5 ? "is-extra" : ""}" data-chip-label="${escapeHtml(value)}">
         <input type="checkbox" name="${name}" value="${escapeHtml(value)}" data-values="${escapeHtml(option.values.join("|"))}" ${checked ? "checked" : ""}>
-        <span class="selector-icon ${iconClass}" aria-hidden="true"></span>
+        <span class="selector-icon ${iconClass}" aria-hidden="true">${iconAsset ? `<img src="${iconAsset}" alt="" loading="lazy">` : ""}</span>
         <span class="selector-name">${escapeHtml(display)}</span>
         <span class="selector-check" aria-hidden="true">✓</span>
       </label>

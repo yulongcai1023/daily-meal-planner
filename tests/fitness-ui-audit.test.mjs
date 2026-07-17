@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 
 const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../app.js", import.meta.url), "utf8");
@@ -24,8 +24,8 @@ assert.ok(ui.includes("estimatedCaloriesRange"), "calorie display should use an 
 assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open"), "exercise image previews should not render in workout cards");
 assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
 assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
-assert.ok(!build.includes("fs.cpSync") && !build.includes("\"assets\""), "static build should no longer copy exercise image assets");
-assert.ok(html.includes("fitness-ui23") && app.includes("fitness-ui23"), "cache-busting asset versions should be updated");
+assert.ok(!build.includes("assets\", \"exercises") && build.includes("assets\", \"fitness-icons"), "static build should copy selector icons but not old exercise previews");
+assert.ok(html.includes("fitness-ui24") && app.includes("fitness-ui24"), "cache-busting asset versions should be updated");
 assert.ok(html.includes('id="equipment-subcard"') && app.includes("syncEquipmentVisibility"), "home no-equipment location should hide the equipment selector");
 assert.ok(app.includes('trainingLocation === "homeNone" ? ["无器械"]') || app.includes("trainingLocation === \"homeNone\" ? [\"无器械\"]"), "home no-equipment location should force bodyweight equipment");
 assert.ok(ui.includes("renderExercisePager") && ui.includes("data-exercise-page-step"), "workout exercises should render as paged panels");
@@ -37,7 +37,8 @@ assert.ok(css.includes("align-content: start") && css.includes("grid-auto-rows: 
 assert.ok(css.includes("overflow: hidden") && css.includes("repeat(auto-fit"), "preference cards should contain auto-fit option grids without overlap");
 assert.ok(css.includes("align-items: stretch") && css.includes("height: 100%"), "preference cards should keep equal row height");
 assert.ok(app.includes("is-hidden-option") && app.includes('noEquipmentInput.checked = false'), "bodyweight equipment option should hide outside home no-equipment mode");
-assert.ok(ui.includes("limitationIconClass") && ui.includes("icon-limit-shoulder"), "body limitation options should use specific body-part icons");
-assert.ok(css.includes("--icon-mask") && css.includes("radial-gradient(circle") && css.includes(".selector-limit .selector-icon::after"), "selector icons should use line-art circle UI with limitation no-entry badge");
+assert.ok(ui.includes("selectorIconAssetByClass") && ui.includes("assets/fitness-icons/limit-shoulder.png"), "selector options should use cropped reference image assets");
+assert.ok(css.includes(".selector-icon img") && css.includes(":has(img)::before"), "selector image icons should disable generated pseudo-icons");
+assert.ok((await readdir(new URL("../assets/fitness-icons", import.meta.url))).length >= 37, "cropped reference icon assets should exist locally");
 
-console.log("Fitness UI audit tests passed: 25 cases");
+console.log("Fitness UI audit tests passed: 26 cases");
