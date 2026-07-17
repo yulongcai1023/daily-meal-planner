@@ -25,7 +25,7 @@ assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open
 assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
 assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
 assert.ok(!build.includes("fs.cpSync") && !build.includes("\"assets\""), "static build should no longer copy exercise image assets");
-assert.ok(html.includes("fitness-ui20") && app.includes("fitness-ui20"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("fitness-ui21") && app.includes("fitness-ui21"), "cache-busting asset versions should be updated");
 assert.ok(html.includes('id="equipment-subcard"') && app.includes("syncEquipmentVisibility"), "home no-equipment location should hide the equipment selector");
 assert.ok(app.includes('trainingLocation === "homeNone" ? ["无器械"]') || app.includes("trainingLocation === \"homeNone\" ? [\"无器械\"]"), "home no-equipment location should force bodyweight equipment");
 assert.ok(ui.includes("renderExercisePager") && ui.includes("data-exercise-page-step"), "workout exercises should render as paged panels");
@@ -34,5 +34,6 @@ assert.ok(app.includes("syncExerciseCompletionFromSets") && app.includes('input.
 assert.ok(app.includes("setExerciseSetsCompletion") && app.includes(".exercise-actions .solid-action"), "manual complete action should complete all set rows");
 assert.ok(css.includes(".selector-grid-muscles") && css.includes("repeat(2"), "muscle focus grid should stay compact without clipping options");
 assert.ok(css.includes("align-content: start") && css.includes("grid-auto-rows: min-content"), "preference option cards should not stretch vertically");
+assert.ok(css.includes("overflow: hidden") && css.includes("repeat(auto-fit"), "preference cards should contain auto-fit option grids without overlap");
 
-console.log("Fitness UI audit tests passed: 20 cases");
+console.log("Fitness UI audit tests passed: 21 cases");
