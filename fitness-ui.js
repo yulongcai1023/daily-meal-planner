@@ -252,7 +252,7 @@ function renderExerciseSetTracker(exercise, dayIndex, exerciseIndex) {
 
 function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
   return `
-    <article class="exercise-card" data-day-index="${dayIndex}" data-exercise-index="${exerciseIndex}">
+    <article class="exercise-card exercise-page-panel ${exerciseIndex === 0 ? "is-active" : ""}" data-day-index="${dayIndex}" data-exercise-index="${exerciseIndex}" ${exerciseIndex === 0 ? "" : "hidden"}>
       <header class="exercise-card-head">
         <span class="exercise-index">${exerciseIndex + 1}</span>
         <div class="exercise-title-block">
@@ -287,6 +287,27 @@ function renderExerciseCard(exercise, exerciseIndex, dayIndex) {
   `;
 }
 
+function renderExercisePager(day, dayIndex) {
+  const exercises = day.exercises || [];
+  if (exercises.length <= 1) return "";
+  const firstTitle = exercises[0]?.name || "";
+  return `
+    <nav class="exercise-pager" data-exercise-pager="${dayIndex}" data-current-exercise="0" aria-label="训练动作翻页">
+      <button class="exercise-page-nav" type="button" data-day-index="${dayIndex}" data-exercise-page-step="-1" disabled>上一动作</button>
+      <div class="exercise-page-status">
+        <span>动作 <b data-exercise-page-current>1</b> / ${exercises.length}</span>
+        <strong data-exercise-page-title>${escapeHtml(firstTitle)}</strong>
+      </div>
+      <div class="exercise-page-dots">
+        ${exercises.map((exercise, index) => `
+          <button class="exercise-page-dot ${index === 0 ? "is-active" : ""}" type="button" data-day-index="${dayIndex}" data-exercise-page="${index}" aria-pressed="${index === 0}" aria-label="查看第 ${index + 1} 个动作：${escapeHtml(exercise.name)}">${index + 1}</button>
+        `).join("")}
+      </div>
+      <button class="exercise-page-nav" type="button" data-day-index="${dayIndex}" data-exercise-page-step="1">下一动作</button>
+    </nav>
+  `;
+}
+
 function renderWorkoutDay(day, index, activeIndex) {
   if (day.isRest) {
     return `
@@ -303,6 +324,7 @@ function renderWorkoutDay(day, index, activeIndex) {
     <article class="workout-day-detail ${index === activeIndex ? "is-active" : ""}" data-day-panel="${index}" ${index === activeIndex ? "" : "hidden"}>
       ${renderWorkoutDayHeader(day, index)}
       ${renderWarmupCooldownCard(day)}
+      ${renderExercisePager(day, index)}
       <div class="exercise-stack">
         ${day.exercises.map((exercise, exerciseIndex) => renderExerciseCard(exercise, exerciseIndex, index)).join("")}
       </div>

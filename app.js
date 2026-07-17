@@ -14,8 +14,8 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui18";
-import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui18";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui19";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui19";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
@@ -483,6 +483,24 @@ function checkedValues(name) {
   });
 }
 
+function syncEquipmentVisibility() {
+  const location = document.querySelector("#training-location")?.value;
+  const equipmentCard = document.querySelector("#equipment-subcard");
+  const search = document.querySelector("#equipment-search");
+  const noEquipmentInput = Array.from(document.querySelectorAll('input[name="training-equipment"]')).find(input => input.value === "无器械");
+  const isHomeNoEquipment = location === "homeNone";
+  if (equipmentCard) {
+    equipmentCard.classList.toggle("is-hidden", isHomeNoEquipment);
+    equipmentCard.setAttribute("aria-hidden", String(isHomeNoEquipment));
+  }
+  if (search) search.disabled = isHomeNoEquipment;
+  if (isHomeNoEquipment) {
+    document.querySelectorAll('input[name="training-equipment"]').forEach(input => {
+      input.checked = input === noEquipmentInput;
+    });
+  }
+}
+
 function loadTrainingSettings() {
   try {
     return JSON.parse(localStorage.getItem(TRAINING_STORAGE_KEY) || "{}");
@@ -516,14 +534,15 @@ function collectTrainingSettings() {
   const dislikedRaw = document.querySelector("#disliked-exercises")?.value || "";
   let limitations = checkedValues("training-limitations");
   if (limitations.includes("无明显限制") && limitations.length > 1) limitations = limitations.filter(item => item !== "无明显限制");
+  const trainingLocation = document.querySelector("#training-location").value;
   return {
     primaryGoal: document.querySelector("#training-primary-goal").value,
     secondaryGoal: document.querySelector("#training-secondary-goal").value || "",
     experienceLevel: document.querySelector("#experience-level").value,
     weeklyTrainingDays: Number(document.querySelector("#weekly-training-days").value),
     sessionDuration: Number(document.querySelector("#session-duration").value),
-    trainingLocation: document.querySelector("#training-location").value,
-    availableEquipment: checkedValues("training-equipment"),
+    trainingLocation,
+    availableEquipment: trainingLocation === "homeNone" ? ["无器械"] : checkedValues("training-equipment"),
     limitations,
     priorityMuscles: checkedValues("training-muscles"),
     preferredStyles: checkedValues("training-styles"),
@@ -626,6 +645,7 @@ function applyTrainingSettings(settings = {}) {
   const segment = document.querySelector(`input[name="experience-segment"][value="${experience}"]`);
   if (segment) segment.checked = true;
   syncSecondaryGoalOptions();
+  syncEquipmentVisibility();
 }
 
 function updateTrainingCompletion() {
@@ -724,6 +744,35 @@ function selectWorkoutDay(dayIndex) {
   }
 }
 
+function selectExercisePage(dayIndex, exerciseIndex) {
+  const dayPanel = document.querySelector(`[data-day-panel="${dayIndex}"]`);
+  if (!dayPanel) return;
+  const cards = Array.from(dayPanel.querySelectorAll(".exercise-page-panel"));
+  if (!cards.length) return;
+  const nextIndex = Math.max(0, Math.min(exerciseIndex, cards.length - 1));
+  cards.forEach(card => {
+    const active = Number(card.dataset.exerciseIndex) === nextIndex;
+    card.classList.toggle("is-active", active);
+    card.hidden = !active;
+  });
+  const pager = dayPanel.querySelector(`[data-exercise-pager="${dayIndex}"]`);
+  if (!pager) return;
+  pager.dataset.currentExercise = String(nextIndex);
+  pager.querySelector("[data-exercise-page-current]").textContent = String(nextIndex + 1);
+  const title = cards[nextIndex]?.querySelector(".exercise-title-block h3")?.textContent || "";
+  const titleNode = pager.querySelector("[data-exercise-page-title]");
+  if (titleNode) titleNode.textContent = title;
+  pager.querySelectorAll("[data-exercise-page]").forEach(button => {
+    const active = Number(button.dataset.exercisePage) === nextIndex;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  pager.querySelectorAll("[data-exercise-page-step]").forEach(button => {
+    const step = Number(button.dataset.exercisePageStep);
+    button.disabled = (step < 0 && nextIndex === 0) || (step > 0 && nextIndex === cards.length - 1);
+  });
+}
+
 function loadWorkoutLogs() {
   try {
     return JSON.parse(localStorage.getItem(WORKOUT_LOG_STORAGE_KEY) || "{}");
@@ -748,6 +797,47 @@ function restoreWorkoutLogs() {
     const field = input.dataset.logField || "done";
     if (logs[key]?.[field] !== undefined) input.checked = Boolean(logs[key][field]);
   });
+  document.querySelectorAll(".exercise-card").forEach(card => syncExerciseCompletionFromSets(card, false));
+}
+
+function syncExerciseCompletionFromSets(exerciseCard, persist = true) {
+  if (!exerciseCard) return;
+  const sets = Array.from(exerciseCard.querySelectorAll(".set-complete"));
+  const exerciseDone = exerciseCard.querySelector(".exercise-done");
+  if (!sets.length || !exerciseDone) return;
+  const shouldBeDone = sets.every(input => input.checked);
+  if (exerciseDone.checked === shouldBeDone) return;
+  exerciseDone.checked = shouldBeDone;
+  if (!persist) return;
+  const key = exerciseDone.dataset.exerciseDone;
+  if (!key) return;
+  const logs = loadWorkoutLogs();
+  logs[key] = logs[key] || {};
+  logs[key].done = shouldBeDone;
+  saveWorkoutLogs(logs);
+}
+
+function setExerciseSetsCompletion(exerciseCard, checked) {
+  if (!exerciseCard) return;
+  const logs = loadWorkoutLogs();
+  exerciseCard.querySelectorAll(".set-complete").forEach(input => {
+    input.checked = checked;
+    const key = input.dataset.logKey;
+    const field = input.dataset.logField || "done";
+    if (!key) return;
+    logs[key] = logs[key] || {};
+    logs[key][field] = checked;
+  });
+  const exerciseDone = exerciseCard.querySelector(".exercise-done");
+  if (exerciseDone) {
+    exerciseDone.checked = checked;
+    const key = exerciseDone.dataset.exerciseDone;
+    if (key) {
+      logs[key] = logs[key] || {};
+      logs[key].done = checked;
+    }
+  }
+  saveWorkoutLogs(logs);
 }
 
 function bindWorkoutLogEvents() {
@@ -760,6 +850,12 @@ function bindWorkoutLogEvents() {
     logs[key] = logs[key] || {};
     logs[key][field] = input.type === "checkbox" ? input.checked : input.value;
     saveWorkoutLogs(logs);
+    if (input.classList.contains("set-complete")) {
+      syncExerciseCompletionFromSets(input.closest(".exercise-card"));
+    }
+    if (input.classList.contains("exercise-done")) {
+      setExerciseSetsCompletion(input.closest(".exercise-card"), input.checked);
+    }
   };
   document.querySelectorAll(".workout-log-input, .exercise-note-input, .set-complete, .exercise-done").forEach(input => {
     input.addEventListener("input", updateLog);
@@ -791,7 +887,28 @@ function renderWorkoutPlan(plan) {
       openExerciseSheet(dayIndex, exerciseIndex);
     });
   });
-  document.querySelectorAll(".save-set-button, .exercise-actions .solid-action").forEach(button => button.addEventListener("click", () => showToast("训练记录已保存在当前页面。")));
+  document.querySelectorAll("[data-exercise-page]").forEach(button => {
+    button.addEventListener("click", () => selectExercisePage(Number(button.dataset.dayIndex), Number(button.dataset.exercisePage)));
+  });
+  document.querySelectorAll("[data-exercise-page-step]").forEach(button => {
+    button.addEventListener("click", () => {
+      const dayIndex = Number(button.dataset.dayIndex);
+      const pager = document.querySelector(`[data-exercise-pager="${dayIndex}"]`);
+      const current = Number(pager?.dataset.currentExercise || 0);
+      selectExercisePage(dayIndex, current + Number(button.dataset.exercisePageStep));
+    });
+  });
+  plan.days.forEach((day, index) => {
+    if (!day.isRest) selectExercisePage(index, 0);
+  });
+  document.querySelectorAll(".save-set-button, .exercise-actions .solid-action").forEach(button => button.addEventListener("click", event => {
+    const exerciseCard = event.currentTarget.closest(".exercise-card");
+    if (exerciseCard) {
+      setExerciseSetsCompletion(exerciseCard, true);
+      updateTrainingCompletion();
+    }
+    showToast("训练记录已保存在当前页面。");
+  }));
   updateTrainingCompletion();
 }
 
@@ -831,6 +948,7 @@ function setupTrainingUI() {
   setupSectionTabs();
   applyTrainingSettings(loadTrainingSettings());
   document.querySelector("#training-primary-goal")?.addEventListener("change", syncSecondaryGoalOptions);
+  document.querySelector("#training-location")?.addEventListener("change", syncEquipmentVisibility);
   document.querySelector("#training-secondary-goal")?.insertAdjacentHTML("afterbegin", `<option value="">不设置次要目标</option>`);
   syncSecondaryGoalOptions();
   document.querySelectorAll("[data-fitness-panel]").forEach(button => {

@@ -25,6 +25,13 @@ assert.ok(!ui.includes("renderExerciseMedia") && !ui.includes("data-preview-open
 assert.ok(!html.includes("exercise-preview-modal") && !app.includes("openExercisePreview"), "enlarged exercise preview modal should be removed");
 assert.ok(!ui.includes("assets/exercises/") && !css.includes(".media-figure.has-preview"), "exercise image asset references should be removed from UI and CSS");
 assert.ok(!build.includes("fs.cpSync") && !build.includes("\"assets\""), "static build should no longer copy exercise image assets");
-assert.ok(html.includes("fitness-ui18") && app.includes("fitness-ui18"), "cache-busting asset versions should be updated");
+assert.ok(html.includes("fitness-ui19") && app.includes("fitness-ui19"), "cache-busting asset versions should be updated");
+assert.ok(html.includes('id="equipment-subcard"') && app.includes("syncEquipmentVisibility"), "home no-equipment location should hide the equipment selector");
+assert.ok(app.includes('trainingLocation === "homeNone" ? ["无器械"]') || app.includes("trainingLocation === \"homeNone\" ? [\"无器械\"]"), "home no-equipment location should force bodyweight equipment");
+assert.ok(ui.includes("renderExercisePager") && ui.includes("data-exercise-page-step"), "workout exercises should render as paged panels");
+assert.ok(app.includes("selectExercisePage") && css.includes(".exercise-pager"), "exercise pager should be interactive and styled");
+assert.ok(app.includes("syncExerciseCompletionFromSets") && app.includes('input.classList.contains("set-complete")'), "finishing all sets should auto-complete the exercise");
+assert.ok(app.includes("setExerciseSetsCompletion") && app.includes(".exercise-actions .solid-action"), "manual complete action should complete all set rows");
+assert.ok(css.includes(".selector-grid-muscles") && css.includes("auto-fit"), "muscle focus grid should auto-fit instead of clipping options");
 
-console.log("Fitness UI audit tests passed: 12 cases");
+console.log("Fitness UI audit tests passed: 19 cases");
