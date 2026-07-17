@@ -1,17 +1,40 @@
 # 健身动作数据一致性审计
 
-生成时间：2026-07-17T05:52:04.078Z
+生成时间：2026-07-17T06:18:34.944Z
 
-- 动作数量：103
-- 进退阶图谱：通过
+- 动作数量：105
+- 进退阶图校验：通过
+- 编码异常字符数量：0
 
-## 无效器械条件
+## 所有角色不匹配 alternative
+
+- leg_curl(isolation) → db_rdl(compound)
+
+## alternative 难度反向关系
 
 - 无
 
-## 重复关系
+## 跨模式且疲劳差异过大的替代
 
 - 无
+
+## 无效设备组合
+
+- 无
+
+## 安全保护字段缺失
+
+- 无
+
+| 动作 ID | 存在 | requiresSpotterOrSafetyArms | 筛选算法使用 |
+| --- | --- | --- | --- |
+| barbell_bench | 是 | 是 | 是 |
+| incline_barbell_bench | 是 | 是 | 是 |
+| close_grip_bench | 是 | 是 | 是 |
+
+## 重复动作模板
+
+- incline_push_up: 通用上斜俯卧撑已保留为兼容数据，但 autoCandidate=否，不进入自动候选
 
 ## 跨模式 progression
 
@@ -19,22 +42,17 @@
 
 ## 跨模式 alternative
 
-- standing_scapular_retraction -> band_pulldown: 水平拉 / 垂直拉; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- wall_angel -> face_pull: 肩胛控制 / 水平拉; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- front_raise -> db_shoulder_press: 肩屈 / 垂直推; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- triceps_pushdown -> close_push_up: 肘伸 / 水平推; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- close_push_up -> triceps_pushdown: 水平推 / 肘伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- close_grip_bench -> triceps_pushdown: 水平推 / 肘伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- bodyweight_squat -> wall_sit: 深蹲 / 静力; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- leg_extension -> leg_press: 膝伸 / 深蹲; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- rdl -> glute_bridge: 髋铰链 / 髋伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- db_rdl -> glute_bridge: 髋铰链 / 髋伸; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- leg_curl -> db_rdl: 膝屈 / 髋铰链; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- dead_bug -> bird_dog: 抗伸展 / 抗旋转; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- bird_dog -> dead_bug: 抗旋转 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- crunch -> dead_bug: 躯干屈曲 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- reverse_crunch -> dead_bug: 骨盆后倾 / 抗伸展; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
-- lying_leg_raise -> reverse_crunch: 髋屈 / 骨盆后倾; type=sameMuscleDifferentPattern; requiresPatternCoverageValidation=true
+- db_rdl → glute_bridge: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- leg_curl → db_rdl: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- dead_bug → bird_dog: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- bird_dog → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- crunch → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- reverse_crunch → dead_bug: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+- lying_leg_raise → reverse_crunch: type=sameMuscleDifferentPattern, 需要模式覆盖校验=是
+
+## 重复关系
+
+- 无
 
 ## 缺失 prerequisites
 
@@ -48,9 +66,12 @@
 
 - 无
 
-## UTF-8 编码检测结果
+## UTF-8 编码检测
 
-- workout-engine.js: 通过
-- tests/workout-engine.test.mjs: 通过
-- workout-difficulty-review.md: 通过
-- workout-difficulty-summary.md: 通过
+| 文件 | 存在 | 替换字符数 | 可疑异常字符数 | 通过 |
+| --- | --- | --- | --- | --- |
+| workout-engine.js | 是 | 0 | 0 | 是 |
+| tests/workout-engine.test.mjs | 是 | 0 | 0 | 是 |
+| workout-difficulty-review.md | 是 | 0 | 0 | 是 |
+| workout-difficulty-summary.md | 是 | 0 | 0 | 是 |
+| workout-data-audit.md | 是 | 0 | 0 | 是 |

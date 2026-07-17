@@ -21,14 +21,14 @@ const EXPERIENCE_MAX_DIFFICULTY_SCORE = {
   novice: 2,
   beginner: 3,
   intermediate: 4,
-  advanced: 5
+  advanced: 6
 };
 
 const LOCATION_EQUIPMENT = {
   homeNone: ["无器械", "瑜伽垫", "椅子", "箱子", "稳定台面"],
-  homeSimple: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跳绳", "引体向上杆", "椅子", "箱子", "稳定台面", "负重物"],
-  apartmentGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "卧推凳", "拉力器", "高位下拉器", "椅子", "箱子", "稳定台面", "负重物"],
-  commercialGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "杠铃", "深蹲架", "史密斯机", "卧推凳", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "双杠", "牧师椅", "爬楼机", "器械推胸", "器械肩推", "髋外展机", "椅子", "箱子", "稳定台面", "负重物"],
+  homeSimple: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跳绳", "引体向上杆", "椅子", "箱子", "稳定台面", "负重背心", "沙袋", "杠铃片"],
+  apartmentGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "卧推凳", "拉力器", "高位下拉器", "椅子", "箱子", "稳定台面", "负重背心", "沙袋", "杠铃片"],
+  commercialGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "杠铃", "深蹲架", "史密斯机", "卧推凳", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "双杠", "辅助臂屈伸机", "牧师椅", "爬楼机", "器械推胸", "器械肩推", "髋外展机", "椅子", "箱子", "稳定台面", "负重背心", "沙袋", "杠铃片"],
   outdoor: ["无器械", "瑜伽垫", "弹力带", "跳绳"]
 };
 
@@ -187,36 +187,41 @@ const adjustableDumbbell = "可调哑铃";
 const fixedDumbbell = "固定哑铃";
 const bench = "卧推凳";
 const pullupBar = "引体向上杆";
-const weightedObject = "负重物";
+const weightedVest = "负重背心";
+const sandbag = "沙袋";
+const weightPlate = "杠铃片";
 const chair = "椅子";
 const box = "箱子";
 const stablePlatform = "稳定台面";
 const parallelBars = "双杠";
 const resistanceBand = "弹力带";
+const assistedDipMachine = "辅助臂屈伸机";
 
 EXERCISES.push(
-  ex({ id: "wall_push_up", name: "墙壁俯卧撑", englishName: "Wall Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["incline_push_up"], defaultRepRange: "10–15次", defaultRestSeconds: 45 }),
-  ex({ id: "high_incline_push_up", name: "高位上斜俯卧撑", englishName: "High Incline Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["kneeling_push_up", "incline_push_up"], defaultRepRange: "8–15次", defaultRestSeconds: 45 }),
-  ex({ id: "low_incline_push_up", name: "低位上斜俯卧撑", englishName: "Low Incline Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["kneeling_push_up", "incline_push_up"], defaultRepRange: "8–15次", defaultRestSeconds: 60 }),
-  ex({ id: "weighted_push_up", name: "负重俯卧撑", englishName: "Weighted Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [weightedObject], difficulty: "advanced", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["close_push_up"], defaultRepRange: "6–10次", defaultRestSeconds: 120 }),
-  ex({ id: "chair_sit_to_stand", name: "椅子坐站", englishName: "Chair Sit-to-Stand", category: exerciseSeed("bodyweight_squat").category, primaryMuscles: exerciseSeed("bodyweight_squat").primaryMuscles, secondaryMuscles: exerciseSeed("bodyweight_squat").secondaryMuscles, movementPattern: exerciseSeed("bodyweight_squat").movementPattern, equipment: [chair, bench, stablePlatform], difficulty: "beginner0", contraindications: exerciseSeed("bodyweight_squat").contraindications, alternatives: ["bodyweight_squat"], defaultRepRange: "8–12次", defaultRestSeconds: 60 }),
+  ex({ id: "wall_push_up", name: "墙壁俯卧撑", englishName: "Wall Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["high_incline_push_up"], defaultRepRange: "10–15次", defaultRestSeconds: 45 }),
+  ex({ id: "high_incline_push_up", name: "高位上斜俯卧撑", englishName: "High Incline Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["kneeling_push_up", "low_incline_push_up"], defaultRepRange: "8–15次", defaultRestSeconds: 45 }),
+  ex({ id: "low_incline_push_up", name: "低位上斜俯卧撑", englishName: "Low Incline Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["kneeling_push_up", "push_up"], defaultRepRange: "8–15次", defaultRestSeconds: 60 }),
+  ex({ id: "weighted_push_up", name: "负重俯卧撑", englishName: "Weighted Push-up", category: exerciseSeed("push_up").category, primaryMuscles: exerciseSeed("push_up").primaryMuscles, secondaryMuscles: exerciseSeed("push_up").secondaryMuscles, movementPattern: exerciseSeed("push_up").movementPattern, equipment: [weightedVest, sandbag, weightPlate], difficulty: "advanced", contraindications: exerciseSeed("push_up").contraindications, alternatives: ["close_push_up"], defaultRepRange: "6–10次", defaultRestSeconds: 120 }),
+  ex({ id: "chair_sit_to_stand", name: "椅子坐站", englishName: "Chair Sit-to-Stand", category: exerciseSeed("bodyweight_squat").category, primaryMuscles: exerciseSeed("bodyweight_squat").primaryMuscles, secondaryMuscles: exerciseSeed("bodyweight_squat").secondaryMuscles, movementPattern: exerciseSeed("bodyweight_squat").movementPattern, equipment: [chair, bench, stablePlatform], difficulty: "beginner0", contraindications: exerciseSeed("bodyweight_squat").contraindications, alternatives: [], defaultRepRange: "8–12次", defaultRestSeconds: 60 }),
   ex({ id: "box_squat", name: "箱式深蹲", englishName: "Box Squat", category: exerciseSeed("bodyweight_squat").category, primaryMuscles: exerciseSeed("bodyweight_squat").primaryMuscles, secondaryMuscles: exerciseSeed("bodyweight_squat").secondaryMuscles, movementPattern: exerciseSeed("bodyweight_squat").movementPattern, equipment: [box, bench, stablePlatform], difficulty: "beginner0", contraindications: exerciseSeed("bodyweight_squat").contraindications, alternatives: ["bodyweight_squat"], defaultRepRange: "8–12次", defaultRestSeconds: 60 }),
-  ex({ id: "hip_hinge_drill", name: "徒手髋铰链", englishName: "Bodyweight Hip Hinge", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["db_rdl"], defaultRepRange: "8–12次", defaultRestSeconds: 45, isCompound: false }),
+  ex({ id: "hip_hinge_drill", name: "徒手髋铰链", englishName: "Bodyweight Hip Hinge", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["wall_hip_hinge"], defaultRepRange: "8–12次", defaultRestSeconds: 45, isCompound: false }),
   ex({ id: "wall_hip_hinge", name: "墙触臀髋铰链", englishName: "Wall Hip Hinge", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [noEquipment], difficulty: "beginner0", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["hip_hinge_drill"], defaultRepRange: "8–12次", defaultRestSeconds: 45, isCompound: false }),
-  ex({ id: "single_leg_rdl", name: "单腿罗马尼亚硬拉", englishName: "Single-leg Romanian Deadlift", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [noEquipment, adjustableDumbbell, fixedDumbbell], difficulty: "advanced", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["db_rdl"], defaultRepRange: "8–10次/侧", defaultRestSeconds: 90, isUnilateral: true }),
+  ex({ id: "bodyweight_single_leg_hinge", name: "徒手单腿髋铰链", englishName: "Bodyweight Single-leg Hip Hinge", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [noEquipment], difficulty: "intermediate", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["wall_hip_hinge"], defaultRepRange: "8–10次/侧", defaultRestSeconds: 60, isUnilateral: true }),
+  ex({ id: "single_leg_rdl", name: "负重单腿罗马尼亚硬拉", englishName: "Weighted Single-leg Romanian Deadlift", category: exerciseSeed("db_rdl").category, primaryMuscles: exerciseSeed("db_rdl").primaryMuscles, secondaryMuscles: exerciseSeed("db_rdl").secondaryMuscles, movementPattern: exerciseSeed("db_rdl").movementPattern, equipment: [adjustableDumbbell, fixedDumbbell, weightPlate], difficulty: "advanced", contraindications: exerciseSeed("db_rdl").contraindications, alternatives: ["db_rdl", "bodyweight_single_leg_hinge"], defaultRepRange: "8–10次/侧", defaultRestSeconds: 90, isUnilateral: true }),
   ex({ id: "weighted_glute_bridge", name: "负重臀桥", englishName: "Weighted Glute Bridge", category: exerciseSeed("glute_bridge").category, primaryMuscles: exerciseSeed("glute_bridge").primaryMuscles, movementPattern: exerciseSeed("glute_bridge").movementPattern, equipment: [adjustableDumbbell, fixedDumbbell], difficulty: "beginner", alternatives: ["glute_bridge"], defaultRepRange: "10–15次", defaultRestSeconds: 75 }),
   ex({ id: "db_hip_thrust", name: "哑铃臀推", englishName: "Dumbbell Hip Thrust", category: exerciseSeed("glute_bridge").category, primaryMuscles: exerciseSeed("glute_bridge").primaryMuscles, movementPattern: exerciseSeed("glute_bridge").movementPattern, equipment: [adjustableDumbbell, fixedDumbbell, bench], difficulty: "beginner", alternatives: ["weighted_glute_bridge"], defaultRepRange: "8–12次", defaultRestSeconds: 90 }),
   ex({ id: "weighted_pull_up", name: "负重引体向上", englishName: "Weighted Pull-up", category: exerciseSeed("pull_up").category, primaryMuscles: exerciseSeed("pull_up").primaryMuscles, movementPattern: exerciseSeed("pull_up").movementPattern, equipment: [pullupBar], difficulty: "advanced", contraindications: exerciseSeed("pull_up").contraindications, alternatives: ["pull_up"], defaultRepRange: "4–8次", defaultRestSeconds: 150 }),
   ex({ id: "band_assisted_dip", name: "弹力带辅助双杠臂屈伸", englishName: "Band-assisted Dip", category: exerciseSeed("dip").category, primaryMuscles: exerciseSeed("dip").primaryMuscles, secondaryMuscles: exerciseSeed("dip").secondaryMuscles, movementPattern: exerciseSeed("dip").movementPattern, equipment: [parallelBars, resistanceBand], difficulty: "intermediate", contraindications: exerciseSeed("dip").contraindications, alternatives: ["close_push_up"], defaultRepRange: "6–10次", defaultRestSeconds: 90 }),
-  ex({ id: "assisted_dip", name: "辅助双杠臂屈伸", englishName: "Assisted Dip", category: exerciseSeed("dip").category, primaryMuscles: exerciseSeed("dip").primaryMuscles, secondaryMuscles: exerciseSeed("dip").secondaryMuscles, movementPattern: exerciseSeed("dip").movementPattern, equipment: [parallelBars], difficulty: "intermediate", contraindications: exerciseSeed("dip").contraindications, alternatives: ["band_assisted_dip"], defaultRepRange: "6–10次", defaultRestSeconds: 90 }),
+  ex({ id: "assisted_dip_machine", name: "器械辅助双杠臂屈伸", englishName: "Assisted Dip Machine", category: exerciseSeed("dip").category, primaryMuscles: exerciseSeed("dip").primaryMuscles, secondaryMuscles: exerciseSeed("dip").secondaryMuscles, movementPattern: exerciseSeed("dip").movementPattern, equipment: [assistedDipMachine], difficulty: "beginner", contraindications: exerciseSeed("dip").contraindications, alternatives: ["band_assisted_dip"], defaultRepRange: "8–12次", defaultRestSeconds: 90 }),
+  ex({ id: "weighted_dip", name: "负重双杠臂屈伸", englishName: "Weighted Dip", category: exerciseSeed("dip").category, primaryMuscles: exerciseSeed("dip").primaryMuscles, secondaryMuscles: exerciseSeed("dip").secondaryMuscles, movementPattern: exerciseSeed("dip").movementPattern, equipment: [parallelBars, weightedVest, weightPlate], difficulty: "advanced", contraindications: exerciseSeed("dip").contraindications, alternatives: ["dip"], defaultRepRange: "4–8次", defaultRestSeconds: 150 }),
   ex({ id: "standing_db_shoulder_press", name: "站姿哑铃肩推", englishName: "Standing Dumbbell Shoulder Press", category: exerciseSeed("db_shoulder_press").category, primaryMuscles: exerciseSeed("db_shoulder_press").primaryMuscles, movementPattern: exerciseSeed("db_shoulder_press").movementPattern, equipment: [adjustableDumbbell, fixedDumbbell], difficulty: "intermediate", contraindications: exerciseSeed("db_shoulder_press").contraindications, alternatives: ["db_shoulder_press"], defaultRepRange: "8–12次", defaultRestSeconds: 90 }),
   ex({ id: "incline_plank", name: "上斜平板支撑", englishName: "Incline Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [noEquipment], difficulty: "beginner0", alternatives: ["knee_plank"], defaultRepRange: "20–45秒", defaultRestSeconds: 45, isCompound: false }),
   ex({ id: "knee_plank", name: "跪姿平板支撑", englishName: "Knee Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "beginner0", alternatives: ["incline_plank"], defaultRepRange: "20–45秒", defaultRestSeconds: 45, isCompound: false }),
   ex({ id: "long_lever_plank", name: "长杠杆平板支撑", englishName: "Long-lever Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "intermediate", alternatives: ["plank"], defaultRepRange: "15–40秒", defaultRestSeconds: 60, isCompound: false }),
-  ex({ id: "weighted_plank", name: "负重平板支撑", englishName: "Weighted Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [weightedObject, yogaMat], difficulty: "advanced", alternatives: ["long_lever_plank"], defaultRepRange: "20–45秒", defaultRestSeconds: 75, isCompound: false }),
+  ex({ id: "weighted_plank", name: "负重平板支撑", englishName: "Weighted Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [weightedVest, weightPlate, sandbag, yogaMat], difficulty: "advanced", alternatives: ["long_lever_plank"], defaultRepRange: "20–45秒", defaultRestSeconds: 75, isCompound: false }),
   ex({ id: "knee_side_plank", name: "屈膝侧平板", englishName: "Knee Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "beginner0", alternatives: ["side_plank"], defaultRepRange: "15–30秒/侧", defaultRestSeconds: 45, isCompound: false, isUnilateral: true }),
   ex({ id: "side_plank_leg_raise", name: "抬腿侧平板", englishName: "Side Plank Leg Raise", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "intermediate", alternatives: ["side_plank"], defaultRepRange: "8–12次/侧", defaultRestSeconds: 60, isCompound: false, isUnilateral: true }),
-  ex({ id: "weighted_side_plank", name: "负重侧平板", englishName: "Weighted Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [weightedObject, yogaMat], difficulty: "advanced", alternatives: ["side_plank_leg_raise"], defaultRepRange: "20–45秒/侧", defaultRestSeconds: 75, isCompound: false, isUnilateral: true })
+  ex({ id: "weighted_side_plank", name: "负重侧平板", englishName: "Weighted Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [weightedVest, weightPlate, sandbag, yogaMat], difficulty: "advanced", alternatives: ["side_plank_leg_raise"], defaultRepRange: "20–45秒/侧", defaultRestSeconds: 75, isCompound: false, isUnilateral: true })
 );
 
 const PROGRESSION_CHAINS = [
@@ -224,9 +229,9 @@ const PROGRESSION_CHAINS = [
   ["db_bench", "barbell_bench", "incline_barbell_bench"],
   ["band_pulldown", "lat_pulldown", "assisted_pull_up", "pull_up", "weighted_pull_up"],
   ["seated_row", "chest_supported_row", "one_arm_db_row", "barbell_row"],
-  ["band_assisted_dip", "assisted_dip", "dip"],
+  ["assisted_dip_machine", "band_assisted_dip", "dip", "weighted_dip"],
   ["chair_sit_to_stand", "box_squat", "bodyweight_squat", "goblet_squat", "smith_squat", "barbell_squat"],
-  ["hip_hinge_drill", "wall_hip_hinge", "db_rdl", "rdl", "single_leg_rdl"],
+  ["hip_hinge_drill", "wall_hip_hinge", "db_rdl", "rdl", "bodyweight_single_leg_hinge", "single_leg_rdl"],
   ["glute_bridge", "weighted_glute_bridge", "db_hip_thrust", "barbell_hip_thrust"],
   ["lunge", "bulgarian_split_squat"],
   ["incline_plank", "plank", "long_lever_plank", "weighted_plank"],
@@ -240,7 +245,7 @@ const DIFFICULTY_OVERRIDES = {
   high_incline_push_up: { difficultyLevel: "novice", difficultyScore: 1.3, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1.5, stabilityDemand: 1.5 },
   low_incline_push_up: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true, skillDifficulty: 2, strengthRequirement: 2.5, stabilityDemand: 2 },
   push_up: { difficultyLevel: "beginner", difficultyScore: 3, beginnerFriendly: true, skillDifficulty: 2, strengthRequirement: 3, stabilityDemand: 3, technicalComplexity: 2 },
-  incline_push_up: { difficultyLevel: "novice", difficultyScore: 1.6, beginnerFriendly: true, suggestedNextIds: ["low_incline_push_up"], alternativeIds: ["high_incline_push_up", "kneeling_push_up"] },
+  incline_push_up: { difficultyLevel: "novice", difficultyScore: 1.6, beginnerFriendly: true, suggestedNextIds: ["low_incline_push_up"], alternativeIds: ["high_incline_push_up", "kneeling_push_up"], autoCandidate: false, trainingRole: "deprecated", countsAsEffectiveSet: false },
   kneeling_push_up: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true, suggestedNextIds: ["low_incline_push_up", "push_up"], alternativeIds: ["high_incline_push_up"] },
   weighted_push_up: { difficultyLevel: "advanced", difficultyScore: 5, beginnerFriendly: false, skillDifficulty: 3, strengthRequirement: 5, stabilityDemand: 4, fatigueCost: 4 },
   machine_chest_press: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true, stabilityDemand: 1, suggestedNextIds: ["db_bench"], alternativeIds: ["push_up"] },
@@ -251,43 +256,57 @@ const DIFFICULTY_OVERRIDES = {
   pull_up: { difficultyLevel: "intermediate", difficultyScore: 4, beginnerFriendly: false, skillDifficulty: 3, strengthRequirement: 5, technicalComplexity: 3, fatigueCost: 4 },
   weighted_pull_up: { difficultyLevel: "advanced", difficultyScore: 5, beginnerFriendly: false, skillDifficulty: 3, strengthRequirement: 5, fatigueCost: 5 },
   assisted_pull_up: { difficultyLevel: "beginner", difficultyScore: 3, strengthRequirement: 3 },
-  standing_scapular_retraction: { trainingRole: "activation", countsAsEffectiveSet: false, fatigueCost: 1 },
-  wall_angel: { trainingRole: "warmup", countsAsEffectiveSet: false, fatigueCost: 1 },
-  standing_reverse_fly: { trainingRole: "activation", countsAsEffectiveSet: false, fatigueCost: 1 },
+  standing_scapular_retraction: { exerciseRole: "activation", trainingRole: "activation", countsAsEffectiveSet: false, fatigueCost: 1, alternativeIds: ["standing_reverse_fly"] },
+  wall_angel: { exerciseRole: "warmup", trainingRole: "warmup", countsAsEffectiveSet: false, fatigueCost: 1, alternativeIds: [] },
+  standing_reverse_fly: { exerciseRole: "activation", trainingRole: "activation", countsAsEffectiveSet: false, fatigueCost: 1, alternativeIds: ["standing_scapular_retraction"] },
   chest_supported_row: { difficultyLevel: "beginner", difficultyScore: 2.5, beginnerFriendly: true, spinalLoad: 1 },
   one_arm_db_row: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3 },
   barbell_row: { difficultyLevel: "intermediate", difficultyScore: 4, spinalLoad: 4, requiresSetupSkill: true },
+  straight_arm_pulldown: { alternativeIds: [] },
   db_shoulder_press: { difficultyLevel: "beginner", difficultyScore: 2, spinalLoad: 1, skillDifficulty: 2, stabilityDemand: 2, alternativeIds: ["standing_db_shoulder_press", "machine_shoulder_press"] },
   standing_db_shoulder_press: { difficultyLevel: "intermediate", difficultyScore: 3, skillDifficulty: 3, strengthRequirement: 3, stabilityDemand: 3, spinalLoad: 3, requiresSetupSkill: false },
   barbell_press: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, spinalLoad: 3, requiresSetupSkill: true },
-  front_raise: { selectionPenalty: 8, trainingRole: "accessory", countsAsEffectiveSet: true },
-  barbell_curl: { difficultyLevel: "beginner", difficultyScore: 2, skillDifficulty: 2, strengthRequirement: 2, requiresSetupSkill: false },
-  preacher_curl: { difficultyLevel: "beginner", difficultyScore: 2, skillDifficulty: 1, strengthRequirement: 2, requiresSetupSkill: false },
-  close_grip_bench: { requiresSpotter: true, requiresSpotterOrSafetyArms: true, requiresSetupSkill: true },
-  close_push_up: { difficultyLevel: "intermediate", difficultyScore: 4 },
+  lateral_raise: { exerciseRole: "isolation", trainingRole: "accessory" },
+  cable_lateral_raise: { exerciseRole: "isolation", trainingRole: "accessory" },
+  front_raise: { selectionPenalty: 8, exerciseRole: "isolation", trainingRole: "accessory", countsAsEffectiveSet: true, alternativeIds: [] },
+  db_curl: { exerciseRole: "isolation", trainingRole: "accessory" },
+  hammer_curl: { exerciseRole: "isolation", trainingRole: "accessory" },
+  barbell_curl: { difficultyLevel: "beginner", difficultyScore: 2, skillDifficulty: 2, strengthRequirement: 2, requiresSetupSkill: false, exerciseRole: "isolation", trainingRole: "accessory" },
+  cable_curl: { exerciseRole: "isolation", trainingRole: "accessory" },
+  preacher_curl: { difficultyLevel: "beginner", difficultyScore: 2, skillDifficulty: 1, strengthRequirement: 2, requiresSetupSkill: false, exerciseRole: "isolation", trainingRole: "accessory" },
+  triceps_pushdown: { exerciseRole: "isolation", trainingRole: "accessory", alternativeIds: ["straight_bar_pushdown"] },
+  straight_bar_pushdown: { exerciseRole: "isolation", trainingRole: "accessory" },
+  overhead_extension: { exerciseRole: "isolation", trainingRole: "accessory" },
+  close_grip_bench: { requiresSpotter: true, requiresSpotterOrSafetyArms: true, requiresSetupSkill: true, alternativeIds: ["close_push_up"] },
+  close_push_up: { difficultyLevel: "intermediate", difficultyScore: 4, alternativeIds: ["dip"] },
+  assisted_dip_machine: { difficultyLevel: "beginner", difficultyScore: 3, jointStress: 2.5, strengthRequirement: 2.5, setupComplexity: 2 },
   band_assisted_dip: { difficultyLevel: "intermediate", difficultyScore: 3.5, jointStress: 3, strengthRequirement: 3 },
-  assisted_dip: { difficultyLevel: "intermediate", difficultyScore: 4, jointStress: 3.5, strengthRequirement: 4 },
   dip: { difficultyLevel: "advanced", difficultyScore: 5, jointStress: 4 },
-  chair_sit_to_stand: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, mobilityDemand: 1 },
-  box_squat: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, mobilityDemand: 2 },
-  bodyweight_squat: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true },
-  goblet_squat: { difficultyLevel: "beginner", difficultyScore: 3, beginnerFriendly: true },
-  smith_squat: { difficultyLevel: "intermediate", difficultyScore: 3.5 },
-  barbell_squat: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, spinalLoad: 4, requiresSpotter: true, requiresSetupSkill: true },
+  weighted_dip: { difficultyLevel: "advanced", difficultyScore: 5.5, jointStress: 5, strengthRequirement: 5, fatigueCost: 5, requiresSetupSkill: true },
+  chair_sit_to_stand: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, mobilityDemand: 1, suggestedNextIds: ["box_squat"] },
+  box_squat: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, mobilityDemand: 2, movementSubtype: "supported" },
+  bodyweight_squat: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true, movementSubtype: "free_weight", alternativeIds: [] },
+  goblet_squat: { difficultyLevel: "beginner", difficultyScore: 3, beginnerFriendly: true, movementSubtype: "free_weight", alternativeIds: ["smith_squat"] },
+  smith_squat: { difficultyLevel: "intermediate", difficultyScore: 3.5, movementSubtype: "machine", alternativeIds: ["goblet_squat", "barbell_squat"] },
+  barbell_squat: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, spinalLoad: 4, requiresSpotter: true, requiresSetupSkill: true, movementSubtype: "free_weight", alternativeIds: ["smith_squat", "goblet_squat"] },
+  leg_press: { movementSubtype: "machine" },
   bulgarian_split_squat: { difficultyLevel: "intermediate", difficultyScore: 4, stabilityDemand: 4, coordinationDemand: 4, beginnerFriendly: false },
   lunge: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3, alternativeIds: ["step_up", "bulgarian_split_squat"] },
   step_up: { difficultyLevel: "beginner", difficultyScore: 2, stabilityDemand: 2, alternativeIds: ["lunge"], stepHeightSensitive: true, supportedVariationDifficulty: "扶持低台阶更接近 beginner；高台阶、负重或无扶持会提高到 intermediate。" },
-  hip_hinge_drill: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, spinalLoad: 1 },
-  wall_hip_hinge: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, spinalLoad: 1 },
-  rdl: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, spinalLoad: 4, requiresSetupSkill: true },
+  hip_hinge_drill: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, spinalLoad: 1, suggestedNextIds: ["wall_hip_hinge"] },
+  wall_hip_hinge: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, spinalLoad: 1, alternativeIds: ["hip_hinge_drill"] },
+  rdl: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, spinalLoad: 4, requiresSetupSkill: true, alternativeIds: ["db_rdl"] },
   db_rdl: { difficultyLevel: "intermediate", difficultyScore: 3, skillDifficulty: 3, strengthRequirement: 3, spinalLoad: 3 },
+  bodyweight_single_leg_hinge: { difficultyLevel: "intermediate", difficultyScore: 4.2, beginnerFriendly: false, skillDifficulty: 3, strengthRequirement: 2, stabilityDemand: 4, spinalLoad: 2, alternativeIds: [] },
   single_leg_rdl: { difficultyLevel: "advanced", difficultyScore: 5, beginnerFriendly: false, skillDifficulty: 4, strengthRequirement: 4, stabilityDemand: 5, spinalLoad: 3 },
   glute_bridge: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, strengthRequirement: 1, stabilityDemand: 1, alternativeIds: [] },
   weighted_glute_bridge: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true, strengthRequirement: 2, stabilityDemand: 2 },
   db_hip_thrust: { difficultyLevel: "beginner", difficultyScore: 3, beginnerFriendly: true, skillDifficulty: 2, strengthRequirement: 3, stabilityDemand: 2 },
   barbell_hip_thrust: { difficultyLevel: "intermediate", difficultyScore: 4, skillDifficulty: 3, strengthRequirement: 4, requiresSetupSkill: true },
   hip_abduction: { difficultyLevel: "beginner", difficultyScore: 2, skillDifficulty: 1, strengthRequirement: 2, fatigueCost: 2, alternativeIds: [] },
-  cable_kickback: { difficultyLevel: "beginner", difficultyScore: 3, skillDifficulty: 2, strengthRequirement: 2, stabilityDemand: 3, coordinationDemand: 2.5, fatigueCost: 2 },
+  leg_extension: { exerciseRole: "isolation", trainingRole: "accessory", alternativeIds: [] },
+  leg_curl: { exerciseRole: "isolation", trainingRole: "accessory" },
+  cable_kickback: { difficultyLevel: "beginner", difficultyScore: 3, skillDifficulty: 2, strengthRequirement: 2, stabilityDemand: 3, coordinationDemand: 2.5, fatigueCost: 2, exerciseRole: "isolation", trainingRole: "accessory", alternativeIds: [] },
   incline_plank: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1, stabilityDemand: 1 },
   knee_plank: { difficultyLevel: "novice", difficultyScore: 1.5, beginnerFriendly: true, skillDifficulty: 1, strengthRequirement: 1.5, stabilityDemand: 1.5 },
   plank: { difficultyLevel: "novice", difficultyScore: 2, beginnerFriendly: true },
@@ -303,7 +322,7 @@ const DIFFICULTY_OVERRIDES = {
   reverse_crunch: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: true },
   lying_leg_raise: { difficultyLevel: "intermediate", difficultyScore: 3, skillDifficulty: 2, strengthRequirement: 3, stabilityDemand: 3 },
   farmer_carry: { difficultyLevel: "intermediate", difficultyScore: 3 },
-  superman: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: false, skillDifficulty: 2, spinalLoad: 2 },
+  superman: { difficultyLevel: "beginner", difficultyScore: 2, beginnerFriendly: false, skillDifficulty: 2, spinalLoad: 2, exerciseRole: "activation", trainingRole: "accessory", countsAsEffectiveSet: false, selectionPenalty: 10 },
   mountain_climber: { difficultyLevel: "intermediate", difficultyScore: 3, fatigueCost: 3 },
   jumping_jack: { difficultyLevel: "beginner", difficultyScore: 2, jointStress: 3 },
   high_knee: { difficultyLevel: "intermediate", difficultyScore: 3, jointStress: 3 },
@@ -371,11 +390,35 @@ function cardioProgressionFields(exercise) {
       intervalStructure: "可采用2–4分钟中等强度爬楼，穿插低速恢复。"
     };
   }
-  if (/jump_rope|jumping_jack|high_knee|跳绳|开合跳|高抬腿/.test(name)) {
+  if (/mountain_climber|登山/.test(name)) {
+    return {
+      intensityPrescription: "优先用支撑稳定性、节奏、工作时间和核心控制质量管理强度。",
+      duration: exercise.defaultRepRange,
+      resistance: "不使用坡度或器械阻力模板；通过动作节奏、工作/休息比例和动作幅度进阶。",
+      intervalStructure: "短间歇：工作15–40秒，休息30–90秒；保持肩、腕和核心稳定。"
+    };
+  }
+  if (/low_impact_circuit|低冲击循环/.test(name)) {
+    return {
+      intensityPrescription: "优先用动作组合、循环轮数、休息时间和可持续呼吸控制强度。",
+      duration: exercise.defaultRepRange,
+      resistance: "不使用坡度或器械阻力模板；通过增加轮数、延长工作时间或缩短休息时间进阶。",
+      intervalStructure: "低冲击循环：每个动作20–45秒，动作间休息15–45秒，按疲劳程度调整轮数。"
+    };
+  }
+  if (/jump_rope|跳绳/.test(name)) {
+    return {
+      intensityPrescription: "优先用跳绳节奏、连续时间、落地质量和心率区间控制强度。",
+      duration: exercise.defaultRepRange,
+      resistance: "通过节奏、连续跳时长、步法复杂度和组间休息进阶，不写成器械阻力进阶。",
+      intervalStructure: "短间歇：跳20–60秒，休息30–90秒；优先保证落地轻柔。"
+    };
+  }
+  if (/jumping_jack|high_knee|开合跳|高抬腿/.test(name)) {
     return {
       intensityPrescription: "优先用冲击承受度、节奏和心率区间控制强度。",
       duration: exercise.defaultRepRange,
-      resistance: "无器械阻力进阶；通过节奏、动作幅度和接触时间控制难度。",
+      resistance: "通过节奏、动作幅度、接触时间和工作时长控制难度。",
       intervalStructure: "短间歇：工作20–60秒，休息30–90秒；优先保证落地轻柔。"
     };
   }
@@ -435,9 +478,12 @@ function inferExerciseMetadata(exercise) {
     requiresSpotter: false,
     requiresSpotterOrSafetyArms: false,
     requiresSetupSkill: /杠铃|深蹲架|史密斯|卧推/.test(exercise.equipment.join("")),
+    setupComplexity: /杠铃|深蹲架|史密斯|卧推|辅助/.test(exercise.equipment.join("")) ? 3 : exercise.equipment.length > 1 ? 2 : 1,
     prerequisites: [],
+    exerciseRole: exercise.isCompound ? "compound" : "accessory",
     trainingRole: "main",
     countsAsEffectiveSet: true,
+    equipmentOptions: exercise.equipment,
     suggestedNextIds: [],
     contraindications: hardContraindications,
     cautions,
@@ -476,14 +522,44 @@ function alternativeTypeFor(exercise, alternative) {
   return "invalid";
 }
 
+function alternativeRiskFor(exercise, alternative) {
+  if (!alternative) {
+    return {
+      fatigueCostDelta: null,
+      jointStressDelta: null,
+      setupComplexityDelta: null,
+      exerciseRoleMismatch: true,
+      tooDifferentForSilentReplacement: true
+    };
+  }
+  const fatigueCostDelta = Math.abs((alternative.fatigueCost || 1) - (exercise.fatigueCost || 1));
+  const jointStressDelta = Math.abs((alternative.jointStress || 1) - (exercise.jointStress || 1));
+  const setupComplexityDelta = Math.abs((alternative.setupComplexity || 1) - (exercise.setupComplexity || 1));
+  const exerciseRoleMismatch = (alternative.exerciseRole || "compound") !== (exercise.exerciseRole || "compound");
+  const crossPattern = alternative.movementPattern !== exercise.movementPattern;
+  return {
+    fatigueCostDelta,
+    jointStressDelta,
+    setupComplexityDelta,
+    exerciseRoleMismatch,
+    tooDifferentForSilentReplacement: Boolean(
+      crossPattern && (fatigueCostDelta > 1 || jointStressDelta > 1 || setupComplexityDelta > 1 || exerciseRoleMismatch)
+    )
+  };
+}
+
 function alternativeDetailsFor(exercise) {
   return (exercise.alternativeIds || []).map(id => {
     const alternative = exerciseById.get(id);
+    const risk = alternativeRiskFor(exercise, alternative);
     return {
       id,
       type: alternativeTypeFor(exercise, alternative),
       movementPattern: alternative?.movementPattern || null,
-      requiresPatternCoverageValidation: Boolean(alternative && alternative.movementPattern !== exercise.movementPattern)
+      exerciseRole: alternative?.exerciseRole || null,
+      requiresPatternCoverageValidation: Boolean(alternative && alternative.movementPattern !== exercise.movementPattern),
+      requiresReplacementSafetyValidation: risk.tooDifferentForSilentReplacement,
+      ...risk
     };
   });
 }
@@ -595,10 +671,12 @@ export function equipmentAllowed(exercise, settings) {
   const available = new Set(settings.availableEquipment || []);
   if (available.size === 1 && available.has("无器械")) return exercise.equipment.every(item => item === "无器械" || item === "瑜伽垫");
   const equipment = exercise.equipment || [];
+  const weightedEquipment = ["负重背心", "沙袋", "杠铃片"];
   if (equipment.includes("无器械") && available.has("无器械")) return true;
   const hasAny = items => items.some(item => available.has(item));
   const dumbbells = ["可调哑铃", "固定哑铃"];
-  if (equipment.includes("负重物")) return available.has("负重物");
+  if (equipment.some(item => weightedEquipment.includes(item))) return hasAny(weightedEquipment) && equipment.filter(item => !weightedEquipment.includes(item) && item !== "瑜伽垫").every(item => available.has(item));
+  if (equipment.includes("辅助臂屈伸机")) return available.has("辅助臂屈伸机");
   if (equipment.includes("双杠") && equipment.includes("弹力带")) return available.has("双杠") && available.has("弹力带");
   if (equipment.some(item => ["椅子", "箱子", "稳定台面"].includes(item))) return hasAny(["椅子", "箱子", "卧推凳", "稳定台面"]);
   if (equipment.includes("卧推凳") && equipment.some(item => dumbbells.includes(item))) {
@@ -616,11 +694,14 @@ export function isExerciseAllowed(exercise, settings) {
   const maxDifficultyScore = EXPERIENCE_MAX_DIFFICULTY_SCORE[experience] ?? 3;
   const limitations = new Set(settings.limitations || []);
   const masteredExerciseIds = new Set(settings.masteredExerciseIds || []);
+  if (exercise.autoCandidate === false) return false;
   if (settings.trainingLocation === "homeNone" && !exercise.equipment.every(item => item === "无器械" || item === "瑜伽垫")) return false;
   if (!equipmentAllowed(exercise, settings)) return false;
   if (exercise.category !== "有氧" && (exercise.difficultyScore || 2) > maxDifficultyScore) return false;
   if ((exercise.prerequisites || []).length && !exercise.prerequisites.every(id => masteredExerciseIds.has(id))) return false;
   if (["beginner0", "novice"].includes(experience) && !exercise.beginnerFriendly && (exercise.technicalComplexity >= 3 || exercise.stabilityDemand >= 3)) return false;
+  const hasSpotterOrSafetyArms = Boolean(settings.hasSpotterOrSafetyArms || settings.hasSpotter || (settings.availableEquipment || []).some(item => ["安全臂", "保护架"].includes(item)));
+  if (exercise.requiresSpotterOrSafetyArms && !hasSpotterOrSafetyArms && ["beginner0", "novice", "beginner"].includes(experience)) return false;
   if (["beginner0", "novice", "beginner"].includes(experience) && (exercise.requiresSpotter || (exercise.requiresSetupSkill && exercise.difficultyScore >= 4))) return false;
   if (isDislikedExercise(exercise, settings.dislikedExercises)) return false;
   if (exercise.contraindications.some(item => limitations.has(item))) return false;
@@ -1175,16 +1256,31 @@ export function getExerciseAlternatives(exerciseId, settings = {}) {
   const original = exerciseById.get(exerciseId);
   if (!original) return [];
   const normalized = normalizeSettings(settings);
+  const originalRole = original.exerciseRole || "compound";
+  const isPrepRole = ["activation", "warmup"].includes(originalRole) || ["activation", "warmup"].includes(original.trainingRole);
   return EXERCISES
     .filter(item => item.id !== exerciseId)
     .filter(item => item.movementPattern === original.movementPattern)
+    .filter(item => !(original.movementPattern === "深蹲" && original.movementSubtype === "free_weight" && item.id === "leg_press"))
     .filter(item => item.primaryMuscles.some(muscle => original.primaryMuscles.includes(muscle)))
+    .filter(item => item.autoCandidate !== false)
+    .filter(item => {
+      const candidateRole = item.exerciseRole || "compound";
+      if (isPrepRole) return candidateRole === originalRole || item.trainingRole === original.trainingRole;
+      return !["activation", "warmup"].includes(candidateRole) && !["activation", "warmup"].includes(item.trainingRole);
+    })
+    .filter(item => {
+      const risk = alternativeRiskFor(original, item);
+      return !risk.tooDifferentForSilentReplacement;
+    })
     .filter(item => Math.abs((item.difficultyScore || 2) - (original.difficultyScore || 2)) <= (normalized.experienceLevel === "advanced" ? 2 : 1))
     .filter(item => isExerciseAllowed(item, normalized))
     .sort((a, b) => {
       const aChain = Number((original.regressionIds || []).includes(a.id) || (original.progressionIds || []).includes(a.id));
       const bChain = Number((original.regressionIds || []).includes(b.id) || (original.progressionIds || []).includes(b.id));
-      return bChain - aChain || experienceSelectionScore(b, normalized, new Set()) - experienceSelectionScore(a, normalized, new Set());
+      const aSubtypeScore = Number(a.movementSubtype && a.movementSubtype === original.movementSubtype);
+      const bSubtypeScore = Number(b.movementSubtype && b.movementSubtype === original.movementSubtype);
+      return bChain - aChain || bSubtypeScore - aSubtypeScore || experienceSelectionScore(b, normalized, new Set()) - experienceSelectionScore(a, normalized, new Set());
     })
     .slice(0, 5);
 }

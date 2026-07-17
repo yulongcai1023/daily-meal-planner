@@ -164,13 +164,34 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
   assert.equal(byId.standing_scapular_retraction.trainingRole, "activation");
   assert.equal(byId.wall_angel.trainingRole, "warmup");
   assert.equal(byId.wall_angel.countsAsEffectiveSet, false);
-  assert.deepEqual(byId.band_assisted_dip.progressionIds, ["assisted_dip"]);
-  assert.deepEqual(byId.assisted_dip.progressionIds, ["dip"]);
+  assert.deepEqual(byId.assisted_dip_machine.progressionIds, ["band_assisted_dip"]);
+  assert.equal(byId.assisted_dip_machine.equipment.includes("辅助臂屈伸机"), true);
+  assert.deepEqual(byId.band_assisted_dip.progressionIds, ["dip"]);
+  assert.deepEqual(byId.dip.progressionIds, ["weighted_dip"]);
   assert.equal(byId.barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.incline_barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.close_grip_bench.requiresSpotterOrSafetyArms, true);
   assert.ok(byId.leg_curl.alternativeDetails.some(item => item.id === "db_rdl" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
   assert.ok(byId.db_rdl.alternativeDetails.some(item => item.id === "glute_bridge" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
+  assert.equal(byId.incline_push_up.autoCandidate, false);
+  assert.equal(byId.chair_sit_to_stand.alternativeIds.includes("bodyweight_squat"), false);
+  assert.equal(byId.hip_hinge_drill.alternativeIds.includes("db_rdl"), false);
+  assert.equal(byId.lateral_raise.trainingRole, "accessory");
+  assert.equal(byId.db_curl.exerciseRole, "isolation");
+  assert.equal(byId.triceps_pushdown.trainingRole, "accessory");
+  assert.equal(byId.leg_extension.exerciseRole, "isolation");
+  assert.equal(byId.leg_curl.trainingRole, "accessory");
+  assert.equal(byId.cable_kickback.exerciseRole, "isolation");
+  assert.equal(byId.superman.countsAsEffectiveSet, false);
+  assert.equal(byId.barbell_squat.alternativeIds.includes("leg_press"), false);
+  const squatAlternatives = getExerciseAlternatives("barbell_squat", {
+    ...base,
+    experienceLevel: "advanced",
+    trainingLocation: "commercialGym",
+    availableEquipment: ["杠铃", "深蹲架", "史密斯机", "可调哑铃", "固定哑铃", "壶铃", "腿举机"]
+  }).map(item => item.id);
+  assert.ok(squatAlternatives.includes("smith_squat") || squatAlternatives.includes("goblet_squat"));
+  assert.equal(squatAlternatives.includes("leg_press"), false);
 }
 
 {
