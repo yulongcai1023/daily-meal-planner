@@ -12,8 +12,8 @@ const { EXERCISES, validateExerciseProgressionGraph, validateExerciseLibrary } =
 
 const byId = new Map(EXERCISES.map(item => [item.id, item]));
 const knownEquipmentIds = new Set([
-  "bodyweight", "yoga_mat", "resistance_band", "adjustable_dumbbells", "fixed_dumbbells", "kettlebell",
-  "barbell", "squat_rack", "smith_machine", "bench", "cable_machine", "lat_pulldown_machine",
+  "bodyweight", "yoga_mat", "resistance_band", "band_anchor", "adjustable_dumbbells", "fixed_dumbbells", "kettlebell",
+  "barbell", "squat_rack", "smith_machine", "bench", "adjustable_bench", "cable_machine", "lat_pulldown_machine",
   "leg_press_machine", "leg_extension_machine", "leg_curl_machine", "treadmill", "elliptical", "bike",
   "rowing_machine", "pull_up_bar", "parallel_bars", "assisted_dip_machine", "assisted_pull_up_machine",
   "preacher_bench", "stair_climber", "machine_chest_press", "machine_shoulder_press", "hip_abduction_machine",
@@ -126,6 +126,27 @@ for (const exercise of EXERCISES) {
   if (exercise.id === "db_bench" && !hasOption(exercise, option => option.includes("bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
     incompleteEquipmentCombinations.push("db_bench: 缺少 哑铃 + 卧推凳 AND 组合");
   }
+  if (["barbell_bench", "close_grip_bench"].includes(exercise.id) && !hasOption(exercise, option => option.includes("barbell") && option.includes("bench") && optionIncludesAny(option, ["squat_rack", "safety_rack"]))) {
+    incompleteEquipmentCombinations.push(`${exercise.id}: 杠铃卧推系列必须包含 barbell + bench + rack`);
+  }
+  if (exercise.id === "incline_db_bench" && !hasOption(exercise, option => option.includes("adjustable_bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
+    incompleteEquipmentCombinations.push("incline_db_bench: 上斜哑铃卧推必须包含 adjustable_bench");
+  }
+  if (exercise.id === "incline_barbell_bench" && !hasOption(exercise, option => option.includes("barbell") && option.includes("adjustable_bench") && optionIncludesAny(option, ["squat_rack", "safety_rack"]))) {
+    incompleteEquipmentCombinations.push("incline_barbell_bench: 上斜杠铃卧推必须包含 barbell + adjustable_bench + rack");
+  }
+  if (exercise.id === "band_pulldown" && !hasOption(exercise, option => option.includes("resistance_band") && option.includes("band_anchor"))) {
+    incompleteEquipmentCombinations.push("band_pulldown: 弹力带方案必须包含 band_anchor");
+  }
+  if (exercise.id === "face_pull" && hasOption(exercise, option => option.includes("resistance_band") && !option.includes("band_anchor"))) {
+    incompleteEquipmentCombinations.push("face_pull: 弹力带方案必须包含 band_anchor");
+  }
+  if (exercise.id === "pallof_press" && hasOption(exercise, option => option.includes("resistance_band") && !option.includes("band_anchor"))) {
+    incompleteEquipmentCombinations.push("pallof_press: 弹力带方案必须包含 band_anchor");
+  }
+  if (exercise.id === "hip_abduction" && hasOption(exercise, option => option.includes("resistance_band") && option.includes("band_anchor"))) {
+    incompleteEquipmentCombinations.push("hip_abduction: 髋外展弹力带方案不应强制固定点");
+  }
   if (exercise.id === "weighted_pull_up") {
     if (!hasOption(exercise, option => option.includes("pull_up_bar") && option.includes("weighted_vest"))) {
       incompleteEquipmentCombinations.push("weighted_pull_up: 缺少 pull_up_bar + weighted_vest");
@@ -178,8 +199,11 @@ for (const exercise of EXERCISES) {
     const safety = exercise.equipmentOptionSafety || [];
     const safetyByOption = new Map(safety.map(item => [optionKey(item.option), item]));
     for (const option of exercise.equipmentOptions || []) {
-      if (option.includes("weight_plate") && !safetyByOption.get(optionKey(option))?.requiresSpotter) {
+      if (option.includes("weight_plate") && exercise.id !== "weighted_side_plank" && !safetyByOption.get(optionKey(option))?.requiresSpotter) {
         missingSafetyRequirements.push(`${exercise.id}: ${optionKey(option)} 缺少 requiresSpotter`);
+      }
+      if (option.includes("weight_plate") && exercise.id === "weighted_side_plank" && !safetyByOption.get(optionKey(option))?.canHoldLoadAlone) {
+        missingSafetyRequirements.push(`${exercise.id}: ${optionKey(option)} 缺少 canHoldLoadAlone`);
       }
       if (option.includes("secured_sandbag") && !safetyByOption.get(optionKey(option))?.requiresSecuredLoad) {
         missingSafetyRequirements.push(`${exercise.id}: ${optionKey(option)} 缺少 requiresSecuredLoad`);

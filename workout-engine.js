@@ -26,10 +26,10 @@ const EXPERIENCE_MAX_DIFFICULTY_SCORE = {
 
 const LOCATION_EQUIPMENT = {
   homeNone: ["无器械", "瑜伽垫", "椅子", "箱子", "稳定台面"],
-  homeSimple: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跳绳", "引体向上杆", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带"],
-  apartmentGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "卧推凳", "拉力器", "高位下拉器", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带", "安全臂", "保护架"],
-  commercialGym: ["无器械", "瑜伽垫", "弹力带", "可调哑铃", "固定哑铃", "壶铃", "杠铃", "深蹲架", "史密斯机", "卧推凳", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "双杠", "辅助臂屈伸机", "辅助引体向上机", "牧师椅", "爬楼机", "器械推胸", "器械肩推", "髋外展机", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带", "安全臂", "保护架"],
-  outdoor: ["无器械", "瑜伽垫", "弹力带", "跳绳"]
+  homeSimple: ["无器械", "瑜伽垫", "弹力带", "弹力带固定点", "可调哑铃", "固定哑铃", "壶铃", "跳绳", "引体向上杆", "可调节卧凳", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带"],
+  apartmentGym: ["无器械", "瑜伽垫", "弹力带", "弹力带固定点", "可调哑铃", "固定哑铃", "壶铃", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "卧推凳", "可调节卧凳", "拉力器", "高位下拉器", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带", "安全臂", "保护架"],
+  commercialGym: ["无器械", "瑜伽垫", "弹力带", "弹力带固定点", "可调哑铃", "固定哑铃", "壶铃", "杠铃", "深蹲架", "史密斯机", "卧推凳", "可调节卧凳", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "双杠", "辅助臂屈伸机", "辅助引体向上机", "牧师椅", "爬楼机", "器械推胸", "器械肩推", "髋外展机", "椅子", "箱子", "稳定台面", "负重背心", "固定沙袋", "杠铃片", "负重腰带", "安全臂", "保护架"],
+  outdoor: ["无器械", "瑜伽垫", "弹力带", "弹力带固定点", "跳绳"]
 };
 
 const ex = ({
@@ -100,19 +100,18 @@ export const EXERCISES = [
   ex({ id: "kneeling_push_up", name: "跪姿俯卧撑", englishName: "Kneeling Push-up", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["无器械"], difficulty: "beginner0", contraindications: ["手腕不适"], alternatives: ["incline_push_up"], defaultRepRange: "8–15次", defaultRestSeconds: 60 }),
   ex({ id: "incline_push_up", name: "上斜俯卧撑", englishName: "Incline Push-up", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["无器械"], difficulty: "beginner0", alternatives: ["kneeling_push_up", "push_up"], replacedBy: ["high_incline_push_up", "low_incline_push_up"] }),
   ex({ id: "db_bench", name: "哑铃卧推", englishName: "Dumbbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["可调哑铃", "固定哑铃", "卧推凳"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["push_up", "machine_chest_press"] }),
-  ex({ id: "incline_db_bench", name: "上斜哑铃卧推", englishName: "Incline Dumbbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["可调哑铃", "固定哑铃", "卧推凳"], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_bench"] }),
-  // TODO(equipment-model): 杠铃卧推实际需要卧推架/安全架；当前器械枚举只有 squat_rack/safety_arms/safety_rack，
-  // 暂不强行新增 bench_press_rack，避免破坏旧用户“杠铃+卧推凳”的兼容数据。
-  ex({ id: "barbell_bench", name: "杠铃卧推", englishName: "Barbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "卧推凳"], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_bench", "machine_chest_press"] }),
-  // TODO(equipment-model): 上斜卧推更准确应区分 adjustable_bench；当前 bench 表示任意卧凳，先保持兼容。
-  ex({ id: "incline_barbell_bench", name: "上斜杠铃卧推", englishName: "Incline Barbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "卧推凳"], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["incline_db_bench"] }),
+  ex({ id: "incline_db_bench", name: "上斜哑铃卧推", englishName: "Incline Dumbbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["可调哑铃", "固定哑铃", "可调节卧凳"], equipmentOptions: [["可调哑铃", "可调节卧凳"], ["固定哑铃", "可调节卧凳"]], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_bench"] }),
+  // TODO(equipment-model): 后续可新增 bench_press_rack/power_rack 细分卧推架；当前复用 squat_rack/safety_rack 表达可兼容卧推的架体。
+  ex({ id: "barbell_bench", name: "杠铃卧推", englishName: "Barbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "卧推凳", "深蹲架", "保护架"], equipmentOptions: [["杠铃", "卧推凳", "深蹲架"], ["杠铃", "卧推凳", "保护架"]], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_bench", "machine_chest_press"] }),
+  // TODO(equipment-model): 后续可新增 incline_bench_press_station；当前用 adjustable_bench + rack 组合表达上斜杠铃卧推。
+  ex({ id: "incline_barbell_bench", name: "上斜杠铃卧推", englishName: "Incline Barbell Bench Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "可调节卧凳", "深蹲架", "保护架"], equipmentOptions: [["杠铃", "可调节卧凳", "深蹲架"], ["杠铃", "可调节卧凳", "保护架"]], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["incline_db_bench"] }),
   ex({ id: "machine_chest_press", name: "器械推胸", englishName: "Machine Chest Press", category: "胸", primaryMuscles: chest, movementPattern: "水平推", equipment: ["器械推胸"], difficulty: "beginner", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_bench", "push_up"] }),
   ex({ id: "db_fly", name: "哑铃飞鸟", englishName: "Dumbbell Fly", category: "胸", primaryMuscles: chest, movementPattern: "夹胸", equipment: ["可调哑铃", "固定哑铃", "卧推凳"], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["cable_fly"], defaultRepRange: "10–15次", defaultRestSeconds: 75, isCompound: false }),
   ex({ id: "cable_fly", name: "绳索夹胸", englishName: "Cable Fly", category: "胸", primaryMuscles: chest, movementPattern: "夹胸", equipment: ["拉力器"], difficulty: "intermediate", suitableLocations: ["apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["db_fly"], defaultRepRange: "10–15次", defaultRestSeconds: 75, isCompound: false }),
 
   ex({ id: "lat_pulldown", name: "高位下拉", englishName: "Lat Pulldown", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["高位下拉器"], difficulty: "beginner", suitableLocations: ["apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["band_pulldown", "band_assisted_pull_up", "assisted_pull_up_machine"] }),
-  // TODO(equipment-model): 弹力带下拉、弹力带面拉、Pallof Press 需要稳定固定点；当前没有 anchor/door_anchor 枚举。
-  ex({ id: "band_pulldown", name: "弹力带下拉", englishName: "Band Pulldown", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["弹力带"], difficulty: "beginner0", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym", "outdoor"], alternatives: ["lat_pulldown"] }),
+  // TODO(equipment-model): 未来可继续区分 overhead_anchor / door_anchor；当前用通用“弹力带固定点”表达可靠固定点。
+  ex({ id: "band_pulldown", name: "弹力带下拉", englishName: "Band Pulldown", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["弹力带", "弹力带固定点"], equipmentOptions: [["弹力带", "弹力带固定点"]], difficulty: "beginner0", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym", "outdoor"], alternatives: ["lat_pulldown"] }),
   ex({ id: "band_assisted_pull_up", name: "弹力带辅助引体向上", englishName: "Band-assisted Pull-up", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["引体向上杆", "弹力带"], equipmentOptions: [["引体向上杆", "弹力带"]], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["lat_pulldown"] }),
   ex({ id: "assisted_pull_up_machine", name: "器械辅助引体向上", englishName: "Assisted Pull-up Machine", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["辅助引体向上机"], difficulty: "beginner", suitableLocations: ["commercialGym"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["lat_pulldown", "band_assisted_pull_up"] }),
   ex({ id: "pull_up", name: "引体向上", englishName: "Pull-up", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["引体向上杆"], difficulty: "advanced", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym", "outdoor"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["lat_pulldown"] }),
@@ -124,7 +123,7 @@ export const EXERCISES = [
   ex({ id: "chest_supported_row", name: "胸托划船", englishName: "Chest-supported Row", category: "背", primaryMuscles: back, movementPattern: "水平拉", equipment: ["可调哑铃", "固定哑铃", "卧推凳"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], alternatives: ["seated_row"] }),
   ex({ id: "barbell_row", name: "杠铃划船", englishName: "Barbell Row", category: "背", primaryMuscles: back, movementPattern: "水平拉", equipment: ["杠铃"], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["腰部不适"], alternatives: ["chest_supported_row"] }),
   ex({ id: "straight_arm_pulldown", name: "直臂下压", englishName: "Straight-arm Pulldown", category: "背", primaryMuscles: back, movementPattern: "垂直拉", equipment: ["拉力器"], difficulty: "intermediate", suitableLocations: ["apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["lat_pulldown"], defaultRepRange: "10–15次", defaultRestSeconds: 75, isCompound: false }),
-  ex({ id: "face_pull", name: "面拉", englishName: "Face Pull", category: "肩", primaryMuscles: shoulder, secondaryMuscles: back, movementPattern: "水平拉", equipment: ["拉力器", "弹力带"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], alternatives: ["reverse_fly"], defaultRepRange: "12–20次", defaultRestSeconds: 60, isCompound: false }),
+  ex({ id: "face_pull", name: "面拉", englishName: "Face Pull", category: "肩", primaryMuscles: shoulder, secondaryMuscles: back, movementPattern: "水平拉", equipment: ["拉力器", "弹力带", "弹力带固定点"], equipmentOptions: [["拉力器"], ["弹力带", "弹力带固定点"]], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], alternatives: ["reverse_fly"], defaultRepRange: "12–20次", defaultRestSeconds: 60, isCompound: false }),
   ex({ id: "reverse_fly", name: "反向飞鸟", englishName: "Reverse Fly", category: "肩", primaryMuscles: shoulder, movementPattern: "水平拉", equipment: ["可调哑铃", "固定哑铃", "弹力带"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], alternatives: ["face_pull"], defaultRepRange: "12–20次", defaultRestSeconds: 60, isCompound: false }),
 
   ex({ id: "db_shoulder_press", name: "坐姿哑铃肩推", englishName: "Seated Dumbbell Shoulder Press", category: "肩", primaryMuscles: shoulder, movementPattern: "垂直推", equipment: ["可调哑铃", "固定哑铃", "卧推凳"], equipmentOptions: [["可调哑铃", "卧推凳"], ["固定哑铃", "卧推凳"]], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适"], alternatives: ["machine_shoulder_press"] }),
@@ -144,15 +143,15 @@ export const EXERCISES = [
   ex({ id: "overhead_extension", name: "过头臂屈伸", englishName: "Overhead Triceps Extension", category: "手臂", primaryMuscles: arm, movementPattern: "肘伸", equipment: ["可调哑铃", "固定哑铃", "拉力器"], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["triceps_pushdown"], defaultRepRange: "10–15次", defaultRestSeconds: 60, isCompound: false }),
   ex({ id: "close_push_up", name: "窄距俯卧撑", englishName: "Close-grip Push-up", category: "手臂", primaryMuscles: arm, secondaryMuscles: chest, movementPattern: "水平推", equipment: ["无器械"], difficulty: "intermediate", contraindications: ["手腕不适", "肘部不适"], alternatives: ["triceps_pushdown"] }),
   ex({ id: "dip", name: "双杠臂屈伸", englishName: "Dip", category: "手臂", primaryMuscles: arm, secondaryMuscles: chest, movementPattern: "水平推", equipment: ["双杠"], difficulty: "advanced", suitableLocations: ["commercialGym"], contraindications: ["肩部不适"], alternatives: ["close_push_up"] }),
-  // TODO(equipment-model): 窄握卧推同样需要卧推架/安全架；当前保持“杠铃+卧推凳”以兼容旧数据。
-  ex({ id: "close_grip_bench", name: "窄握卧推", englishName: "Close-grip Bench Press", category: "手臂", primaryMuscles: arm, secondaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "卧推凳"], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["triceps_pushdown"] }),
+  // TODO(equipment-model): 后续可新增 close_grip_bench_station；当前复用 squat_rack/safety_rack 表达可兼容卧推的架体。
+  ex({ id: "close_grip_bench", name: "窄握卧推", englishName: "Close-grip Bench Press", category: "手臂", primaryMuscles: arm, secondaryMuscles: chest, movementPattern: "水平推", equipment: ["杠铃", "卧推凳", "深蹲架", "保护架"], equipmentOptions: [["杠铃", "卧推凳", "深蹲架"], ["杠铃", "卧推凳", "保护架"]], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["肩部不适", "肘部不适"], alternatives: ["triceps_pushdown"] }),
 
   ex({ id: "bodyweight_squat", name: "自重深蹲", englishName: "Bodyweight Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "深蹲", equipment: ["无器械"], difficulty: "beginner0", contraindications: ["膝盖不适", "不能做深蹲类动作"], alternatives: ["wall_sit"] }),
   ex({ id: "goblet_squat", name: "高脚杯深蹲", englishName: "Goblet Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "深蹲", equipment: ["可调哑铃", "固定哑铃", "壶铃"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["膝盖不适", "不能做深蹲类动作"], alternatives: ["leg_press"] }),
   ex({ id: "barbell_squat", name: "杠铃深蹲", englishName: "Barbell Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "深蹲", equipment: ["杠铃", "深蹲架"], difficulty: "intermediate", suitableLocations: ["commercialGym"], contraindications: ["膝盖不适", "腰部不适", "不能做深蹲类动作"], alternatives: ["leg_press"] }),
   ex({ id: "smith_squat", name: "史密斯深蹲", englishName: "Smith Machine Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "深蹲", equipment: ["史密斯机"], difficulty: "beginner", suitableLocations: ["commercialGym"], contraindications: ["膝盖不适", "不能做深蹲类动作"], alternatives: ["leg_press"] }),
   ex({ id: "leg_press", name: "腿举", englishName: "Leg Press", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "深蹲", equipment: ["腿举机"], difficulty: "beginner", suitableLocations: ["commercialGym"], contraindications: ["膝盖不适"], alternatives: ["goblet_squat"] }),
-  ex({ id: "bulgarian_split_squat", name: "保加利亚分腿蹲", englishName: "Bulgarian Split Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "弓步", equipment: ["卧推凳", "箱子", "稳定台面", "可调哑铃", "固定哑铃"], equipmentOptions: [["卧推凳"], ["箱子"], ["稳定台面"], ["可调哑铃", "卧推凳"], ["固定哑铃", "卧推凳"], ["可调哑铃", "箱子"], ["固定哑铃", "箱子"], ["可调哑铃", "稳定台面"], ["固定哑铃", "稳定台面"]], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["膝盖不适"], alternatives: ["step_up"], defaultRepRange: "8–10次/侧", isUnilateral: true }),
+  ex({ id: "bulgarian_split_squat", name: "保加利亚分腿蹲", englishName: "Bulgarian Split Squat", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "弓步", equipment: ["卧推凳", "箱子", "稳定台面", "可调哑铃", "固定哑铃", "壶铃"], equipmentOptions: [["卧推凳"], ["箱子"], ["稳定台面"], ["可调哑铃", "卧推凳"], ["固定哑铃", "卧推凳"], ["壶铃", "卧推凳"], ["可调哑铃", "箱子"], ["固定哑铃", "箱子"], ["壶铃", "箱子"], ["可调哑铃", "稳定台面"], ["固定哑铃", "稳定台面"], ["壶铃", "稳定台面"]], difficulty: "intermediate", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["膝盖不适"], alternatives: ["step_up"], defaultRepRange: "8–10次/侧", isUnilateral: true }),
   ex({ id: "lunge", name: "箭步蹲", englishName: "Lunge", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "弓步", equipment: ["无器械", "可调哑铃", "固定哑铃"], difficulty: "beginner", contraindications: ["膝盖不适"], alternatives: ["step_up"], defaultRepRange: "8–12次/侧", isUnilateral: true }),
   ex({ id: "step_up", name: "台阶踏步", englishName: "Step-up", category: "腿", primaryMuscles: quad, secondaryMuscles: glute, movementPattern: "弓步", equipment: ["箱子", "卧推凳", "稳定台面", "可调哑铃", "固定哑铃", "壶铃"], equipmentOptions: [["箱子"], ["卧推凳"], ["稳定台面"], ["可调哑铃", "箱子"], ["固定哑铃", "箱子"], ["壶铃", "箱子"], ["可调哑铃", "卧推凳"], ["固定哑铃", "卧推凳"], ["壶铃", "卧推凳"], ["可调哑铃", "稳定台面"], ["固定哑铃", "稳定台面"], ["壶铃", "稳定台面"]], difficulty: "beginner", contraindications: ["膝盖不适"], alternatives: ["glute_bridge"], defaultRepRange: "8–12次/侧", isUnilateral: true }),
   ex({ id: "leg_extension", name: "腿屈伸", englishName: "Leg Extension", category: "腿", primaryMuscles: quad, movementPattern: "膝伸", equipment: ["腿屈伸机"], difficulty: "beginner", suitableLocations: ["commercialGym"], contraindications: ["膝盖不适"], alternatives: ["leg_press"], defaultRepRange: "10–15次", defaultRestSeconds: 75, isCompound: false }),
@@ -174,7 +173,7 @@ export const EXERCISES = [
   ex({ id: "reverse_crunch", name: "反向卷腹", englishName: "Reverse Crunch", category: "核心", primaryMuscles: core, movementPattern: "骨盆后倾", equipment: ["无器械", "瑜伽垫"], difficulty: "beginner", contraindications: ["腰部不适"], alternatives: ["dead_bug"], defaultRepRange: "10–15次", defaultRestSeconds: 45, isCompound: false }),
   ex({ id: "hanging_leg_raise", name: "悬垂举腿", englishName: "Hanging Leg Raise", category: "核心", primaryMuscles: core, movementPattern: "髋屈", equipment: ["引体向上杆"], difficulty: "advanced", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], contraindications: ["肩部不适", "腰部不适"], alternatives: ["lying_leg_raise"], defaultRepRange: "8–12次", defaultRestSeconds: 75 }),
   ex({ id: "lying_leg_raise", name: "仰卧抬腿", englishName: "Lying Leg Raise", category: "核心", primaryMuscles: core, movementPattern: "髋屈", equipment: ["无器械", "瑜伽垫"], difficulty: "beginner", contraindications: ["腰部不适"], alternatives: ["reverse_crunch"], defaultRepRange: "8–12次", defaultRestSeconds: 60, isCompound: false }),
-  ex({ id: "pallof_press", name: "帕洛夫抗旋转推", englishName: "Pallof Press", category: "核心", primaryMuscles: core, movementPattern: "抗旋转", equipment: ["弹力带", "拉力器"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], defaultRepRange: "8–12次/侧", defaultRestSeconds: 60, isCompound: false, isUnilateral: true, aliases: ["Pallof Press", "帕洛夫推"] }),
+  ex({ id: "pallof_press", name: "帕洛夫抗旋转推", englishName: "Pallof Press", category: "核心", primaryMuscles: core, movementPattern: "抗旋转", equipment: ["弹力带", "弹力带固定点", "拉力器"], equipmentOptions: [["弹力带", "弹力带固定点"], ["拉力器"]], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym"], defaultRepRange: "8–12次/侧", defaultRestSeconds: 60, isCompound: false, isUnilateral: true, aliases: ["Pallof Press", "帕洛夫推"] }),
   ex({ id: "farmer_carry", name: "农夫行走", englishName: "Farmer Carry", category: "核心", primaryMuscles: core, secondaryMuscles: ["背", "手臂"], movementPattern: "负重行走", equipment: ["可调哑铃", "固定哑铃", "壶铃"], difficulty: "beginner", suitableLocations: ["homeSimple", "apartmentGym", "commercialGym", "outdoor"], defaultRepRange: "20–40米", defaultRestSeconds: 75 }),
   ex({ id: "superman", name: "超人式", englishName: "Superman", category: "核心", primaryMuscles: ["背", "臀"], movementPattern: "背伸", equipment: ["无器械", "瑜伽垫"], difficulty: "beginner0", contraindications: ["腰部不适"], defaultRepRange: "10–15次", defaultRestSeconds: 45, isCompound: false }),
 
@@ -235,7 +234,7 @@ EXERCISES.push(
   ex({ id: "weighted_plank", name: "负重平板支撑", englishName: "Weighted Plank", category: exerciseSeed("plank").category, primaryMuscles: exerciseSeed("plank").primaryMuscles, movementPattern: exerciseSeed("plank").movementPattern, equipment: [weightedVest, securedSandbag], equipmentOptions: [[weightedVest], [securedSandbag]], equipmentOptionSafety: [{ option: [weightedVest], canTrainAlone: true }, { option: [securedSandbag], requiresSecuredLoad: true }], difficulty: "advanced", alternatives: ["long_lever_plank"], defaultRepRange: "20–45秒", defaultRestSeconds: 75, isCompound: false }),
   ex({ id: "knee_side_plank", name: "屈膝侧平板", englishName: "Knee Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "beginner0", alternatives: ["side_plank"], defaultRepRange: "15–30秒/侧", defaultRestSeconds: 45, isCompound: false, isUnilateral: true }),
   ex({ id: "side_plank_leg_raise", name: "抬腿侧平板", englishName: "Side Plank Leg Raise", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [noEquipment, yogaMat], difficulty: "intermediate", alternatives: ["side_plank"], defaultRepRange: "8–12次/侧", defaultRestSeconds: 60, isCompound: false, isUnilateral: true }),
-  ex({ id: "weighted_side_plank", name: "负重侧平板", englishName: "Weighted Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [weightedVest, weightPlate, securedSandbag, yogaMat], equipmentOptions: [[weightedVest, yogaMat], [weightPlate, yogaMat], [securedSandbag, yogaMat]], equipmentOptionSafety: [{ option: [weightedVest, yogaMat], canTrainAlone: true }, { option: [weightPlate, yogaMat], requiresSpotter: true }, { option: [securedSandbag, yogaMat], requiresSecuredLoad: true }], difficulty: "advanced", alternatives: ["side_plank_leg_raise"], defaultRepRange: "20–45秒/侧", defaultRestSeconds: 75, isCompound: false, isUnilateral: true })
+  ex({ id: "weighted_side_plank", name: "负重侧平板", englishName: "Weighted Side Plank", category: exerciseSeed("side_plank").category, primaryMuscles: exerciseSeed("side_plank").primaryMuscles, movementPattern: exerciseSeed("side_plank").movementPattern, equipment: [weightedVest, weightPlate, securedSandbag], equipmentOptions: [[weightedVest], [weightPlate], [securedSandbag]], equipmentOptionSafety: [{ option: [weightedVest], canTrainAlone: true }, { option: [weightPlate], canHoldLoadAlone: true }, { option: [securedSandbag], requiresSecuredLoad: true }], difficulty: "advanced", alternatives: ["side_plank_leg_raise"], defaultRepRange: "20–45秒/侧", defaultRestSeconds: 75, isCompound: false, isUnilateral: true })
 );
 
 const PROGRESSION_CHAINS = [
@@ -479,6 +478,7 @@ const EQUIPMENT_ID_BY_LABEL = {
   "无器械": "bodyweight",
   "瑜伽垫": "yoga_mat",
   "弹力带": "resistance_band",
+  "弹力带固定点": "band_anchor",
   "可调哑铃": "adjustable_dumbbells",
   "固定哑铃": "fixed_dumbbells",
   "壶铃": "kettlebell",
@@ -486,6 +486,7 @@ const EQUIPMENT_ID_BY_LABEL = {
   "深蹲架": "squat_rack",
   "史密斯机": "smith_machine",
   "卧推凳": "bench",
+  "可调节卧凳": "adjustable_bench",
   "拉力器": "cable_machine",
   "高位下拉器": "lat_pulldown_machine",
   "腿举机": "leg_press_machine",
@@ -568,7 +569,7 @@ function inferExerciseMetadata(exercise) {
   const defaultExerciseRole = overrides.exerciseRole || exercise.exerciseRole || (isCardio ? "cardio" : exercise.isCompound ? "primary_compound" : "accessory");
   const isNonWorkSegment = ["warmup", "activation", "deprecated"].includes(defaultProgramRole) || ["warmup", "activation", "skill_drill"].includes(defaultExerciseRole);
   const defaultCountsAsWorkSet = !isNonWorkSegment;
-  const defaultCountsTowardMuscleVolume = defaultCountsAsWorkSet && !isCardio && defaultExerciseRole !== "cardio";
+  const defaultCountsTowardMuscleVolume = defaultCountsAsWorkSet && !isCardio && !["cardio", "core", "loaded_carry"].includes(defaultExerciseRole);
   const merged = {
     difficultyLevel: baseLevel,
     difficultyScore: baseScore,
@@ -616,7 +617,7 @@ function inferExerciseMetadata(exercise) {
     merged.countsTowardMuscleVolume = false;
     merged.countsTowardEffectiveSets = false;
   }
-  if (merged.exerciseRole === "cardio" || isCardio) {
+  if (["cardio", "core", "loaded_carry"].includes(merged.exerciseRole) || isCardio) {
     merged.countsAsWorkSet = true;
     merged.countsTowardMuscleVolume = false;
     merged.countsTowardEffectiveSets = true;
@@ -765,8 +766,9 @@ export function validateExerciseLibrary() {
     ...Object.values(LOCATION_EQUIPMENT).flat().map(equipmentId)
   ]);
   const byId = new Map(EXERCISES.map(item => [item.id, item]));
-  const supportEquipment = new Set(["bench", "chair", "box", "stable_platform", "preacher_bench"]);
+  const supportEquipment = new Set(["bench", "adjustable_bench", "chair", "box", "stable_platform", "preacher_bench"]);
   const raisedSupportEquipment = new Set(["bench", "chair", "box", "stable_platform"]);
+  const rackEquipment = new Set(["squat_rack", "safety_rack"]);
   const validRoles = new Set(["primary_compound", "secondary_compound", "isolation", "accessory", "loaded_carry", "core", "cardio", "skill_drill", "activation", "warmup"]);
 
   for (const exercise of EXERCISES) {
@@ -832,6 +834,29 @@ export function validateExerciseLibrary() {
     }
     if (exercise.id === "weighted_plank" && (exercise.equipmentOptions || []).some(option => option.includes("weight_plate"))) {
       errors.push("weighted_plank: 不应保留单独杠铃片负重方案，需与负重俯卧撑安全策略一致");
+    }
+    if (["barbell_bench", "close_grip_bench"].includes(exercise.id)) {
+      const hasRack = (exercise.equipmentOptions || []).every(option => option.includes("barbell") && option.includes("bench") && option.some(item => rackEquipment.has(equipmentId(item))));
+      if (!hasRack) errors.push(`${exercise.id}: 每个杠铃卧推方案都必须包含杠铃、卧推凳和架体`);
+    }
+    if (exercise.id === "incline_db_bench") {
+      const hasAdjustableBench = (exercise.equipmentOptions || []).every(option => option.includes("adjustable_bench") && option.some(item => ["adjustable_dumbbells", "fixed_dumbbells"].includes(equipmentId(item))));
+      if (!hasAdjustableBench) errors.push("incline_db_bench: 每个上斜哑铃卧推方案都必须包含可调节卧凳");
+    }
+    if (exercise.id === "incline_barbell_bench") {
+      const hasAdjustableBenchAndRack = (exercise.equipmentOptions || []).every(option => option.includes("barbell") && option.includes("adjustable_bench") && option.some(item => rackEquipment.has(equipmentId(item))));
+      if (!hasAdjustableBenchAndRack) errors.push("incline_barbell_bench: 每个上斜杠铃卧推方案都必须包含杠铃、可调节卧凳和架体");
+    }
+    if (exercise.id === "band_pulldown") {
+      const hasAnchor = (exercise.equipmentOptions || []).every(option => option.includes("resistance_band") && option.includes("band_anchor"));
+      if (!hasAnchor) errors.push("band_pulldown: 弹力带方案必须包含固定点");
+    }
+    if (["face_pull", "pallof_press"].includes(exercise.id)) {
+      const bandOptionsNeedAnchor = (exercise.equipmentOptions || []).every(option => !option.includes("resistance_band") || option.includes("band_anchor"));
+      if (!bandOptionsNeedAnchor) errors.push(`${exercise.id}: 弹力带方案必须包含固定点`);
+    }
+    if (exercise.id === "hip_abduction" && (exercise.equipmentOptions || []).some(option => option.includes("resistance_band") && option.includes("band_anchor"))) {
+      errors.push("hip_abduction: 髋外展弹力带方案不应强制固定点");
     }
     if (exercise.countsAsWorkSet === undefined || exercise.countsTowardMuscleVolume === undefined) {
       errors.push(`${exercise.id}: 新统计字段不能为 undefined`);

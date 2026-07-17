@@ -1,6 +1,6 @@
 # 健身动作结构报告
 
-生成时间：2026-07-17T22:57:32.647Z
+生成时间：2026-07-17T23:28:07.698Z
 
 | 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | equipmentOptions |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -8,14 +8,14 @@
 | kneeling_push_up | 跪姿俯卧撑 | 2 | workset | primary_compound | 是 | 是 | [bodyweight] |
 | incline_push_up | 上斜俯卧撑 | 1.6 | deprecated | skill_drill | 否 | 否 | [bodyweight] |
 | db_bench | 哑铃卧推 | 2.5 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] |
-| incline_db_bench | 上斜哑铃卧推 | 2.5 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] |
-| barbell_bench | 杠铃卧推 | 4 | workset | primary_compound | 是 | 是 | [barbell+bench] |
-| incline_barbell_bench | 上斜杠铃卧推 | 4.5 | workset | primary_compound | 是 | 是 | [barbell+bench] |
+| incline_db_bench | 上斜哑铃卧推 | 2.5 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells+adjustable_bench] / [fixed_dumbbells+adjustable_bench] |
+| barbell_bench | 杠铃卧推 | 4 | workset | primary_compound | 是 | 是 | [barbell+bench+squat_rack] / [barbell+bench+safety_rack] |
+| incline_barbell_bench | 上斜杠铃卧推 | 4.5 | workset | primary_compound | 是 | 是 | [barbell+adjustable_bench+squat_rack] / [barbell+adjustable_bench+safety_rack] |
 | machine_chest_press | 器械推胸 | 2 | workset | primary_compound | 是 | 是 | [machine_chest_press] |
 | db_fly | 哑铃飞鸟 | 3 | workset | isolation | 是 | 是 | [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] |
 | cable_fly | 绳索夹胸 | 3 | workset | isolation | 是 | 是 | [cable_machine] |
 | lat_pulldown | 高位下拉 | 2 | workset | primary_compound | 是 | 是 | [lat_pulldown_machine] |
-| band_pulldown | 弹力带下拉 | 1 | workset | primary_compound | 是 | 是 | [resistance_band] |
+| band_pulldown | 弹力带下拉 | 1 | workset | primary_compound | 是 | 是 | [resistance_band+band_anchor] |
 | band_assisted_pull_up | 弹力带辅助引体向上 | 3 | workset | primary_compound | 是 | 是 | [pull_up_bar+resistance_band] |
 | assisted_pull_up_machine | 器械辅助引体向上 | 2.5 | workset | primary_compound | 是 | 是 | [assisted_pull_up_machine] |
 | pull_up | 引体向上 | 4 | workset | primary_compound | 是 | 是 | [pull_up_bar] |
@@ -27,7 +27,7 @@
 | chest_supported_row | 胸托划船 | 2.5 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] |
 | barbell_row | 杠铃划船 | 4 | workset | primary_compound | 是 | 是 | [barbell] |
 | straight_arm_pulldown | 直臂下压 | 3 | workset | isolation | 是 | 是 | [cable_machine] |
-| face_pull | 面拉 | 2 | workset | accessory | 是 | 是 | [cable_machine] / [resistance_band] |
+| face_pull | 面拉 | 2 | workset | accessory | 是 | 是 | [cable_machine] / [resistance_band+band_anchor] |
 | reverse_fly | 反向飞鸟 | 2 | workset | accessory | 是 | 是 | [adjustable_dumbbells] / [fixed_dumbbells] / [resistance_band] |
 | db_shoulder_press | 坐姿哑铃肩推 | 2 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] |
 | machine_shoulder_press | 器械肩推 | 2 | workset | primary_compound | 是 | 是 | [machine_shoulder_press] |
@@ -45,13 +45,13 @@
 | overhead_extension | 过头臂屈伸 | 3 | workset | isolation | 是 | 是 | [adjustable_dumbbells] / [fixed_dumbbells] / [cable_machine] |
 | close_push_up | 窄距俯卧撑 | 4 | workset | primary_compound | 是 | 是 | [bodyweight] |
 | dip | 双杠臂屈伸 | 4 | workset | primary_compound | 是 | 是 | [parallel_bars] |
-| close_grip_bench | 窄握卧推 | 3 | workset | primary_compound | 是 | 是 | [barbell+bench] |
+| close_grip_bench | 窄握卧推 | 3 | workset | primary_compound | 是 | 是 | [barbell+bench+squat_rack] / [barbell+bench+safety_rack] |
 | bodyweight_squat | 自重深蹲 | 2 | workset | primary_compound | 是 | 是 | [bodyweight] |
 | goblet_squat | 高脚杯深蹲 | 3 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells] / [fixed_dumbbells] / [kettlebell] |
 | barbell_squat | 杠铃深蹲 | 4 | workset | primary_compound | 是 | 是 | [barbell+squat_rack] |
 | smith_squat | 史密斯深蹲 | 3.5 | workset | primary_compound | 是 | 是 | [smith_machine] |
 | leg_press | 腿举 | 2 | workset | primary_compound | 是 | 是 | [leg_press_machine] |
-| bulgarian_split_squat | 保加利亚分腿蹲 | 4 | workset | primary_compound | 是 | 是 | [bench] / [box] / [stable_platform] / [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] / [adjustable_dumbbells+box] / [fixed_dumbbells+box] / [adjustable_dumbbells+stable_platform] / [fixed_dumbbells+stable_platform] |
+| bulgarian_split_squat | 保加利亚分腿蹲 | 4 | workset | primary_compound | 是 | 是 | [bench] / [box] / [stable_platform] / [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] / [kettlebell+bench] / [adjustable_dumbbells+box] / [fixed_dumbbells+box] / [kettlebell+box] / [adjustable_dumbbells+stable_platform] / [fixed_dumbbells+stable_platform] / [kettlebell+stable_platform] |
 | lunge | 箭步蹲 | 3 | workset | primary_compound | 是 | 是 | [bodyweight] |
 | step_up | 台阶踏步 | 2 | workset | primary_compound | 是 | 是 | [box] / [bench] / [stable_platform] / [adjustable_dumbbells+box] / [fixed_dumbbells+box] / [kettlebell+box] / [adjustable_dumbbells+bench] / [fixed_dumbbells+bench] / [kettlebell+bench] / [adjustable_dumbbells+stable_platform] / [fixed_dumbbells+stable_platform] / [kettlebell+stable_platform] |
 | leg_extension | 腿屈伸 | 2 | workset | isolation | 是 | 是 | [leg_extension_machine] |
@@ -64,16 +64,16 @@
 | cable_kickback | 绳索后踢 | 3 | workset | isolation | 是 | 是 | [cable_machine] |
 | calf_raise | 提踵 | 2 | workset | accessory | 是 | 是 | [bodyweight] |
 | wall_sit | 靠墙静蹲 | 1 | workset | accessory | 是 | 是 | [bodyweight] |
-| plank | 平板支撑 | 2 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| side_plank | 侧平板支撑 | 3 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| dead_bug | 死虫 | 1 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| bird_dog | 鸟狗 | 1 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| crunch | 卷腹 | 2 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| reverse_crunch | 反向卷腹 | 2 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| hanging_leg_raise | 悬垂举腿 | 5 | workset | core | 是 | 是 | [pull_up_bar] |
-| lying_leg_raise | 仰卧抬腿 | 3 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| pallof_press | 帕洛夫抗旋转推 | 2 | workset | core | 是 | 是 | [resistance_band] / [cable_machine] |
-| farmer_carry | 农夫行走 | 3 | workset | loaded_carry | 是 | 是 | [adjustable_dumbbells] / [fixed_dumbbells] / [kettlebell] |
+| plank | 平板支撑 | 2 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| side_plank | 侧平板支撑 | 3 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| dead_bug | 死虫 | 1 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| bird_dog | 鸟狗 | 1 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| crunch | 卷腹 | 2 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| reverse_crunch | 反向卷腹 | 2 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| hanging_leg_raise | 悬垂举腿 | 5 | workset | core | 是 | 否 | [pull_up_bar] |
+| lying_leg_raise | 仰卧抬腿 | 3 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| pallof_press | 帕洛夫抗旋转推 | 2 | workset | core | 是 | 否 | [resistance_band+band_anchor] / [cable_machine] |
+| farmer_carry | 农夫行走 | 3 | workset | loaded_carry | 是 | 否 | [adjustable_dumbbells] / [fixed_dumbbells] / [kettlebell] |
 | superman | 超人式 | 2 | activation | activation | 否 | 否 | [bodyweight] / [yoga_mat] |
 | mountain_climber | 登山跑 | 3 | workset | cardio | 是 | 否 | [bodyweight] |
 | jumping_jack | 开合跳 | 2 | workset | cardio | 是 | 否 | [bodyweight] |
@@ -103,10 +103,10 @@
 | assisted_dip_machine | 器械辅助双杠臂屈伸 | 3 | workset | primary_compound | 是 | 是 | [assisted_dip_machine] |
 | weighted_dip | 负重双杠臂屈伸 | 5 | workset | primary_compound | 是 | 是 | [parallel_bars+weighted_vest] / [parallel_bars+dip_belt+weight_plate] |
 | standing_db_shoulder_press | 站姿哑铃肩推 | 3 | workset | primary_compound | 是 | 是 | [adjustable_dumbbells] / [fixed_dumbbells] |
-| incline_plank | 上斜平板支撑 | 1 | workset | core | 是 | 是 | [bench] / [box] / [chair] / [stable_platform] |
-| knee_plank | 跪姿平板支撑 | 1 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| long_lever_plank | 长杠杆平板支撑 | 3.5 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| weighted_plank | 负重平板支撑 | 4.5 | workset | core | 是 | 是 | [weighted_vest] / [secured_sandbag] |
-| knee_side_plank | 屈膝侧平板 | 1 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| side_plank_leg_raise | 抬腿侧平板 | 4 | workset | core | 是 | 是 | [bodyweight] / [yoga_mat] |
-| weighted_side_plank | 负重侧平板 | 5 | workset | core | 是 | 是 | [weighted_vest+yoga_mat] / [weight_plate+yoga_mat] / [secured_sandbag+yoga_mat] |
+| incline_plank | 上斜平板支撑 | 1 | workset | core | 是 | 否 | [bench] / [box] / [chair] / [stable_platform] |
+| knee_plank | 跪姿平板支撑 | 1 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| long_lever_plank | 长杠杆平板支撑 | 3.5 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| weighted_plank | 负重平板支撑 | 4.5 | workset | core | 是 | 否 | [weighted_vest] / [secured_sandbag] |
+| knee_side_plank | 屈膝侧平板 | 1 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| side_plank_leg_raise | 抬腿侧平板 | 4 | workset | core | 是 | 否 | [bodyweight] / [yoga_mat] |
+| weighted_side_plank | 负重侧平板 | 5 | workset | core | 是 | 否 | [weighted_vest] / [weight_plate] / [secured_sandbag] |
