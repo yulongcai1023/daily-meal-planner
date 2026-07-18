@@ -37,7 +37,8 @@ const ex = ({
   equipment = ["无器械"], difficulty = "beginner", suitableLocations = ["homeNone", "homeSimple", "apartmentGym", "commercialGym", "outdoor"],
   contraindications = [], alternatives = [], instructions = [], commonMistakes = [], defaultRepRange = "8–12次",
   defaultRestSeconds = 90, isCompound = true, isUnilateral = false, tags = [], equipmentOptions = null, equipmentOptionSafety = [],
-  aliases = [], replacedBy = [], trackingMode = null, loadEntryMode = null, loadDirection = null, optionalLogFields = []
+  aliases = [], replacedBy = [], trackingMode = null, loadEntryMode = null, loadDirection = null, optionalLogFields = [],
+  optionalEquipment = [], recommendedEquipment = []
 }) => ({
   id,
   name,
@@ -65,6 +66,8 @@ const ex = ({
   loadEntryMode,
   loadDirection,
   optionalLogFields,
+  optionalEquipment,
+  recommendedEquipment,
   isCompound,
   isUnilateral,
   tags
@@ -358,7 +361,7 @@ const DIFFICULTY_OVERRIDES = {
   lying_leg_raise: { difficultyLevel: "intermediate", difficultyScore: 3, skillDifficulty: 2, strengthRequirement: 3, stabilityDemand: 3 },
   one_arm_db_row: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3, trackingMode: "reps_per_side" },
   bulgarian_split_squat: { difficultyLevel: "intermediate", difficultyScore: 4, stabilityDemand: 4, coordinationDemand: 4, beginnerFriendly: false, difficultyScope: "base_movement_pattern", trackingMode: "reps_per_side" },
-  lunge: { trackingMode: "reps_per_side" },
+  lunge: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3, coordinationDemand: 3, trackingMode: "reps_per_side" },
   step_up: { difficultyLevel: "beginner", difficultyScore: 2, stabilityDemand: 2, alternativeIds: ["lunge"], difficultyScope: "base_movement_pattern", stepHeightSensitive: true, supportedVariationDifficulty: "扶持低台阶更接近 beginner；高台阶、负重或无扶持会提高到 intermediate。", trackingMode: "reps_per_side" },
   cable_kickback: { difficultyLevel: "beginner", difficultyScore: 3, skillDifficulty: 2, strengthRequirement: 2, stabilityDemand: 3, coordinationDemand: 2.5, fatigueCost: 2, exerciseRole: "isolation", programRole: "workset", alternativeIds: [], trackingMode: "reps_per_side" },
   bodyweight_single_leg_hinge: { difficultyLevel: "intermediate", difficultyScore: 3.5, skillDifficulty: 3, strengthRequirement: 2, stabilityDemand: 4, trackingMode: "reps_per_side" },
@@ -370,10 +373,10 @@ const DIFFICULTY_OVERRIDES = {
   knee_plank: { exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
   long_lever_plank: { difficultyLevel: "intermediate", difficultyScore: 3.5, skillDifficulty: 2, strengthRequirement: 4, stabilityDemand: 3, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
   weighted_plank: { difficultyLevel: "advanced", difficultyScore: 4.5, skillDifficulty: 2, strengthRequirement: 4, stabilityDemand: 3.5, requiresSetupSkill: true, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
-  side_plank: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
-  knee_side_plank: { exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
+  side_plank: { difficultyLevel: "intermediate", difficultyScore: 3, stabilityDemand: 3, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration_per_side" },
+  knee_side_plank: { exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration_per_side" },
   side_plank_leg_raise: { difficultyLevel: "intermediate", difficultyScore: 4, stabilityDemand: 4, skillDifficulty: 3, prerequisites: ["side_plank"], exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "reps_per_side" },
-  weighted_side_plank: { difficultyLevel: "advanced", difficultyScore: 5, stabilityDemand: 4, strengthRequirement: 4, skillDifficulty: 3, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration" },
+  weighted_side_plank: { difficultyLevel: "advanced", difficultyScore: 5, stabilityDemand: 4, strengthRequirement: 4, skillDifficulty: 3, exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "duration_per_side" },
   dead_bug: { exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "reps_per_side" },
   bird_dog: { exerciseRole: "core", countsTowardMuscleVolume: false, trackingMode: "reps_per_side" },
   crunch: { exerciseRole: "core", countsTowardMuscleVolume: true, trackingMode: "reps" },
@@ -391,13 +394,13 @@ const DIFFICULTY_OVERRIDES = {
   mountain_climber: { difficultyLevel: "intermediate", difficultyScore: 3, fatigueCost: 3, trackingMode: "duration" },
   jumping_jack: { difficultyLevel: "beginner", difficultyScore: 2, jointStress: 3, trackingMode: "duration" },
   high_knee: { difficultyLevel: "intermediate", difficultyScore: 3, jointStress: 3, trackingMode: "duration" },
-  brisk_walk: { trackingMode: "duration", optionalLogFields: ["distanceMeters", "optionalPace", "optionalHeartRate"] },
-  running: { trackingMode: "duration", optionalLogFields: ["distanceMeters", "optionalPace", "optionalHeartRate"] },
-  elliptical: { trackingMode: "duration", optionalLogFields: ["optionalResistanceLevel", "optionalHeartRate"] },
-  bike: { trackingMode: "duration", optionalLogFields: ["optionalResistanceLevel", "optionalHeartRate"] },
-  stair_climber: { trackingMode: "duration", optionalLogFields: ["optionalResistanceLevel", "optionalHeartRate"] },
+  brisk_walk: { trackingMode: "duration", optionalLogFields: ["distanceMeters", "paceSecondsPerKm", "averageHeartRate", "calories"] },
+  running: { trackingMode: "duration", optionalLogFields: ["distanceMeters", "paceSecondsPerKm", "averageHeartRate", "calories", "inclineLevel"] },
+  elliptical: { trackingMode: "duration", optionalLogFields: ["resistanceLevel", "averageHeartRate", "calories"] },
+  bike: { trackingMode: "duration", optionalLogFields: ["resistanceLevel", "averageHeartRate", "calories"] },
+  stair_climber: { trackingMode: "duration", optionalLogFields: ["resistanceLevel", "averageHeartRate", "calories"] },
   jump_rope: { difficultyLevel: "intermediate", difficultyScore: 3, coordinationDemand: 4, trackingMode: "duration" },
-  rowing_machine: { difficultyLevel: "intermediate", difficultyScore: 3, technicalComplexity: 3, trackingMode: "duration", optionalLogFields: ["distanceMeters", "optionalPace", "optionalResistanceLevel", "optionalHeartRate"] },
+  rowing_machine: { difficultyLevel: "intermediate", difficultyScore: 3, technicalComplexity: 3, trackingMode: "duration", optionalLogFields: ["distanceMeters", "paceSecondsPerKm", "resistanceLevel", "averageHeartRate", "calories"] },
   low_impact_circuit: { difficultyLevel: "novice", difficultyScore: 1, beginnerFriendly: true, trackingMode: "duration" }
 };
 
@@ -561,7 +564,7 @@ function deriveEquipmentOptions(equipment = []) {
   const has = id => ids.includes(id);
   const dumbbells = ids.filter(id => ["adjustable_dumbbells", "fixed_dumbbells"].includes(id));
   if (!ids.length) return [["bodyweight"]];
-  if (has("bodyweight")) return [["bodyweight"], ...(has("yoga_mat") ? [["yoga_mat"]] : [])];
+  if (has("bodyweight")) return [["bodyweight"]];
   if (dumbbells.length && has("bench")) return dumbbells.map(id => [id, "bench"]);
   if (dumbbells.length && ids.every(id => ["adjustable_dumbbells", "fixed_dumbbells"].includes(id))) return dumbbells.map(id => [id]);
   if (ids.some(id => ["chair", "box", "stable_platform"].includes(id))) return ids.map(id => [id]);
@@ -574,7 +577,7 @@ function equipmentOptionLabels(equipmentOptions = []) {
   return [...new Set(equipmentOptions.flat().map(equipmentLabel))];
 }
 
-const VALID_TRACKING_MODES = new Set(["reps", "reps_per_side", "duration", "distance"]);
+const VALID_TRACKING_MODES = new Set(["reps", "reps_per_side", "duration", "duration_per_side", "distance"]);
 
 const CARDIO_TRACKING_IDS = new Set([
   "mountain_climber", "jumping_jack", "high_knee", "brisk_walk", "running",
@@ -587,6 +590,8 @@ const UNILATERAL_REP_IDS = new Set([
   "bird_dog", "pallof_press"
 ]);
 
+const UNILATERAL_DURATION_IDS = new Set(["side_plank", "knee_side_plank", "weighted_side_plank"]);
+
 function isNonTrackedSegment(programRole, exerciseRole) {
   return ["warmup", "activation", "deprecated"].includes(programRole) || ["warmup", "activation", "skill_drill"].includes(exerciseRole);
 }
@@ -596,6 +601,7 @@ function inferTrackingMode(exercise, exerciseRole, programRole) {
   if (isNonTrackedSegment(programRole, exerciseRole)) return null;
   if (CARDIO_TRACKING_IDS.has(exercise.id) || exerciseRole === "cardio" || exercise.category === "有氧") return "duration";
   if (exerciseRole === "loaded_carry" || /负重行走/.test(exercise.movementPattern)) return "distance";
+  if (UNILATERAL_DURATION_IDS.has(exercise.id) || (/\/侧|每侧/.test(exercise.defaultRepRange || "") && /秒|分钟/.test(exercise.defaultRepRange || ""))) return "duration_per_side";
   if (UNILATERAL_REP_IDS.has(exercise.id) || exercise.isUnilateral || /\/侧|每侧/.test(exercise.defaultRepRange || "")) return "reps_per_side";
   if (/秒|分钟/.test(exercise.defaultRepRange || "")) return "duration";
   if (/米|公里/.test(exercise.defaultRepRange || "")) return "distance";
@@ -608,6 +614,7 @@ function inferLoadEntryMode(exercise) {
   if (exercise.id === "farmer_carry") return "per_implement";
   if (/weighted_/.test(exercise.id) || equipmentIds.has("weight_plate") || equipmentIds.has("weighted_vest") || equipmentIds.has("dip_belt")) return "total_load";
   if (equipmentIds.has("assisted_pull_up_machine") || equipmentIds.has("assisted_dip_machine") || /machine|leg_press|leg_extension|leg_curl|lat_pulldown|cable/.test(exercise.id)) return "machine_stack";
+  if ((exercise.equipmentOptions || []).some(option => option.every(id => ["bench", "adjustable_bench", "chair", "box", "stable_platform", "bodyweight"].includes(equipmentId(id)))) && !/weighted_/.test(exercise.id)) return "bodyweight";
   if (equipmentIds.has("adjustable_dumbbells") || equipmentIds.has("fixed_dumbbells") || equipmentIds.has("kettlebell")) return "per_implement";
   if (equipmentIds.has("barbell")) return "total_load";
   if (equipmentIds.has("resistance_band")) return "band_level";
@@ -624,9 +631,11 @@ function inferLoadDirection(exercise) {
 
 function formatTrackingTarget(trackingMode, rawTarget) {
   const raw = String(rawTarget || "").trim();
-  if (trackingMode === "reps_per_side") {
+  if (trackingMode === "reps_per_side" || trackingMode === "duration_per_side") {
     return raw
       .replace(/次\/侧/g, "次")
+      .replace(/秒\/侧/g, "秒")
+      .replace(/分钟\/侧/g, "分钟")
       .replace(/^每侧\s*/, "")
       .replace(/^/, "每侧 ");
   }
@@ -638,6 +647,7 @@ function trackingTargetUnit(trackingMode) {
     reps: "次数",
     reps_per_side: "每侧次数",
     duration: "时长",
+    duration_per_side: "每侧时长",
     distance: "距离"
   }[trackingMode] || "次数";
 }
@@ -667,6 +677,10 @@ function inferExerciseMetadata(exercise) {
   const cardioFields = cardioProgressionFields(exercise);
   const overrides = DIFFICULTY_OVERRIDES[exercise.id] || {};
   const defaultEquipmentOptions = (exercise.equipmentOptions || deriveEquipmentOptions(exercise.equipment)).map(normalizeEquipmentOption);
+  const defaultOptionalEquipment = [
+    ...(exercise.optionalEquipment || []),
+    ...((exercise.equipment || []).map(equipmentId).includes("yoga_mat") ? ["yoga_mat"] : [])
+  ].flat().map(equipmentId);
   const defaultProgramRole = overrides.programRole || exercise.programRole || "workset";
   const defaultExerciseRole = overrides.exerciseRole || exercise.exerciseRole || (isCardio ? "cardio" : exercise.isCompound ? "primary_compound" : "accessory");
   const isNonWorkSegment = isNonTrackedSegment(defaultProgramRole, defaultExerciseRole);
@@ -699,6 +713,8 @@ function inferExerciseMetadata(exercise) {
     loadEntryMode: exercise.loadEntryMode || null,
     loadDirection: exercise.loadDirection || null,
     optionalLogFields: exercise.optionalLogFields || [],
+    optionalEquipment: [...new Set(defaultOptionalEquipment)],
+    recommendedEquipment: [...new Set([...(exercise.recommendedEquipment || []).map(equipmentId), ...defaultOptionalEquipment])],
     equipmentOptions: defaultEquipmentOptions,
     equipmentOptionSafety: (exercise.equipmentOptionSafety || []).map(rule => ({ ...rule, option: normalizeEquipmentOption(rule.option || []) })),
     suggestedNextIds: [],
@@ -772,6 +788,9 @@ export function normalizeWorkoutLogEntry(entry = {}, exerciseOrId = null) {
   if (trackingMode === "reps_per_side" && normalized.repsPerSide === undefined && normalized.reps !== undefined) {
     normalized.repsPerSide = normalized.reps;
   }
+  if (trackingMode === "duration_per_side" && normalized.durationPerSideSeconds === undefined && normalized.durationSeconds !== undefined) {
+    normalized.durationPerSideSeconds = normalized.durationSeconds;
+  }
   return normalized;
 }
 
@@ -779,6 +798,7 @@ export function isWorkoutSetComplete(entry = {}, exerciseOrId = null) {
   const normalized = normalizeWorkoutLogEntry(entry, exerciseOrId);
   if (normalized.completed === true || normalized.done === true) return true;
   if (normalized.trackingMode === "duration") return Number(normalized.durationSeconds) > 0;
+  if (normalized.trackingMode === "duration_per_side") return Number(normalized.durationPerSideSeconds ?? normalized.durationSeconds) > 0;
   if (normalized.trackingMode === "distance") return Number(normalized.distanceMeters) > 0;
   if (normalized.trackingMode === "reps_per_side") return Number(normalized.repsPerSide) > 0;
   return Number(normalized.actualReps ?? normalized.reps) > 0;
@@ -957,8 +977,14 @@ export function validateExerciseLibrary() {
     if (UNILATERAL_REP_IDS.has(exercise.id) && resolveExerciseTrackingMode(exercise) !== "reps_per_side") {
       errors.push(`${exercise.id}: 单侧动作必须使用 reps_per_side`);
     }
+    if (UNILATERAL_DURATION_IDS.has(exercise.id) && resolveExerciseTrackingMode(exercise) !== "duration_per_side") {
+      errors.push(`${exercise.id}: 单侧等长动作必须使用 duration_per_side`);
+    }
     if ((CARDIO_TRACKING_IDS.has(exercise.id) || exercise.exerciseRole === "cardio") && resolveExerciseTrackingMode(exercise) !== "duration") {
       errors.push(`${exercise.id}: 有氧动作必须使用 duration 追踪`);
+    }
+    if ((exercise.equipmentOptions || []).some(option => option.length === 1 && option.includes("yoga_mat"))) {
+      errors.push(`${exercise.id}: yoga_mat 只能作为可选/推荐器械，不能成为独立必需器械方案`);
     }
     if (exercise.programRole === "deprecated" && exercise.autoCandidate !== false) {
       errors.push(`${exercise.id}: deprecated 动作不能进入新计划候选池`);
@@ -1678,8 +1704,8 @@ export function validateWorkoutPlan(plan, settings = plan?.settings || {}) {
       seen.add(exercise.id);
       if (exercise.programRole === "workset") {
         if (!row.sets || !resolveExerciseTrackingMode(exercise) || !row.targetLabel || row.restSeconds === undefined || !row.intensity) errors.push(`${row.name} 缺少组数、追踪目标、休息或强度。`);
-        if (row.trackingMode === "reps_per_side" && !String(row.targetLabel).includes("每侧")) errors.push(`${row.name} 单侧动作目标必须标注“每侧”。`);
-        if (["duration", "distance"].includes(row.trackingMode) && /次/.test(String(row.targetLabel))) errors.push(`${row.name} ${row.trackingMode} 目标不应显示为次数。`);
+        if (["reps_per_side", "duration_per_side"].includes(row.trackingMode) && !String(row.targetLabel).includes("每侧")) errors.push(`${row.name} 单侧动作目标必须标注“每侧”。`);
+        if (["duration", "duration_per_side", "distance"].includes(row.trackingMode) && /次/.test(String(row.targetLabel))) errors.push(`${row.name} ${row.trackingMode} 目标不应显示为次数。`);
       }
     }
   }
@@ -1780,6 +1806,6 @@ export const TRAINING_DATA_SHAPES = {
   trainingProfiles: ["userId", "primaryGoal", "secondaryGoal", "experienceLevel", "weeklyTrainingDays", "availableDays", "sessionDuration", "trainingLocation", "availableEquipment", "limitations", "priorityMuscles", "dislikedExercises", "preferredStyles", "selectedSplit", "createdAt", "updatedAt"],
   workoutPlans: ["id", "userId", "weekStart", "splitType", "goal", "days", "status", "version", "createdAt", "updatedAt"],
   workoutSessions: ["id", "planId", "userId", "date", "workoutDayId", "startedAt", "completedAt", "duration", "exercises", "notes", "perceivedDifficulty", "status"],
-  exerciseLogs: ["userId", "sessionId", "exerciseId", "setNumber", "trackingMode", "targetReps", "actualReps", "repsPerSide", "durationSeconds", "distanceMeters", "targetWeight", "actualWeight", "loadEntryMode", "loadDirection", "optionalCalories", "optionalHeartRate", "optionalPace", "optionalResistanceLevel", "rir", "completed", "createdAt"],
+  exerciseLogs: ["userId", "sessionId", "exerciseId", "setNumber", "trackingMode", "targetReps", "actualReps", "repsPerSide", "durationSeconds", "durationPerSideSeconds", "distanceMeters", "distanceFeet", "paceSecondsPerKm", "targetWeight", "actualWeight", "loadEntryMode", "loadDirection", "optionalCalories", "calories", "optionalHeartRate", "averageHeartRate", "optionalPace", "optionalResistanceLevel", "resistanceLevel", "inclineLevel", "rir", "completed", "createdAt"],
   userExerciseProficiency: ["userId", "exerciseId", "status", "proficiencyLevel", "sessionsCompleted", "successfulSessions", "lastUsedAt", "averageRir", "formConfidence", "painReported", "readyForProgression"]
 };

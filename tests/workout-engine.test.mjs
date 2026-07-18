@@ -51,6 +51,7 @@ const allExercises = plan => trainingDays(plan).flatMap(day => day.exercises);
 const equipmentUsed = plan => allExercises(plan).flatMap(exercise => exercise.equipment);
 const trainingIndexes = plan => plan.days.map((day, index) => day.isRest ? null : index).filter(index => index !== null);
 const exerciseIds = plan => allExercises(plan).map(exercise => exercise.exerciseId);
+const byId = Object.fromEntries(EXERCISES.map(item => [item.id, item]));
 
 assert.ok(EXERCISES.length >= 60, "exercise library should be broad enough");
 assert.ok(EXERCISES.every(exercise => exercise.difficultyScore && exercise.difficultyLevel), "all exercises should have expanded difficulty metadata");
@@ -283,6 +284,9 @@ assert.ok(EXERCISES.every(exercise => {
   assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.includes("kettlebell") && option.includes("bench")));
   assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.includes("kettlebell") && option.includes("box")));
   assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.includes("kettlebell") && option.includes("stable_platform")));
+  assert.equal(byId.lunge.difficultyScore, 3);
+  assert.ok(byId.lunge.difficultyScore >= byId.bodyweight_squat.difficultyScore);
+  assert.ok(byId.lunge.difficultyScore < byId.bulgarian_split_squat.difficultyScore);
   const cardioIds = ["mountain_climber", "jumping_jack", "high_knee", "brisk_walk", "running", "elliptical", "bike", "rowing_machine", "stair_climber", "jump_rope", "low_impact_circuit"];
   assert.ok(cardioIds.every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false && byId[id].trackingMode === "duration"));
   assert.equal(isWorkoutSetComplete({ durationSeconds: 600 }, byId.bike), true);
@@ -291,10 +295,27 @@ assert.ok(EXERCISES.every(exercise => {
   assert.equal(byId.rowing_machine.countsTowardMuscleVolume, false);
   assert.equal(byId.assisted_pull_up_machine.loadDirection, "assistance");
   assert.equal(byId.weighted_pull_up.loadDirection, "resistance");
+  assert.equal(byId.assisted_dip_machine.loadDirection, "assistance");
+  assert.equal(byId.weighted_dip.loadDirection, "resistance");
   assert.equal(compareLoadProgress({ weight: 40 }, { weight: 45 }, byId.assisted_pull_up_machine).improved, false);
   assert.equal(compareLoadProgress({ weight: 45 }, { weight: 40 }, byId.assisted_pull_up_machine).improved, true);
   assert.equal(compareLoadProgress({ weight: 10 }, { weight: 15 }, byId.weighted_pull_up).improved, true);
   assert.ok(["standing_scapular_retraction", "wall_angel", "hip_hinge_drill", "superman"].every(id => byId[id].countsAsWorkSet === false && byId[id].countsTowardMuscleVolume === false));
+  assert.equal(byId.side_plank.trackingMode, "duration_per_side");
+  assert.equal(byId.knee_side_plank.trackingMode, "duration_per_side");
+  assert.equal(byId.weighted_side_plank.trackingMode, "duration_per_side");
+  assert.equal(byId.side_plank_leg_raise.trackingMode, "reps_per_side");
+  assert.equal(isWorkoutSetComplete({ durationPerSideSeconds: 30 }, byId.side_plank), true);
+  assert.equal(normalizeWorkoutLogEntry({ durationSeconds: 30 }, byId.side_plank).durationPerSideSeconds, 30);
+  assert.ok(["plank", "side_plank", "dead_bug", "bird_dog", "crunch", "reverse_crunch", "lying_leg_raise", "superman", "glute_bridge", "knee_plank", "knee_side_plank", "side_plank_leg_raise"].every(id => byId[id].optionalEquipment.includes("yoga_mat")));
+  assert.ok(["plank", "side_plank", "dead_bug", "bird_dog", "crunch", "reverse_crunch", "lying_leg_raise", "superman", "glute_bridge", "knee_plank", "knee_side_plank", "side_plank_leg_raise"].every(id => !byId[id].equipmentOptions.some(option => option.length === 1 && option.includes("yoga_mat"))));
+  assert.equal(isExerciseAllowed(byId.plank, { ...base, availableEquipment: ["瑜伽垫"] }), false);
+  assert.equal(byId.step_up.loadEntryMode, "bodyweight");
+  assert.equal(byId.bulgarian_split_squat.loadEntryMode, "bodyweight");
+  assert.equal(byId.incline_plank.loadEntryMode, "bodyweight");
+  assert.equal(byId.db_bench.loadEntryMode, "per_implement");
+  assert.equal(byId.db_curl.loadEntryMode, "per_implement");
+  assert.equal(byId.barbell_bench.loadEntryMode, "total_load");
   assert.equal(byId.barbell_squat.alternativeIds.includes("leg_press"), false);
   const squatAlternatives = getExerciseAlternatives("barbell_squat", {
     ...base,
@@ -402,8 +423,8 @@ assert.ok(EXERCISES.every(exercise => {
 {
   const plan = makePlan();
   assert.ok(trainingDays(plan).every(day => day.exercises.every(row => row.sets && row.reps && row.targetLabel && row.trackingMode && row.restSeconds !== undefined && row.intensity)));
-  assert.ok(allExercises(plan).filter(row => row.trackingMode === "reps_per_side").every(row => row.targetLabel.includes("每侧")));
-  assert.ok(allExercises(plan).filter(row => ["duration", "distance"].includes(row.trackingMode)).every(row => !row.targetLabel.includes("次")));
+  assert.ok(allExercises(plan).filter(row => ["reps_per_side", "duration_per_side"].includes(row.trackingMode)).every(row => row.targetLabel.includes("每侧")));
+  assert.ok(allExercises(plan).filter(row => ["duration", "duration_per_side", "distance"].includes(row.trackingMode)).every(row => !row.targetLabel.includes("次")));
 }
 
 {
@@ -479,6 +500,82 @@ assert.ok(EXERCISES.every(exercise => {
 {
   const plan = makePlan({ selectedSplit: "fullBody", weeklyTrainingDays: 3 });
   assert.ok(trainingDays(plan).some(day => day.exercises.some(row => row.category === "核心")));
+}
+
+{
+  const plan = makePlan({
+    primaryGoal: "health",
+    secondaryGoal: "mobility",
+    trainingLocation: "homeNone",
+    availableEquipment: ["无器械", "椅子"],
+    experienceLevel: "beginner",
+    selectedSplit: "fullBody",
+    cardioPreference: "none"
+  });
+  assert.ok(trainingDays(plan).every(day => day.exercises.length > 0), "scenario A should generate full bodyweight beginner plan");
+  assert.ok(allExercises(plan).every(row => isExerciseAllowed(byId[row.exerciseId], plan.settings)), "scenario A must only use complete available equipment combinations");
+  assert.ok(!equipmentUsed(plan).some(item => ["可调哑铃", "固定哑铃", "杠铃", "拉力器", "弹力带固定点"].includes(item)), "scenario A must not use dumbbell, barbell, cable or band anchor");
+  assert.ok(!exerciseIds(plan).includes("incline_push_up"), "scenario A must not use deprecated incline_push_up");
+  assert.ok(allExercises(plan).every(row => row.trackingMode), "scenario A rows should resolve trackingMode");
+}
+
+{
+  const plan = makePlan({
+    primaryGoal: "muscleGain",
+    trainingLocation: "homeSimple",
+    availableEquipment: ["无器械", "可调哑铃", "可调节卧凳", "弹力带", "弹力带固定点"],
+    experienceLevel: "advanced",
+    selectedSplit: "ppl",
+    weeklyTrainingDays: 3,
+    cardioPreference: "none"
+  });
+  const ids = exerciseIds(plan);
+  assert.ok(isExerciseAllowed(byId.incline_db_bench, plan.settings), "scenario B should allow incline dumbbell bench");
+  assert.ok(isExerciseAllowed(byId.band_pulldown, plan.settings), "scenario B should allow anchored band pulldown");
+  assert.ok(isExerciseAllowed(byId.face_pull, plan.settings), "scenario B should allow band face pull with anchor");
+  assert.ok(isExerciseAllowed(byId.pallof_press, plan.settings), "scenario B should allow Pallof Press with anchor");
+  assert.ok(allExercises(plan).every(row => isExerciseAllowed(byId[row.exerciseId], plan.settings)), "scenario B must only use a complete available equipment option");
+  assert.ok(!exerciseIds(plan).some(id => ["barbell_bench", "incline_barbell_bench", "barbell_squat", "barbell_row", "weighted_pull_up", "pull_up"].includes(id)), "scenario B must not select barbell or pull-up-bar exercises");
+  assert.ok(allExercises(plan).filter(row => row.trackingMode === "reps_per_side").every(row => row.targetLabel.includes("每侧")));
+  assert.ok(ids.length > 0);
+}
+
+{
+  const plan = makePlan({
+    trainingLocation: "commercialGym",
+    availableEquipment: ["无器械", "杠铃", "卧推凳", "可调节卧凳", "深蹲架", "保护架", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "可调哑铃", "固定哑铃"],
+    experienceLevel: "advanced",
+    selectedSplit: "ppl",
+    weeklyTrainingDays: 3,
+    cardioPreference: "none",
+    hasSpotterOrSafetyArms: true
+  });
+  assert.equal(isExerciseAllowed(byId.barbell_bench, plan.settings), true);
+  assert.equal(isExerciseAllowed(byId.incline_barbell_bench, plan.settings), true);
+  assert.ok(byId.barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("bench") && option.includes("squat_rack")));
+  assert.ok(byId.incline_barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("adjustable_bench") && option.includes("squat_rack")));
+  assert.ok(allExercises(plan).some(row => (byId[row.exerciseId]?.difficultyScore || 1) < 4), "scenario C should not select only highest-difficulty exercises");
+}
+
+{
+  const bandOnly = { ...base, availableEquipment: ["弹力带"], trainingLocation: "homeSimple" };
+  assert.equal(isExerciseAllowed(byId.hip_abduction, bandOnly), true);
+  assert.equal(isExerciseAllowed(byId.band_pulldown, bandOnly), false);
+  assert.equal(isExerciseAllowed(byId.face_pull, bandOnly), false);
+  assert.equal(isExerciseAllowed(byId.pallof_press, bandOnly), false);
+}
+
+{
+  const flatBenchOnly = {
+    ...base,
+    trainingLocation: "homeSimple",
+    availableEquipment: ["无器械", "可调哑铃", "固定哑铃", "卧推凳"],
+    experienceLevel: "intermediate"
+  };
+  assert.equal(isExerciseAllowed(byId.db_bench, flatBenchOnly), true);
+  assert.equal(isExerciseAllowed(byId.incline_db_bench, flatBenchOnly), false);
+  assert.equal(isExerciseAllowed(byId.barbell_bench, flatBenchOnly), false);
+  assert.equal(isExerciseAllowed(byId.incline_barbell_bench, flatBenchOnly), false);
 }
 
 {

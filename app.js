@@ -685,8 +685,8 @@ function exerciseIcon(exercise) {
 
 function fallbackTargetLabel(exercise) {
   const raw = exercise.defaultRepRange || exercise.reps || "";
-  if (exercise.trackingMode === "reps_per_side") {
-    return String(raw).replace(/次\/侧/g, "次").replace(/^每侧\s*/, "").replace(/^/, "每侧 ");
+  if (exercise.trackingMode === "reps_per_side" || exercise.trackingMode === "duration_per_side") {
+    return String(raw).replace(/次\/侧/g, "次").replace(/秒\/侧/g, "秒").replace(/分钟\/侧/g, "分钟").replace(/^每侧\s*/, "").replace(/^/, "每侧 ");
   }
   return raw;
 }
@@ -735,7 +735,7 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
     reps: next.defaultRepRange || current.reps,
     trackingMode: next.trackingMode,
     targetLabel: fallbackTargetLabel(next),
-    targetUnitLabel: { reps: "次数", reps_per_side: "每侧次数", duration: "时长", distance: "距离" }[next.trackingMode] || "次数",
+    targetUnitLabel: { reps: "次数", reps_per_side: "每侧次数", duration: "时长", duration_per_side: "每侧时长", distance: "距离" }[next.trackingMode] || "次数",
     loadEntryMode: next.loadEntryMode,
     loadDirection: next.loadDirection,
     optionalLogFields: next.optionalLogFields || [],
@@ -824,7 +824,7 @@ function restoredWorkoutLogValue(log, field, exercise) {
   if (!log) return undefined;
   const normalized = normalizeWorkoutLogEntry(log, exercise);
   if (field === "repsPerSide" && normalized.repsPerSide !== undefined) return normalized.repsPerSide;
-  if (field === "durationSeconds" || field === "distanceMeters") return log[field];
+  if (field === "durationSeconds" || field === "durationPerSideSeconds" || field === "distanceMeters") return normalized[field] ?? log[field];
   return normalized[field];
 }
 

@@ -271,6 +271,7 @@ function renderExerciseMetrics(exercise) {
     reps: "次数",
     reps_per_side: "每侧次数",
     duration: "时长",
+    duration_per_side: "每侧时长",
     distance: "距离"
   }[exercise.trackingMode] || "次数";
   return `
@@ -302,6 +303,7 @@ function renderExerciseSetTracker(exercise, dayIndex, exerciseIndex) {
     reps: { field: "reps", label: "实际次数", placeholder: "10", inputMode: "numeric" },
     reps_per_side: { field: "repsPerSide", label: "每侧次数", placeholder: "10", inputMode: "numeric" },
     duration: { field: "durationSeconds", label: "时长/秒", placeholder: "45", inputMode: "numeric" },
+    duration_per_side: { field: "durationPerSideSeconds", label: "每侧时长/秒", placeholder: "30", inputMode: "numeric" },
     distance: { field: "distanceMeters", label: "距离/米", placeholder: "30", inputMode: "numeric" }
   }[mode] || { field: "reps", label: "实际次数", placeholder: "10", inputMode: "numeric" };
   const loadLabel = exercise.loadDirection === "assistance"

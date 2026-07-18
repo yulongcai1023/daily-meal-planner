@@ -24,6 +24,7 @@ const weightedEquipmentIds = new Set(["weighted_vest", "secured_sandbag", "weigh
 const programRoles = new Set(["workset", "warmup", "activation", "deprecated"]);
 const exerciseRoles = new Set(["primary_compound", "secondary_compound", "isolation", "accessory", "loaded_carry", "core", "cardio", "skill_drill", "activation", "warmup"]);
 const raisedSupportEquipment = new Set(["bench", "chair", "box", "stable_platform"]);
+const validTrackingModes = new Set(["reps", "reps_per_side", "duration", "duration_per_side", "distance"]);
 
 const text = value => {
   if (value === true) return "是";
@@ -111,8 +112,17 @@ for (const exercise of EXERCISES) {
     invalidCountingSemantics.push(`${exercise.id}: 新统计字段为 undefined`);
   }
   const resolvedTrackingMode = resolveExerciseTrackingMode(exercise);
+  if (resolvedTrackingMode && !validTrackingModes.has(resolvedTrackingMode)) {
+    missingTrackingModes.push(`${exercise.id}: trackingMode 非法：${text(resolvedTrackingMode)}`);
+  }
   if (exercise.programRole === "workset" && ["primary_compound", "secondary_compound", "isolation", "accessory", "core", "loaded_carry", "cardio"].includes(exercise.exerciseRole) && !resolvedTrackingMode) {
     missingTrackingModes.push(`${exercise.id}: 工作组动作缺少解析后的 trackingMode`);
+  }
+  if (["side_plank", "knee_side_plank", "weighted_side_plank"].includes(exercise.id) && resolvedTrackingMode !== "duration_per_side") {
+    missingTrackingModes.push(`${exercise.id}: 单侧等长动作应使用 duration_per_side`);
+  }
+  if ((exercise.equipmentOptions || []).some(option => option.length === 1 && option.includes("yoga_mat"))) {
+    incompleteEquipmentCombinations.push(`${exercise.id}: yoga_mat 不应作为独立必需器械方案`);
   }
   if (exercise.exerciseRole === "cardio" && resolvedTrackingMode !== "duration") {
     missingTrackingModes.push(`${exercise.id}: 有氧动作应按 duration 追踪，当前=${text(resolvedTrackingMode)}`);
@@ -314,9 +324,9 @@ const md = `# 健身动作数据结构收尾审计\n\n生成时间：${audit.gen
 writeFileSync(mdPath, md, "utf8");
 
 const rows = [
-  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | 追踪模式 | equipmentOptions |",
-  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text(resolveExerciseTrackingMode(item))} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
+  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | 追踪模式 | 必需 equipmentOptions | 可选器械 |",
+  "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text(resolveExerciseTrackingMode(item))} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} | ${text(item.optionalEquipment)} |`)
 ];
 writeFileSync(reviewPath, `# 健身动作结构报告\n\n生成时间：${audit.generatedAt}\n\n${rows.join("\n")}\n`, "utf8");
 writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
