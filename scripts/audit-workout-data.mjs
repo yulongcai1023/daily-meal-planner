@@ -8,7 +8,7 @@ if (process.stderr.setDefaultEncoding) process.stderr.setDefaultEncoding("utf8")
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const source = readFileSync(resolve(root, "workout-engine.js"), "utf8");
 const moduleUrl = `data:text/javascript;charset=utf-8,${encodeURIComponent(source)}`;
-const { EXERCISES, validateExerciseProgressionGraph, validateExerciseLibrary } = await import(moduleUrl);
+const { EXERCISES, resolveExerciseTrackingMode, validateExerciseProgressionGraph, validateExerciseLibrary } = await import(moduleUrl);
 
 const byId = new Map(EXERCISES.map(item => [item.id, item]));
 const knownEquipmentIds = new Set([
@@ -61,6 +61,7 @@ const missingSafetyRequirements = [];
 const invalidActionIds = [];
 const unreachableEquipmentIds = [];
 const deprecatedReplacementIssues = [];
+const missingTrackingModes = [];
 
 for (const exercise of EXERCISES) {
   if (!(exercise.difficultyScore >= 1 && exercise.difficultyScore <= 5)) {
@@ -108,6 +109,13 @@ for (const exercise of EXERCISES) {
   }
   if (exercise.countsAsWorkSet === undefined || exercise.countsTowardMuscleVolume === undefined) {
     invalidCountingSemantics.push(`${exercise.id}: 新统计字段为 undefined`);
+  }
+  const resolvedTrackingMode = resolveExerciseTrackingMode(exercise);
+  if (exercise.programRole === "workset" && ["primary_compound", "secondary_compound", "isolation", "accessory", "core", "loaded_carry", "cardio"].includes(exercise.exerciseRole) && !resolvedTrackingMode) {
+    missingTrackingModes.push(`${exercise.id}: 工作组动作缺少解析后的 trackingMode`);
+  }
+  if (exercise.exerciseRole === "cardio" && resolvedTrackingMode !== "duration") {
+    missingTrackingModes.push(`${exercise.id}: 有氧动作应按 duration 追踪，当前=${text(resolvedTrackingMode)}`);
   }
   if (dynamicAbsIds.has(exercise.id) && (!exercise.countsAsWorkSet || !exercise.countsTowardMuscleVolume || exercise.trackingMode !== "reps")) {
     invalidCountingSemantics.push(`${exercise.id}: 动态腹肌动作必须计入核心直接训练量，并使用 reps 追踪`);
@@ -265,6 +273,7 @@ const audit = {
   weightedWithoutLoadEquipment,
   programRoleExerciseRoleConflicts,
   invalidCountingSemantics,
+  missingTrackingModes,
   skillDrillEffectiveSets,
   cardioMarkedCompoundOrAccessory,
   deprecatedReplacementIssues,
@@ -292,6 +301,7 @@ const md = `# 健身动作数据结构收尾审计\n\n生成时间：${audit.gen
   + `## 名称包含 weighted 但没有负重器械的动作\n\n${lineItems(weightedWithoutLoadEquipment)}\n\n`
   + `## programRole 与 exerciseRole 冲突\n\n${lineItems(programRoleExerciseRoleConflicts)}\n\n`
   + `## 统计语义异常\n\n${lineItems(invalidCountingSemantics)}\n\n`
+  + `## 追踪模式异常\n\n${lineItems(missingTrackingModes)}\n\n`
   + `## warmup / activation / skill_drill 仍计入有效组\n\n${lineItems(skillDrillEffectiveSets)}\n\n`
   + `## cardio 被错误标记或计入肌肉有效组\n\n${lineItems(cardioMarkedCompoundOrAccessory)}\n\n`
   + `## 弃用动作迁移异常\n\n${lineItems(deprecatedReplacementIssues)}\n\n`
@@ -306,7 +316,7 @@ writeFileSync(mdPath, md, "utf8");
 const rows = [
   "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | 追踪模式 | equipmentOptions |",
   "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text(item.trackingMode)} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
+  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text(resolveExerciseTrackingMode(item))} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
 ];
 writeFileSync(reviewPath, `# 健身动作结构报告\n\n生成时间：${audit.generatedAt}\n\n${rows.join("\n")}\n`, "utf8");
 writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
@@ -318,6 +328,7 @@ writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
   + `- 名称包含 weighted 但没有负重器械：${weightedWithoutLoadEquipment.length}\n`
   + `- programRole 与 exerciseRole 冲突：${programRoleExerciseRoleConflicts.length}\n`
   + `- 统计语义异常：${invalidCountingSemantics.length}\n`
+  + `- 追踪模式异常：${missingTrackingModes.length}\n`
   + `- warmup / activation / skill_drill 仍计入有效组：${skillDrillEffectiveSets.length}\n`
   + `- cardio 被错误标记或计入肌肉有效组：${cardioMarkedCompoundOrAccessory.length}\n`
   + `- 弃用动作迁移异常：${deprecatedReplacementIssues.length}\n`

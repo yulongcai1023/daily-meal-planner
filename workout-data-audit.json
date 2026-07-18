@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T00:18:42.404Z",
+  "generatedAt": "2026-07-18T02:42:51.172Z",
   "exerciseCount": 106,
   "graphOk": true,
   "libraryOk": true,
@@ -10,6 +10,7 @@
   "weightedWithoutLoadEquipment": [],
   "programRoleExerciseRoleConflicts": [],
   "invalidCountingSemantics": [],
+  "missingTrackingModes": [],
   "skillDrillEffectiveSets": [],
   "cardioMarkedCompoundOrAccessory": [],
   "deprecatedReplacementIssues": [],

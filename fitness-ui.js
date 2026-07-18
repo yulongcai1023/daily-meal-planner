@@ -266,10 +266,17 @@ function renderWarmupCooldownCard(day) {
 }
 
 function renderExerciseMetrics(exercise) {
+  const targetLabel = exercise.targetLabel || exercise.reps;
+  const unitLabel = exercise.targetUnitLabel || {
+    reps: "次数",
+    reps_per_side: "每侧次数",
+    duration: "时长",
+    distance: "距离"
+  }[exercise.trackingMode] || "次数";
   return `
     <div class="exercise-metrics">
       <div><strong>${exercise.sets}</strong><span>组数</span></div>
-      <div><strong>${escapeHtml(exercise.reps)}</strong><span>次数</span></div>
+      <div><strong>${escapeHtml(targetLabel)}</strong><span>${escapeHtml(unitLabel)}</span></div>
       <div><strong>${exercise.restSeconds}</strong><span>组间休息/秒</span></div>
       <div><strong>${escapeHtml(exercise.intensity.replace("RIR ", ""))}</strong><span>建议强度 RIR</span></div>
     </div>
@@ -289,19 +296,37 @@ function renderExerciseInstructions(exercise) {
 }
 
 function renderExerciseSetTracker(exercise, dayIndex, exerciseIndex) {
+  const mode = exercise.trackingMode || "reps";
+  const targetLabel = exercise.targetLabel || exercise.reps;
+  const trackingConfig = {
+    reps: { field: "reps", label: "实际次数", placeholder: "10", inputMode: "numeric" },
+    reps_per_side: { field: "repsPerSide", label: "每侧次数", placeholder: "10", inputMode: "numeric" },
+    duration: { field: "durationSeconds", label: "时长/秒", placeholder: "45", inputMode: "numeric" },
+    distance: { field: "distanceMeters", label: "距离/米", placeholder: "30", inputMode: "numeric" }
+  }[mode] || { field: "reps", label: "实际次数", placeholder: "10", inputMode: "numeric" };
+  const loadLabel = exercise.loadDirection === "assistance"
+    ? "辅助重量"
+    : exercise.loadEntryMode === "per_implement"
+      ? "单手重量"
+      : exercise.loadEntryMode === "machine_stack"
+        ? "器械重量"
+        : "负重";
+  const needsLoadInput = !["bodyweight", "band_level", "none"].includes(exercise.loadEntryMode || "bodyweight");
   const rows = Array.from({ length: Math.max(1, exercise.sets || 1) }, (_, index) => `
     <div class="set-row" data-set-index="${index}">
       <span>第${index + 1}组</span>
-      <span>${escapeHtml(exercise.reps)}</span>
-      <label><span>重量</span><input class="workout-log-input" data-log-field="weight" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="number" min="0" step="0.5" placeholder="20"></label>
-      <label><span>次数</span><input class="workout-log-input" data-log-field="reps" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="text" placeholder="10"></label>
+      <span>${escapeHtml(targetLabel)}</span>
+      ${needsLoadInput
+        ? `<label><span>${escapeHtml(loadLabel)}</span><input class="workout-log-input" data-log-field="weight" data-tracking-mode="${escapeHtml(mode)}" data-load-entry-mode="${escapeHtml(exercise.loadEntryMode || "")}" data-load-direction="${escapeHtml(exercise.loadDirection || "")}" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="number" min="0" step="0.5" placeholder="20"></label>`
+        : `<span class="set-muted">—</span>`}
+      <label><span>${escapeHtml(trackingConfig.label)}</span><input class="workout-log-input" data-log-field="${escapeHtml(trackingConfig.field)}" data-tracking-mode="${escapeHtml(mode)}" data-load-entry-mode="${escapeHtml(exercise.loadEntryMode || "")}" data-load-direction="${escapeHtml(exercise.loadDirection || "")}" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="text" inputmode="${escapeHtml(trackingConfig.inputMode)}" placeholder="${escapeHtml(trackingConfig.placeholder)}"></label>
       <label><span>RIR</span><input class="workout-log-input" data-log-field="rir" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="text" placeholder="2"></label>
-      <label class="set-check"><input class="set-complete" data-log-field="done" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="checkbox"><span>完成</span></label>
+      <label class="set-check"><input class="set-complete" data-log-field="done" data-tracking-mode="${escapeHtml(mode)}" data-load-entry-mode="${escapeHtml(exercise.loadEntryMode || "")}" data-load-direction="${escapeHtml(exercise.loadDirection || "")}" data-log-key="${dayIndex}:${exerciseIndex}:${index}" type="checkbox"><span>完成</span></label>
     </div>
   `).join("");
   return `
     <section class="set-tracker">
-      <div class="set-header"><span>组次</span><span>目标</span><span>重量</span><span>实际次数</span><span>RIR</span><span>完成</span></div>
+      <div class="set-header"><span>组次</span><span>目标</span><span>${escapeHtml(loadLabel)}</span><span>${escapeHtml(trackingConfig.label)}</span><span>RIR</span><span>完成</span></div>
       ${rows}
       <label class="exercise-note">备注<input class="exercise-note-input" data-note-key="${dayIndex}:${exerciseIndex}" type="text" placeholder="记录动作感受、疼痛、动作调整等"></label>
     </section>
@@ -389,7 +414,7 @@ function renderWorkoutDay(day, index, activeIndex) {
       <div class="exercise-stack">
         ${day.exercises.map((exercise, exerciseIndex) => renderExerciseCard(exercise, exerciseIndex, index)).join("")}
       </div>
-      ${day.cardio ? `<section class="warmup-card cardio-soft"><h3>有氧安排</h3><p>${escapeHtml(day.cardio.name)} · ${escapeHtml(day.cardio.reps)} · ${escapeHtml(day.cardio.note)}</p></section>` : ""}
+      ${day.cardio ? `<section class="warmup-card cardio-soft"><h3>有氧安排</h3><p>${escapeHtml(day.cardio.name)} · ${escapeHtml(day.cardio.targetLabel || day.cardio.reps)} · ${escapeHtml(day.cardio.note)}</p></section>` : ""}
     </article>
   `;
 }

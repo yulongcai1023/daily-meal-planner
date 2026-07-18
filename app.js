@@ -14,7 +14,7 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
-import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui25";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, normalizeWorkoutLogEntry, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui25";
 import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui25";
 
 const firebaseConfig = {
@@ -683,6 +683,14 @@ function exerciseIcon(exercise) {
   return "🏋️";
 }
 
+function fallbackTargetLabel(exercise) {
+  const raw = exercise.defaultRepRange || exercise.reps || "";
+  if (exercise.trackingMode === "reps_per_side") {
+    return String(raw).replace(/次\/侧/g, "次").replace(/^每侧\s*/, "").replace(/^/, "每侧 ");
+  }
+  return raw;
+}
+
 function openExerciseSheet(dayIndex, exerciseIndex) {
   const sheet = document.querySelector("#exercise-sheet");
   const options = document.querySelector("#sheet-options");
@@ -724,6 +732,13 @@ function replaceExercise(dayIndex, exerciseIndex, altId) {
     difficultyScore: next.difficultyScore,
     technicalComplexity: next.technicalComplexity,
     stabilityDemand: next.stabilityDemand,
+    reps: next.defaultRepRange || current.reps,
+    trackingMode: next.trackingMode,
+    targetLabel: fallbackTargetLabel(next),
+    targetUnitLabel: { reps: "次数", reps_per_side: "每侧次数", duration: "时长", distance: "距离" }[next.trackingMode] || "次数",
+    loadEntryMode: next.loadEntryMode,
+    loadDirection: next.loadDirection,
+    optionalLogFields: next.optionalLogFields || [],
     recommendationReasons: next.recommendationReasons || [],
     isCompound: next.isCompound,
     alternatives: getExerciseAlternatives(next.id, currentWorkoutPlan.settings).map(alt => ({ id: alt.id, name: alt.name }))
@@ -799,12 +814,27 @@ function saveWorkoutLogs(logs) {
   localStorage.setItem(WORKOUT_LOG_STORAGE_KEY, JSON.stringify(logs));
 }
 
+function exerciseFromLogElement(input) {
+  const raw = input.dataset.logKey || input.dataset.noteKey || input.dataset.exerciseDone || "";
+  const [dayIndex, exerciseIndex] = raw.split(":").map(Number);
+  return currentWorkoutPlan?.days?.[dayIndex]?.exercises?.[exerciseIndex] || null;
+}
+
+function restoredWorkoutLogValue(log, field, exercise) {
+  if (!log) return undefined;
+  const normalized = normalizeWorkoutLogEntry(log, exercise);
+  if (field === "repsPerSide" && normalized.repsPerSide !== undefined) return normalized.repsPerSide;
+  if (field === "durationSeconds" || field === "distanceMeters") return log[field];
+  return normalized[field];
+}
+
 function restoreWorkoutLogs() {
   const logs = loadWorkoutLogs();
   document.querySelectorAll(".workout-log-input, .exercise-note-input").forEach(input => {
     const key = input.dataset.logKey || input.dataset.noteKey;
     const field = input.dataset.logField || "note";
-    if (logs[key]?.[field] !== undefined) input.value = logs[key][field];
+    const value = restoredWorkoutLogValue(logs[key], field, exerciseFromLogElement(input));
+    if (value !== undefined) input.value = value;
   });
   document.querySelectorAll(".set-complete, .exercise-done").forEach(input => {
     const key = input.dataset.logKey || input.dataset.exerciseDone;
@@ -863,6 +893,9 @@ function bindWorkoutLogEvents() {
     const logs = loadWorkoutLogs();
     logs[key] = logs[key] || {};
     logs[key][field] = input.type === "checkbox" ? input.checked : input.value;
+    if (input.dataset.trackingMode) logs[key].trackingMode = input.dataset.trackingMode;
+    if (input.dataset.loadEntryMode) logs[key].loadEntryMode = input.dataset.loadEntryMode;
+    if (input.dataset.loadDirection) logs[key].loadDirection = input.dataset.loadDirection;
     saveWorkoutLogs(logs);
     if (input.classList.contains("set-complete")) {
       syncExerciseCompletionFromSets(input.closest(".exercise-card"));

@@ -8,6 +8,10 @@ const {
   generateWorkoutPlan,
   getExerciseAlternatives,
   isExerciseAllowed,
+  compareLoadProgress,
+  isWorkoutSetComplete,
+  normalizeWorkoutLogEntry,
+  resolveExerciseTrackingMode,
   validateExerciseProgressionGraph,
   validateExerciseLibrary,
   scoreWeeklySchedule,
@@ -251,15 +255,24 @@ assert.ok(EXERCISES.every(exercise => {
   assert.equal(byId.farmer_carry.countsAsWorkSet, true);
   assert.equal(byId.farmer_carry.countsTowardMuscleVolume, false);
   assert.equal(byId.farmer_carry.trackingMode, "distance");
+  assert.equal(byId.farmer_carry.loadEntryMode, "per_implement");
+  assert.equal(byId.farmer_carry.loadDirection, "resistance");
+  assert.equal(isWorkoutSetComplete({ weight: 24, distanceMeters: 30 }, byId.farmer_carry), true);
+  assert.equal(normalizeWorkoutLogEntry({ reps: 30 }, byId.farmer_carry).distanceMeters, undefined);
   assert.equal(byId.plank.countsAsWorkSet, true);
   assert.equal(byId.plank.countsTowardMuscleVolume, false);
   assert.equal(byId.plank.trackingMode, "duration");
+  assert.equal(normalizeWorkoutLogEntry({ reps: 30 }, byId.plank).durationSeconds, undefined);
   assert.equal(byId.dead_bug.trackingMode, "reps_per_side");
   assert.equal(byId.pallof_press.trackingMode, "reps_per_side");
   assert.equal(byId.wall_sit.trackingMode, "duration");
   assert.equal(byId.wall_sit.countsTowardMuscleVolume, false);
   assert.ok(["crunch", "reverse_crunch", "hanging_leg_raise", "lying_leg_raise"].every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === true && byId[id].trackingMode === "reps"));
   assert.ok(["plank", "side_plank", "dead_bug", "bird_dog", "pallof_press", "incline_plank", "knee_plank", "long_lever_plank", "knee_side_plank", "side_plank_leg_raise", "weighted_plank", "weighted_side_plank"].every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false));
+  assert.ok(["push_up", "db_bench", "barbell_bench", "machine_chest_press", "lat_pulldown", "barbell_row", "db_curl", "bodyweight_squat", "glute_bridge"].every(id => resolveExerciseTrackingMode(byId[id]) === "reps"));
+  assert.ok(["one_arm_db_row", "bulgarian_split_squat", "lunge", "step_up", "cable_kickback", "bodyweight_single_leg_hinge", "single_leg_rdl", "side_plank_leg_raise", "dead_bug", "bird_dog", "pallof_press"].every(id => byId[id].trackingMode === "reps_per_side"));
+  assert.equal(normalizeWorkoutLogEntry({ reps: 10 }, byId.one_arm_db_row).repsPerSide, 10);
+  assert.equal(isWorkoutSetComplete({ repsPerSide: 10 }, byId.step_up), true);
   assert.equal(byId.step_up.difficultyScope, "base_movement_pattern");
   assert.equal(byId.bulgarian_split_squat.difficultyScope, "base_movement_pattern");
   assert.equal(byId.box_squat.name, "徒手箱式深蹲");
@@ -271,7 +284,16 @@ assert.ok(EXERCISES.every(exercise => {
   assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.includes("kettlebell") && option.includes("box")));
   assert.ok(byId.bulgarian_split_squat.equipmentOptions.some(option => option.includes("kettlebell") && option.includes("stable_platform")));
   const cardioIds = ["mountain_climber", "jumping_jack", "high_knee", "brisk_walk", "running", "elliptical", "bike", "rowing_machine", "stair_climber", "jump_rope", "low_impact_circuit"];
-  assert.ok(cardioIds.every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false));
+  assert.ok(cardioIds.every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false && byId[id].trackingMode === "duration"));
+  assert.equal(isWorkoutSetComplete({ durationSeconds: 600 }, byId.bike), true);
+  assert.equal(byId.running.trackingMode, "duration");
+  assert.equal(byId.jump_rope.trackingMode, "duration");
+  assert.equal(byId.rowing_machine.countsTowardMuscleVolume, false);
+  assert.equal(byId.assisted_pull_up_machine.loadDirection, "assistance");
+  assert.equal(byId.weighted_pull_up.loadDirection, "resistance");
+  assert.equal(compareLoadProgress({ weight: 40 }, { weight: 45 }, byId.assisted_pull_up_machine).improved, false);
+  assert.equal(compareLoadProgress({ weight: 45 }, { weight: 40 }, byId.assisted_pull_up_machine).improved, true);
+  assert.equal(compareLoadProgress({ weight: 10 }, { weight: 15 }, byId.weighted_pull_up).improved, true);
   assert.ok(["standing_scapular_retraction", "wall_angel", "hip_hinge_drill", "superman"].every(id => byId[id].countsAsWorkSet === false && byId[id].countsTowardMuscleVolume === false));
   assert.equal(byId.barbell_squat.alternativeIds.includes("leg_press"), false);
   const squatAlternatives = getExerciseAlternatives("barbell_squat", {
@@ -379,7 +401,9 @@ assert.ok(EXERCISES.every(exercise => {
 
 {
   const plan = makePlan();
-  assert.ok(trainingDays(plan).every(day => day.exercises.every(row => row.sets && row.reps && row.restSeconds !== undefined && row.intensity)));
+  assert.ok(trainingDays(plan).every(day => day.exercises.every(row => row.sets && row.reps && row.targetLabel && row.trackingMode && row.restSeconds !== undefined && row.intensity)));
+  assert.ok(allExercises(plan).filter(row => row.trackingMode === "reps_per_side").every(row => row.targetLabel.includes("每侧")));
+  assert.ok(allExercises(plan).filter(row => ["duration", "distance"].includes(row.trackingMode)).every(row => !row.targetLabel.includes("次")));
 }
 
 {

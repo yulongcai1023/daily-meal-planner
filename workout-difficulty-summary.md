@@ -8,6 +8,7 @@
 - 名称包含 weighted 但没有负重器械：0
 - programRole 与 exerciseRole 冲突：0
 - 统计语义异常：0
+- 追踪模式异常：0
 - warmup / activation / skill_drill 仍计入有效组：0
 - cardio 被错误标记或计入肌肉有效组：0
 - 弃用动作迁移异常：0
