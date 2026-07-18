@@ -1,6 +1,6 @@
 # 健身动作结构报告
 
-生成时间：2026-07-18T03:13:56.131Z
+生成时间：2026-07-18T03:30:42.388Z
 
 | 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | 追踪模式 | 必需 equipmentOptions | 可选器械 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -87,8 +87,8 @@
 | jump_rope | 跳绳 | 3 | workset | cardio | 是 | 否 | duration | [jump_rope] | - |
 | low_impact_circuit | 低冲击循环训练 | 1 | workset | cardio | 是 | 否 | duration | [bodyweight] | - |
 | wall_push_up | 墙壁俯卧撑 | 1 | workset | primary_compound | 是 | 是 | reps | [bodyweight] | - |
-| high_incline_push_up | 高位上斜俯卧撑 | 1.3 | workset | primary_compound | 是 | 是 | reps | [bodyweight] | - |
-| low_incline_push_up | 低位上斜俯卧撑 | 2 | workset | primary_compound | 是 | 是 | reps | [bodyweight] | - |
+| high_incline_push_up | 高位上斜俯卧撑 | 1.3 | workset | primary_compound | 是 | 是 | reps | [bench] / [stable_platform] | - |
+| low_incline_push_up | 低位上斜俯卧撑 | 2 | workset | primary_compound | 是 | 是 | reps | [bench] / [box] / [stable_platform] | - |
 | weighted_push_up | 负重俯卧撑 | 5 | workset | primary_compound | 是 | 是 | reps | [weighted_vest] / [secured_sandbag] | - |
 | chair_sit_to_stand | 椅子坐站 | 1 | workset | primary_compound | 是 | 是 | reps | [chair] / [bench] / [stable_platform] | - |
 | box_squat | 徒手箱式深蹲 | 1.5 | workset | primary_compound | 是 | 是 | reps | [box] / [bench] / [stable_platform] | - |

@@ -128,6 +128,10 @@ assert.ok(EXERCISES.every(exercise => {
   assert.deepEqual(byId.wall_push_up.progressionIds, ["high_incline_push_up"]);
   assert.deepEqual(byId.high_incline_push_up.progressionIds, ["low_incline_push_up"]);
   assert.deepEqual(byId.low_incline_push_up.progressionIds, ["push_up"]);
+  assert.equal(byId.high_incline_push_up.equipmentOptions.some(option => option.length === 1 && option.includes("bodyweight")), false);
+  assert.equal(byId.low_incline_push_up.equipmentOptions.some(option => option.length === 1 && option.includes("bodyweight")), false);
+  assert.ok(byId.high_incline_push_up.equipmentOptions.some(option => option.includes("bench") || option.includes("stable_platform")));
+  assert.ok(byId.low_incline_push_up.equipmentOptions.some(option => option.includes("bench") || option.includes("box") || option.includes("stable_platform")));
   assert.equal(byId.kneeling_push_up.progressionIds.length, 0, "kneeling push-up should not be the only linear progression");
   assert.ok(byId.kneeling_push_up.suggestedNextIds.includes("push_up"));
   assert.ok(byId.kneeling_push_up.alternativeIds.includes("high_incline_push_up"));
@@ -447,6 +451,21 @@ assert.ok(EXERCISES.every(exercise => {
 }
 
 {
+  const bodyweightOnly = { ...base, trainingLocation: "homeNone", availableEquipment: ["无器械"], cardioPreference: "none" };
+  assert.equal(isExerciseAllowed(byId.wall_push_up, bodyweightOnly), true);
+  assert.equal(isExerciseAllowed(byId.high_incline_push_up, bodyweightOnly), false);
+  assert.equal(isExerciseAllowed(byId.low_incline_push_up, bodyweightOnly), false);
+  const bodyweightBench = { ...base, availableEquipment: ["无器械", "卧推凳"], trainingLocation: "homeSimple" };
+  assert.equal(isExerciseAllowed(byId.wall_push_up, bodyweightBench), true);
+  assert.equal(isExerciseAllowed(byId.high_incline_push_up, bodyweightBench), true);
+  assert.equal(isExerciseAllowed(byId.low_incline_push_up, bodyweightBench), true);
+  const bodyweightBox = { ...base, availableEquipment: ["无器械", "箱子"], trainingLocation: "homeSimple" };
+  assert.equal(isExerciseAllowed(byId.low_incline_push_up, bodyweightBox), true);
+  const bodyweightChair = { ...base, availableEquipment: ["无器械", "椅子"], trainingLocation: "homeSimple" };
+  assert.equal(isExerciseAllowed(byId.high_incline_push_up, bodyweightChair), false);
+}
+
+{
   const plan = makePlan({ sessionDuration: 20, cardioPreference: "none" });
   assert.ok(trainingDays(plan).every(day => day.estimatedDuration <= 25));
 }
@@ -472,7 +491,12 @@ assert.ok(EXERCISES.every(exercise => {
   assert.deepEqual(result.errors, []);
   assert.ok(result.plan);
   const days = trainingDays(result.plan);
+  const ids = exerciseIds(result.plan);
   assert.deepEqual(days.map(day => day.theme), ["推", "拉", "腿"]);
+  assert.equal(ids.includes("high_incline_push_up"), false);
+  assert.equal(ids.includes("low_incline_push_up"), false);
+  assert.equal(ids.includes("incline_push_up"), false);
+  assert.ok(ids.includes("wall_push_up") || ids.includes("kneeling_push_up") || ids.includes("push_up"));
   assert.ok(days.find(day => day.theme === "拉").exercises.length > 0);
   assert.ok(days.find(day => day.theme === "腿").exercises.some(row => ["自重深蹲", "臀桥", "提踵", "靠墙静蹲", "箭步蹲", "台阶踏步"].includes(row.name)));
   assert.ok(equipmentUsed(result.plan).every(item => item === "无器械" || item === "瑜伽垫"));

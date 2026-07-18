@@ -228,6 +228,18 @@ for (const exercise of EXERCISES) {
   if (exercise.id === "incline_plank" && !((exercise.equipmentOptions || []).every(option => option.some(id => raisedSupportEquipment.has(id))))) {
     incompleteEquipmentCombinations.push("incline_plank: 每个器械方案都必须包含抬高支撑面");
   }
+  if (["high_incline_push_up", "low_incline_push_up"].includes(exercise.id)) {
+    if (hasOption(exercise, option => option.length === 1 && option.includes("bodyweight"))) {
+      incompleteEquipmentCombinations.push(`${exercise.id}: 不得拥有单独 [bodyweight] 方案`);
+    }
+    const expected = exercise.id === "high_incline_push_up" ? ["bench", "stable_platform"] : ["bench", "box", "stable_platform"];
+    if (!hasOption(exercise, option => option.some(id => expected.includes(id)))) {
+      incompleteEquipmentCombinations.push(`${exercise.id}: 缺少抬高支撑面方案`);
+    }
+  }
+  if (/incline.*push_up/.test(exercise.id) && exercise.programRole === "workset" && !hasOption(exercise, option => option.some(id => raisedSupportEquipment.has(id)))) {
+    incompleteEquipmentCombinations.push(`${exercise.id}: 工作组上斜俯卧撑必须包含抬高支撑面`);
+  }
   if (exercise.id === "weighted_plank" && hasOption(exercise, option => option.includes("weight_plate"))) {
     incompleteEquipmentCombinations.push("weighted_plank: 与 weighted_push_up 保持一致，不保留单独 weight_plate 方案");
   }
