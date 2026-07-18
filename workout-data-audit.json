@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-07-18T05:05:42.667Z",
+  "exerciseCount": 106,
+  "graphOk": true,
+  "libraryOk": true,
+  "graphErrors": [],
+  "libraryErrors": [],
+  "outOfRangeDifficulty": [],
+  "missingEquipmentOptionSemantics": [],
+  "weightedWithoutLoadEquipment": [],
+  "programRoleExerciseRoleConflicts": [],
+  "invalidCountingSemantics": [],
+  "missingTrackingModes": [],
+  "skillDrillEffectiveSets": [],
+  "cardioMarkedCompoundOrAccessory": [],
+  "deprecatedReplacementIssues": [],
+  "incompleteEquipmentCombinations": [],
+  "missingSafetyRequirements": [],
+  "invalidActionIds": [],
+  "unreachableEquipmentIds": [],
+  "encodingAbnormalCharacterCount": 0
+}

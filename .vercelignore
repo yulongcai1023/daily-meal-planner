@@ -1,0 +1,11 @@
+node_modules/
+android/
+www/
+dist/
+tests/
+DailyMealPlanner-debug.apk
+*.apk
+
+.git/
+.firebase/
+.vercel/cache/

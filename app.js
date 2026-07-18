@@ -1,156 +1,319 @@
-const mealPools = {
-  breakfast: [
-    { icon: "🥣", name: "燕麦酸奶水果碗", foods: [["燕麦", 45, "g"], ["无糖酸奶", 180, "g"], ["蓝莓", 80, "g"], ["核桃", 10, "g"]], kcal: 430 },
-    { icon: "🍳", name: "全麦鸡蛋早餐盘", foods: [["全麦面包", 70, "g"], ["鸡蛋", 2, "个"], ["牛奶", 220, "ml"], ["小番茄", 100, "g"]], kcal: 455 },
-    { icon: "🌽", name: "玉米鸡蛋豆浆餐", foods: [["甜玉米", 180, "g"], ["鸡蛋", 1, "个"], ["无糖豆浆", 300, "ml"], ["橙子", 150, "g"]], kcal: 420 }
-  ],
-  lunch: [
-    { icon: "🍚", name: "杂粮饭香煎鸡胸", foods: [["杂粮饭", 180, "g"], ["鸡胸肉", 150, "g"], ["西兰花", 180, "g"], ["橄榄油", 8, "g"]], kcal: 640 },
-    { icon: "🐟", name: "糙米清蒸鱼套餐", foods: [["糙米饭", 180, "g"], ["鲈鱼", 180, "g"], ["彩椒菌菇", 200, "g"], ["烹调油", 8, "g"]], kcal: 625 },
-    { icon: "🥩", name: "藜麦牛肉时蔬碗", foods: [["藜麦饭", 180, "g"], ["瘦牛肉", 140, "g"], ["混合时蔬", 220, "g"], ["烹调油", 8, "g"]], kcal: 655 }
-  ],
-  snack: [
-    { icon: "🍎", name: "水果坚果加餐", foods: [["苹果", 180, "g"], ["巴旦木", 15, "g"]], kcal: 180 },
-    { icon: "🥛", name: "牛奶香蕉加餐", foods: [["低脂牛奶", 220, "ml"], ["香蕉", 100, "g"]], kcal: 195 },
-    { icon: "🍠", name: "酸奶红薯加餐", foods: [["无糖酸奶", 120, "g"], ["蒸红薯", 100, "g"]], kcal: 180 }
-  ],
-  dinner: [
-    { icon: "🥗", name: "南瓜虾仁暖沙拉", foods: [["南瓜", 220, "g"], ["虾仁", 160, "g"], ["绿叶菜", 220, "g"], ["全麦面包", 50, "g"], ["橄榄油", 8, "g"]], kcal: 570 },
-    { icon: "🍲", name: "豆腐鸡肉荞麦面", foods: [["荞麦面", 80, "g"], ["鸡腿肉去皮", 120, "g"], ["北豆腐", 100, "g"], ["青菜", 200, "g"]], kcal: 590 },
-    { icon: "🥘", name: "番茄牛肉土豆煲", foods: [["瘦牛肉", 130, "g"], ["土豆", 180, "g"], ["番茄", 200, "g"], ["米饭", 100, "g"], ["烹调油", 6, "g"]], kcal: 605 }
-  ]
+﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  serverTimestamp,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { createDailyMenu, getRecipeDatabaseStats } from "./recipe-engine.js?v=20260715-strict2";
+import { EXERCISES, SPLITS, generateWorkoutPlan, getExerciseAlternatives, normalizeWorkoutLogEntry, validateSplitCompatibility, validateWorkoutPlan } from "./workout-engine.js?v=20260716-fitness-ui25";
+import { renderFitnessDashboard, renderSheetOptions, renderTrainingOptionList } from "./fitness-ui.js?v=20260716-fitness-ui25";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD2POa9NJxDPVz0CfCHVQQJEYnYkmUAnEM",
+  authDomain: "food-b5162.firebaseapp.com",
+  projectId: "food-b5162",
+  storageBucket: "food-b5162.firebasestorage.app",
+  messagingSenderId: "467674185358",
+  appId: "1:467674185358:web:99c6473e18219e7a6d13df",
+  measurementId: "G-KQ8G0VY4S2"
 };
 
-function addRecipes(category, recipes) {
-  mealPools[category].push(...recipes.map(([icon, name, kcal, foods]) => ({ icon, name, kcal, foods })));
-}
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
-// 扩展菜谱库：每个餐段新增 25 道，共新增 100 道。
-addRecipes("breakfast", [
-  ["🥣", "小米南瓜粥配鸡蛋", 410, [["小米粥", 300, "g"], ["南瓜", 120, "g"], ["鸡蛋", 1, "个"], ["牛奶", 200, "ml"]]],
-  ["🍠", "紫薯牛奶早餐盘", 425, [["紫薯", 180, "g"], ["牛奶", 250, "ml"], ["鸡蛋", 1, "个"], ["猕猴桃", 100, "g"]]],
-  ["🥪", "金枪鱼全麦三明治", 450, [["全麦面包", 80, "g"], ["水浸金枪鱼", 90, "g"], ["生菜", 50, "g"], ["番茄", 80, "g"], ["低脂奶酪", 20, "g"]]],
-  ["🥞", "香蕉燕麦松饼", 440, [["燕麦", 55, "g"], ["香蕉", 100, "g"], ["鸡蛋", 1, "个"], ["无糖酸奶", 120, "g"]]],
-  ["🍜", "番茄鸡蛋荞麦面", 455, [["荞麦面", 70, "g"], ["鸡蛋", 1, "个"], ["番茄", 180, "g"], ["青菜", 100, "g"]]],
-  ["🥯", "全麦贝果牛油果蛋", 470, [["全麦贝果", 80, "g"], ["牛油果", 50, "g"], ["鸡蛋", 1, "个"], ["生菜", 60, "g"]]],
-  ["🍚", "杂粮饭团豆浆餐", 430, [["杂粮饭团", 160, "g"], ["无糖豆浆", 300, "ml"], ["黄瓜", 100, "g"]]],
-  ["🥣", "红豆薏米粥早餐", 420, [["红豆薏米粥", 320, "g"], ["鸡蛋", 1, "个"], ["原味酸奶", 150, "g"]]],
-  ["🌯", "鸡肉蔬菜早餐卷", 460, [["全麦饼", 70, "g"], ["鸡胸肉", 90, "g"], ["彩椒", 80, "g"], ["生菜", 60, "g"]]],
-  ["🥛", "黑芝麻燕麦豆浆", 415, [["燕麦", 45, "g"], ["无糖豆浆", 280, "ml"], ["黑芝麻", 10, "g"], ["梨", 150, "g"]]],
-  ["🥚", "菠菜鸡蛋全麦吐司", 435, [["全麦吐司", 75, "g"], ["鸡蛋", 2, "个"], ["菠菜", 100, "g"], ["牛奶", 150, "ml"]]],
-  ["🌽", "山药玉米早餐盘", 405, [["山药", 150, "g"], ["玉米", 120, "g"], ["鸡蛋", 1, "个"], ["无糖豆浆", 200, "ml"]]],
-  ["🥣", "藜麦苹果肉桂粥", 400, [["藜麦", 45, "g"], ["燕麦", 25, "g"], ["苹果", 120, "g"], ["牛奶", 180, "ml"]]],
-  ["🥪", "烟熏三文鱼开放吐司", 465, [["全麦面包", 75, "g"], ["烟熏三文鱼", 70, "g"], ["低脂奶酪", 25, "g"], ["黄瓜", 100, "g"]]],
-  ["🍲", "青菜瘦肉燕麦粥", 425, [["燕麦米", 60, "g"], ["瘦猪肉", 80, "g"], ["青菜", 120, "g"], ["香菇", 50, "g"]]],
-  ["🥔", "土豆鸡蛋酸奶盘", 440, [["蒸土豆", 220, "g"], ["鸡蛋", 2, "个"], ["无糖酸奶", 150, "g"], ["小番茄", 100, "g"]]],
-  ["🍌", "花生香蕉隔夜燕麦", 455, [["燕麦", 50, "g"], ["牛奶", 180, "ml"], ["香蕉", 100, "g"], ["花生酱", 12, "g"]]],
-  ["🥟", "白菜鸡肉蒸饺早餐", 445, [["鸡肉蒸饺", 180, "g"], ["无糖豆浆", 250, "ml"], ["橙子", 120, "g"]]],
-  ["🍳", "蘑菇蛋卷配全麦面包", 430, [["鸡蛋", 2, "个"], ["蘑菇", 100, "g"], ["全麦面包", 65, "g"], ["牛奶", 150, "ml"]]],
-  ["🥣", "莲子百合杂粮粥", 405, [["杂粮粥", 320, "g"], ["莲子", 20, "g"], ["百合", 30, "g"], ["鸡蛋", 1, "个"]]],
-  ["🍞", "低脂奶酪火鸡吐司", 450, [["全麦吐司", 80, "g"], ["火鸡胸肉", 80, "g"], ["低脂奶酪", 25, "g"], ["番茄", 100, "g"]]],
-  ["🥛", "可可香蕉酸奶碗", 420, [["无糖酸奶", 220, "g"], ["香蕉", 100, "g"], ["燕麦", 35, "g"], ["可可粉", 5, "g"], ["杏仁", 10, "g"]]],
-  ["🍚", "糙米鸡丝蔬菜粥", 430, [["糙米粥", 300, "g"], ["鸡丝", 90, "g"], ["胡萝卜", 60, "g"], ["青菜", 100, "g"]]],
-  ["🧇", "酸奶莓果全麦华夫", 445, [["全麦华夫饼", 100, "g"], ["无糖酸奶", 150, "g"], ["草莓", 120, "g"], ["核桃", 8, "g"]]],
-  ["🥙", "鹰嘴豆鸡蛋皮塔饼", 460, [["全麦皮塔饼", 75, "g"], ["鹰嘴豆", 90, "g"], ["鸡蛋", 1, "个"], ["生菜", 80, "g"]]]
-]);
-
-addRecipes("lunch", [
-  ["🍗", "黑椒鸡腿糙米饭", 650, [["糙米饭", 180, "g"], ["去皮鸡腿肉", 160, "g"], ["西兰花", 180, "g"], ["烹调油", 8, "g"]]],
-  ["🐟", "柠檬三文鱼藜麦碗", 670, [["三文鱼", 150, "g"], ["藜麦饭", 170, "g"], ["芦笋", 180, "g"], ["橄榄油", 6, "g"]]],
-  ["🥩", "芹菜牛肉杂粮饭", 640, [["瘦牛肉", 150, "g"], ["杂粮饭", 180, "g"], ["芹菜", 180, "g"], ["烹调油", 8, "g"]]],
-  ["🦐", "虾仁豆腐盖饭", 620, [["米饭", 180, "g"], ["虾仁", 140, "g"], ["嫩豆腐", 150, "g"], ["青菜", 150, "g"], ["烹调油", 7, "g"]]],
-  ["🍛", "咖喱鸡肉蔬菜饭", 660, [["糙米饭", 180, "g"], ["鸡胸肉", 150, "g"], ["土豆", 100, "g"], ["胡萝卜", 80, "g"], ["低脂咖喱汁", 50, "g"]]],
-  ["🍜", "番茄牛腩荞麦面", 655, [["荞麦面", 90, "g"], ["牛腩", 140, "g"], ["番茄", 220, "g"], ["青菜", 150, "g"]]],
-  ["🥘", "菌菇豆腐杂粮煲", 600, [["杂粮饭", 170, "g"], ["北豆腐", 200, "g"], ["混合菌菇", 180, "g"], ["青菜", 150, "g"], ["烹调油", 8, "g"]]],
-  ["🐔", "照烧鸡胸紫米饭", 645, [["紫米饭", 180, "g"], ["鸡胸肉", 160, "g"], ["卷心菜", 180, "g"], ["低糖照烧汁", 25, "g"]]],
-  ["🐟", "香煎鳕鱼土豆泥", 625, [["鳕鱼", 180, "g"], ["土豆泥", 220, "g"], ["四季豆", 180, "g"], ["橄榄油", 8, "g"]]],
-  ["🍚", "卤牛腱杂蔬饭", 650, [["米饭", 180, "g"], ["卤牛腱", 150, "g"], ["西兰花", 120, "g"], ["胡萝卜", 80, "g"]]],
-  ["🌯", "墨西哥鸡肉杂粮卷", 630, [["全麦饼", 90, "g"], ["鸡胸肉", 150, "g"], ["红腰豆", 80, "g"], ["彩椒", 120, "g"], ["生菜", 80, "g"]]],
-  ["🍲", "冬瓜虾仁豆腐汤饭", 605, [["糙米饭", 170, "g"], ["虾仁", 150, "g"], ["豆腐", 130, "g"], ["冬瓜", 250, "g"], ["烹调油", 6, "g"]]],
-  ["🥩", "洋葱猪里脊糙米饭", 635, [["糙米饭", 180, "g"], ["猪里脊", 160, "g"], ["洋葱", 100, "g"], ["彩椒", 120, "g"], ["烹调油", 8, "g"]]],
-  ["🐟", "清蒸鲳鱼红薯饭", 620, [["鲳鱼", 180, "g"], ["红薯", 220, "g"], ["青菜", 200, "g"], ["烹调油", 6, "g"]]],
-  ["🥗", "鸡肉鹰嘴豆能量碗", 640, [["鸡胸肉", 150, "g"], ["鹰嘴豆", 120, "g"], ["藜麦饭", 120, "g"], ["混合生菜", 180, "g"], ["橄榄油", 8, "g"]]],
-  ["🍝", "牛肉番茄全麦意面", 665, [["全麦意面", 95, "g"], ["瘦牛肉末", 140, "g"], ["番茄", 220, "g"], ["蘑菇", 100, "g"]]],
-  ["🦆", "冬笋鸭胸杂粮饭", 650, [["杂粮饭", 180, "g"], ["去皮鸭胸", 150, "g"], ["冬笋", 160, "g"], ["青菜", 140, "g"]]],
-  ["🍳", "番茄豆腐滑蛋饭", 610, [["米饭", 170, "g"], ["鸡蛋", 2, "个"], ["豆腐", 160, "g"], ["番茄", 200, "g"], ["烹调油", 7, "g"]]],
-  ["🐟", "金枪鱼玉米糙米碗", 625, [["糙米饭", 180, "g"], ["水浸金枪鱼", 150, "g"], ["玉米", 80, "g"], ["生菜", 150, "g"], ["牛油果", 40, "g"]]],
-  ["🍗", "香菇蒸鸡小米饭", 635, [["小米饭", 180, "g"], ["去皮鸡腿肉", 160, "g"], ["香菇", 100, "g"], ["青菜", 180, "g"]]],
-  ["🥘", "韩式瘦牛肉拌饭", 660, [["糙米饭", 180, "g"], ["瘦牛肉", 140, "g"], ["菠菜", 100, "g"], ["胡萝卜", 80, "g"], ["鸡蛋", 1, "个"]]],
-  ["🦐", "西葫芦虾仁藜麦饭", 615, [["藜麦饭", 180, "g"], ["虾仁", 170, "g"], ["西葫芦", 200, "g"], ["烹调油", 8, "g"]]],
-  ["🐔", "口蘑鸡肉荞麦饭", 630, [["荞麦饭", 180, "g"], ["鸡胸肉", 155, "g"], ["口蘑", 160, "g"], ["芦笋", 150, "g"]]],
-  ["🥣", "海带豆腐牛肉汤饭", 620, [["糙米饭", 170, "g"], ["瘦牛肉", 130, "g"], ["豆腐", 120, "g"], ["海带", 80, "g"], ["青菜", 150, "g"]]],
-  ["🌮", "黑豆鸡肉玉米饼", 645, [["玉米饼", 100, "g"], ["鸡胸肉", 150, "g"], ["黑豆", 90, "g"], ["番茄", 100, "g"], ["生菜", 80, "g"]]]
-]);
-
-addRecipes("snack", [
-  ["🍓", "草莓希腊酸奶", 175, [["希腊酸奶", 150, "g"], ["草莓", 150, "g"]]],
-  ["🥝", "猕猴桃腰果加餐", 180, [["猕猴桃", 180, "g"], ["腰果", 15, "g"]]],
-  ["🍐", "香梨核桃加餐", 185, [["梨", 200, "g"], ["核桃", 15, "g"]]],
-  ["🍊", "橙子低脂奶酪", 170, [["橙子", 200, "g"], ["低脂奶酪", 35, "g"]]],
-  ["🫐", "蓝莓燕麦酸奶杯", 195, [["无糖酸奶", 150, "g"], ["蓝莓", 100, "g"], ["燕麦", 15, "g"]]],
-  ["🥒", "黄瓜鹰嘴豆泥", 165, [["黄瓜", 180, "g"], ["鹰嘴豆泥", 55, "g"]]],
-  ["🍅", "小番茄鸡蛋加餐", 150, [["小番茄", 180, "g"], ["鸡蛋", 1, "个"]]],
-  ["🍑", "桃子巴旦木加餐", 180, [["桃子", 220, "g"], ["巴旦木", 15, "g"]]],
-  ["🍍", "菠萝茅屋奶酪杯", 190, [["菠萝", 150, "g"], ["茅屋奶酪", 100, "g"]]],
-  ["🍇", "葡萄开心果加餐", 200, [["葡萄", 160, "g"], ["开心果", 15, "g"]]],
-  ["🌽", "水煮玉米加餐", 175, [["甜玉米", 180, "g"]]],
-  ["🥚", "鸡蛋全麦脆饼", 185, [["鸡蛋", 1, "个"], ["全麦脆饼", 35, "g"]]],
-  ["🥛", "无糖豆浆核桃", 190, [["无糖豆浆", 300, "ml"], ["核桃", 12, "g"]]],
-  ["🍉", "西瓜酸奶杯", 165, [["西瓜", 280, "g"], ["无糖酸奶", 100, "g"]]],
-  ["🥕", "胡萝卜条花生酱", 180, [["胡萝卜", 180, "g"], ["无糖花生酱", 18, "g"]]],
-  ["🍒", "樱桃南瓜籽加餐", 185, [["樱桃", 180, "g"], ["南瓜籽", 15, "g"]]],
-  ["🥥", "椰香奇亚籽布丁", 195, [["低脂牛奶", 180, "ml"], ["奇亚籽", 18, "g"], ["椰蓉", 5, "g"]]],
-  ["🍌", "香蕉花生酱小食", 205, [["香蕉", 120, "g"], ["花生酱", 15, "g"]]],
-  ["🫛", "毛豆海苔加餐", 180, [["水煮毛豆仁", 130, "g"], ["海苔", 5, "g"]]],
-  ["🍎", "烤苹果肉桂酸奶", 175, [["苹果", 180, "g"], ["无糖酸奶", 100, "g"], ["肉桂粉", 2, "g"]]],
-  ["🍠", "紫薯牛奶加餐", 195, [["紫薯", 120, "g"], ["低脂牛奶", 180, "ml"]]],
-  ["🥣", "豆乳燕麦杯", 185, [["无糖豆浆", 180, "ml"], ["燕麦", 25, "g"], ["奇亚籽", 8, "g"]]],
-  ["🥭", "芒果酸奶杯", 190, [["芒果", 150, "g"], ["无糖酸奶", 150, "g"]]],
-  ["🧀", "奶酪全麦饼干", 200, [["低脂奶酪", 40, "g"], ["全麦饼干", 35, "g"]]],
-  ["🍋", "柚子杏仁加餐", 175, [["柚子", 250, "g"], ["杏仁", 15, "g"]]]
-]);
-
-addRecipes("dinner", [
-  ["🐟", "清蒸鳕鱼杂粮饭", 575, [["鳕鱼", 180, "g"], ["杂粮饭", 140, "g"], ["西兰花", 220, "g"], ["烹调油", 6, "g"]]],
-  ["🍗", "香草鸡胸烤时蔬", 560, [["鸡胸肉", 170, "g"], ["土豆", 160, "g"], ["西葫芦", 160, "g"], ["彩椒", 100, "g"], ["橄榄油", 8, "g"]]],
-  ["🥘", "虾仁豆腐菌菇煲", 535, [["虾仁", 160, "g"], ["豆腐", 180, "g"], ["菌菇", 180, "g"], ["青菜", 180, "g"], ["米饭", 100, "g"]]],
-  ["🥩", "芦笋牛肉藜麦盘", 590, [["瘦牛肉", 140, "g"], ["藜麦饭", 140, "g"], ["芦笋", 200, "g"], ["烹调油", 7, "g"]]],
-  ["🍲", "冬瓜鸡肉丸汤", 520, [["鸡肉丸", 170, "g"], ["冬瓜", 260, "g"], ["青菜", 160, "g"], ["红薯", 170, "g"]]],
-  ["🐟", "番茄巴沙鱼荞麦面", 555, [["巴沙鱼", 180, "g"], ["荞麦面", 70, "g"], ["番茄", 220, "g"], ["青菜", 180, "g"]]],
-  ["🥗", "金枪鱼土豆沙拉", 540, [["水浸金枪鱼", 150, "g"], ["土豆", 220, "g"], ["鸡蛋", 1, "个"], ["混合生菜", 180, "g"], ["橄榄油", 6, "g"]]],
-  ["🍛", "南瓜鸡肉咖喱", 580, [["鸡胸肉", 160, "g"], ["南瓜", 220, "g"], ["糙米饭", 130, "g"], ["洋葱", 80, "g"]]],
-  ["🥬", "白菜豆腐炖瘦肉", 525, [["瘦猪肉", 130, "g"], ["北豆腐", 160, "g"], ["白菜", 250, "g"], ["杂粮饭", 100, "g"]]],
-  ["🦐", "蒜香虾仁西兰花饭", 550, [["虾仁", 180, "g"], ["西兰花", 240, "g"], ["糙米饭", 140, "g"], ["橄榄油", 7, "g"]]],
-  ["🍝", "鸡肉蘑菇全麦意面", 590, [["全麦意面", 80, "g"], ["鸡胸肉", 140, "g"], ["蘑菇", 160, "g"], ["番茄", 150, "g"]]],
-  ["🐠", "香煎龙利鱼紫薯盘", 545, [["龙利鱼", 190, "g"], ["紫薯", 190, "g"], ["芦笋", 200, "g"], ["橄榄油", 7, "g"]]],
-  ["🍳", "西红柿豆腐炒蛋", 520, [["鸡蛋", 2, "个"], ["豆腐", 180, "g"], ["西红柿", 220, "g"], ["糙米饭", 110, "g"]]],
-  ["🥣", "山药排骨蔬菜汤", 570, [["瘦排骨", 150, "g"], ["山药", 180, "g"], ["胡萝卜", 100, "g"], ["青菜", 180, "g"]]],
-  ["🌯", "牛肉彩椒全麦卷", 585, [["全麦饼", 80, "g"], ["瘦牛肉", 140, "g"], ["彩椒", 160, "g"], ["生菜", 100, "g"], ["无糖酸奶酱", 30, "g"]]],
-  ["🐔", "口水鸡轻食荞麦碗", 575, [["去皮鸡腿肉", 160, "g"], ["荞麦面", 65, "g"], ["黄瓜", 150, "g"], ["豆芽", 120, "g"], ["低油酱汁", 25, "g"]]],
-  ["🍲", "海带豆腐蛤蜊汤饭", 525, [["蛤蜊肉", 150, "g"], ["豆腐", 160, "g"], ["海带", 80, "g"], ["糙米饭", 130, "g"], ["青菜", 150, "g"]]],
-  ["🥩", "萝卜炖牛腱杂粮饭", 595, [["牛腱", 150, "g"], ["白萝卜", 220, "g"], ["杂粮饭", 140, "g"], ["青菜", 150, "g"]]],
-  ["🍆", "肉末蒸茄子糙米饭", 550, [["瘦肉末", 130, "g"], ["茄子", 240, "g"], ["糙米饭", 140, "g"], ["烹调油", 6, "g"]]],
-  ["🐟", "鲈鱼豆腐青菜煲", 540, [["鲈鱼", 180, "g"], ["豆腐", 140, "g"], ["青菜", 220, "g"], ["红薯", 150, "g"]]],
-  ["🥗", "烤鸡鹰嘴豆沙拉", 565, [["鸡胸肉", 160, "g"], ["鹰嘴豆", 100, "g"], ["混合生菜", 220, "g"], ["全麦面包", 45, "g"], ["橄榄油", 7, "g"]]],
-  ["🍜", "酸汤肥牛魔芋面", 555, [["瘦肥牛", 150, "g"], ["魔芋面", 220, "g"], ["金针菇", 120, "g"], ["番茄", 180, "g"], ["玉米", 100, "g"]]],
-  ["🦆", "橙香鸭胸时蔬盘", 585, [["去皮鸭胸", 160, "g"], ["南瓜", 180, "g"], ["四季豆", 180, "g"], ["橙子", 100, "g"]]],
-  ["🥘", "扁豆鸡肉糙米煲", 570, [["鸡胸肉", 150, "g"], ["扁豆", 100, "g"], ["糙米饭", 140, "g"], ["番茄", 160, "g"], ["菠菜", 120, "g"]]],
-  ["🍄", "菌菇豆干荞麦饭", 525, [["荞麦饭", 140, "g"], ["豆干", 160, "g"], ["混合菌菇", 200, "g"], ["青菜", 180, "g"], ["烹调油", 7, "g"]]]
-]);
+// 食谱推荐逻辑已迁移到 recipe-engine.js：食材、做法、模板和份量都由模块化数据库动态组合。
 
 const form = document.querySelector("#profile-form");
 const results = document.querySelector("#results");
 let latestProfile = null;
 
+const authModal = document.querySelector("#auth-modal");
+const authForm = document.querySelector("#auth-form");
+const authUsername = document.querySelector("#auth-username");
+const authPassword = document.querySelector("#auth-password");
+const authConfirmPassword = document.querySelector("#auth-confirm-password");
+const authSecurityCode = document.querySelector("#auth-security-code");
+const authNewPassword = document.querySelector("#auth-new-password");
+const authError = document.querySelector("#auth-error");
+const toast = document.querySelector("#toast");
+const forgotPasswordButton = document.querySelector("#forgot-password");
+let authMode = "login";
+let currentUser = null;
+let currentUserProfile = null;
+let toastTimer = null;
+let currentWorkoutPlan = null;
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("is-visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+}
+
+function normalizeUsername(username) {
+  return username.trim().toLocaleLowerCase();
+}
+
+function validateUsername(username) {
+  return /^[\p{L}\p{N}_-]{3,20}$/u.test(username);
+}
+
+function usernameToAuthEmail(username) {
+  return `${normalizeUsername(username)}@daily-meal-planner.local`;
+}
+
+function setFieldVisibility(name, visible) {
+  const wrapper = document.querySelector(`[data-auth-field="${name}"]`);
+  if (!wrapper) return;
+  wrapper.hidden = !visible;
+  const input = wrapper.querySelector("input");
+  if (input) input.required = visible;
+}
+
+function newSalt() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function hashSecret(secret, salt) {
+  if (!globalThis.crypto?.subtle) throw new Error("当前浏览器不支持安全加密，请换用新版浏览器。");
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(secret), "PBKDF2", false, ["deriveBits"]);
+  const digest = await crypto.subtle.deriveBits({
+    name: "PBKDF2",
+    salt: encoder.encode(salt),
+    iterations: 120000,
+    hash: "SHA-256"
+  }, keyMaterial, 256);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  document.querySelectorAll("[data-auth-mode]").forEach(tab => {
+    const active = tab.dataset.authMode === mode;
+    tab.classList.toggle("is-active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+  const isLogin = mode === "login";
+  const isRegister = mode === "register";
+  const isRecover = mode === "recover";
+  document.querySelector("#auth-title").textContent = isLogin ? "欢迎回来" : isRegister ? "创建云端账号" : "找回密码";
+  document.querySelector("#auth-description").textContent = isLogin
+    ? "输入用户名和密码，登录后自动从 Firebase 恢复身体数据。"
+    : isRegister
+      ? "注册用户名后，每次生成食谱都会自动同步到 Firebase。"
+      : "输入用户名、安全码和新密码，验证通过后重置登录密码。";
+  document.querySelector("#auth-submit").textContent = isLogin ? "登录并恢复档案" : isRegister ? "注册并开始使用" : "验证安全码并重置密码";
+  authPassword.autocomplete = isLogin ? "current-password" : "new-password";
+  setFieldVisibility("password", !isRecover);
+  setFieldVisibility("confirm-password", isRegister);
+  setFieldVisibility("security-code", isRegister || isRecover);
+  setFieldVisibility("new-password", isRecover);
+  forgotPasswordButton.hidden = isRecover;
+  authError.textContent = "";
+}
+
+function openAuth(mode = "login") {
+  setAuthMode(mode);
+  authModal.classList.add("is-open");
+  authModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  authUsername.focus();
+}
+
+function closeAuth() {
+  authModal.classList.remove("is-open");
+  authModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+  authForm.reset();
+  authError.textContent = "";
+}
+
+function applyProfile(profile) {
+  if (!profile) return;
+  document.querySelector("#height").value = profile.height;
+  document.querySelector("#weight").value = profile.weight;
+  document.querySelector("#age").value = profile.age;
+  document.querySelector("#sex").value = profile.sex;
+  const activity = document.querySelector(`input[name="activity"][value="${profile.activity}"]`);
+  const goal = document.querySelector(`input[name="goal"][value="${profile.goal}"]`);
+  if (activity) activity.checked = true;
+  if (goal) goal.checked = true;
+}
+
+async function loadCloudUser(uid) {
+  const snapshot = await getDoc(doc(db, "users", uid));
+  return snapshot.exists() ? snapshot.data() : null;
+}
+
+function formatFirebaseError(error) {
+  const messages = {
+    "auth/email-already-in-use": "这个邮箱已经注册过，请直接登录。",
+    "auth/invalid-email": "请输入有效的邮箱地址。",
+    "auth/invalid-credential": "用户名或密码不正确。",
+    "auth/user-not-found": "没有找到这个用户名对应的账号。",
+    "auth/wrong-password": "用户名或密码不正确。",
+    "auth/weak-password": "密码强度太弱，至少需要 6 个字符。",
+    "auth/operation-not-allowed": "Firebase 还没有启用邮箱密码登录，请先在 Firebase Console 开启 Email/Password。",
+    "permission-denied": "Firestore 权限不足，请确认安全规则已部署。",
+    "auth/username-taken": "这个用户名已经被注册，请换一个。",
+    "auth/recovery-failed": "用户名或安全码不正确。"
+  };
+  return messages[error.code] || error.message || "操作失败，请稍后重试。";
+}
+
+async function updateAuthUI(restoreProfile = false) {
+  if (!currentUser) {
+    document.querySelector("#guest-actions").hidden = false;
+    document.querySelector("#user-actions").hidden = true;
+    return;
+  }
+  document.querySelector("#guest-actions").hidden = true;
+  document.querySelector("#user-actions").hidden = false;
+  document.querySelector("#current-username").textContent = currentUserProfile?.username || currentUser.email || "已登录用户";
+  if (restoreProfile) {
+    try {
+      currentUserProfile = await loadCloudUser(currentUser.uid);
+      document.querySelector("#current-username").textContent = currentUserProfile?.username || currentUser.email || "已登录用户";
+      if (currentUserProfile?.profile) {
+        applyProfile(currentUserProfile.profile);
+        latestProfile = currentUserProfile.profile;
+        showToast("已从 Firebase 恢复个人数据");
+      }
+    } catch (error) {
+      showToast(formatFirebaseError(error));
+    }
+  }
+}
+
+async function saveProfileForCurrentUser(profile) {
+  if (!currentUser) return;
+  await setDoc(doc(db, "users", currentUser.uid), {
+    username: currentUserProfile?.username || null,
+    authEmail: currentUser.email,
+    profile,
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+  showToast("个人数据已同步到 Firebase");
+}
+
+document.querySelector("#open-auth").addEventListener("click", () => openAuth("login"));
+document.querySelector("#logout-button").addEventListener("click", async () => {
+  await signOut(auth);
+  showToast("已退出登录");
+});
+forgotPasswordButton.addEventListener("click", () => setAuthMode("recover"));
+document.querySelectorAll("[data-close-auth]").forEach(element => element.addEventListener("click", closeAuth));
+document.querySelectorAll("[data-auth-mode]").forEach(tab => tab.addEventListener("click", () => setAuthMode(tab.dataset.authMode)));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && authModal.classList.contains("is-open")) closeAuth();
+});
+
+authForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  authError.textContent = "";
+  const username = authUsername.value.trim();
+  const normalizedUsername = normalizeUsername(username);
+  const password = authPassword.value;
+  const confirmPassword = authConfirmPassword.value;
+  const securityCode = authSecurityCode.value;
+  const newPassword = authNewPassword.value;
+  if (!validateUsername(username)) {
+    authError.textContent = "用户名需为 3–20 个文字、字母、数字、下划线或短横线。";
+    return;
+  }
+  if (authMode !== "recover" && password.length < 6) {
+    authError.textContent = "密码至少需要 6 个字符。";
+    return;
+  }
+  if (authMode === "register" && password !== confirmPassword) {
+    authError.textContent = "两次输入的密码不一致。";
+    return;
+  }
+  if ((authMode === "register" || authMode === "recover") && securityCode.length < 6) {
+    authError.textContent = "安全码至少需要 6 个字符。";
+    return;
+  }
+  if (authMode === "recover" && newPassword.length < 6) {
+    authError.textContent = "新密码至少需要 6 个字符。";
+    return;
+  }
+  try {
+    if (authMode === "register") {
+      const usernameRef = doc(db, "usernames", normalizedUsername);
+      const existingUsername = await getDoc(usernameRef);
+      if (existingUsername.exists()) throw { code: "auth/username-taken" };
+      const authEmail = usernameToAuthEmail(username);
+      const credential = await createUserWithEmailAndPassword(auth, authEmail, password);
+      const recoverySalt = newSalt();
+      const recoveryCodeHash = await hashSecret(securityCode, recoverySalt);
+      await setDoc(doc(db, "users", credential.user.uid), {
+        username,
+        normalizedUsername,
+        authEmail,
+        recoverySalt,
+        recoveryCodeHash,
+        profile: null,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(usernameRef, {
+        uid: credential.user.uid,
+        username,
+        authEmail,
+        createdAt: serverTimestamp()
+      });
+    } else {
+      if (authMode === "recover") {
+        const response = await fetch("/api/recover-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, securityCode, newPassword })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw { code: result.code || "auth/recovery-failed", message: result.message };
+        await signInWithEmailAndPassword(auth, usernameToAuthEmail(username), newPassword);
+      } else {
+        await signInWithEmailAndPassword(auth, usernameToAuthEmail(username), password);
+      }
+    }
+    closeAuth();
+    showToast(authMode === "register" ? "注册成功，已登录" : authMode === "recover" ? "密码已重置并登录" : "登录成功");
+  } catch (error) {
+    authError.textContent = formatFirebaseError(error);
+  }
+});
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if (!user) currentUserProfile = null;
+  updateAuthUI(true);
+});
+
 function calculate(profile) {
   const { height, weight, age, sex, activity, goal } = profile;
   const bmr = 10 * weight + 6.25 * height - 5 * age + (sex === "male" ? 5 : -161);
   const maintenance = bmr * activity;
-  const multiplier = goal === "lose" ? .85 : goal === "gain" ? 1.1 : 1;
+  const multiplier = goal === "lose" ? .85 : goal === "gain" ? 1.12 : 1;
   const lowerLimit = sex === "male" ? 1500 : 1200;
   const calories = Math.round(Math.max(maintenance * multiplier, lowerLimit) / 10) * 10;
-  const protein = Math.round(weight * (goal === "lose" ? 1.6 : goal === "gain" ? 1.7 : 1.4));
-  const fat = Math.round(calories * .27 / 9);
+  const activityProteinBonus = activity >= 1.725 ? .25 : activity >= 1.55 ? .15 : activity >= 1.375 ? .05 : 0;
+  const proteinPerKg = (goal === "lose" ? 1.7 : goal === "gain" ? 1.85 : 1.45) + activityProteinBonus;
+  const protein = Math.round(weight * proteinPerKg);
+  const fatRatio = goal === "lose" ? .25 : goal === "gain" ? .26 : .28;
+  const fat = Math.round(calories * fatRatio / 9);
   const carbs = Math.round((calories - protein * 4 - fat * 9) / 4);
   const bmi = weight / ((height / 100) ** 2);
   return { bmr: Math.round(bmr), maintenance: Math.round(maintenance), calories, protein, fat, carbs, bmi, floorApplied: maintenance * multiplier < lowerLimit };
@@ -163,24 +326,8 @@ function bmiText(bmi) {
   return "较高";
 }
 
-let previousMealNames = new Set();
-
-function pick(pool) {
-  const freshChoices = pool.filter(meal => !previousMealNames.has(meal.name));
-  const choices = freshChoices.length ? freshChoices : pool;
-  return choices[Math.floor(Math.random() * choices.length)];
-}
-
-function createMenu(target) {
-  const selected = [pick(mealPools.breakfast), pick(mealPools.lunch), pick(mealPools.snack), pick(mealPools.dinner)];
-  previousMealNames = new Set(selected.map(meal => meal.name));
-  const baseTotal = selected.reduce((sum, meal) => sum + meal.kcal, 0);
-  const scale = target / baseTotal;
-  return selected.map(meal => ({
-    ...meal,
-    kcal: Math.round(meal.kcal * scale / 5) * 5,
-    foods: meal.foods.map(([food, amount, unit]) => [food, unit === "个" ? Math.max(1, Math.round(amount * scale)) : Math.round(amount * scale / 5) * 5, unit])
-  }));
+function createMenu(profile, nutrition) {
+  return createDailyMenu(profile, nutrition);
 }
 
 const recipeModal = document.querySelector("#recipe-modal");
@@ -189,28 +336,41 @@ let recipeReturnFocus = null;
 
 function recipeInstructions(meal, mealType) {
   const names = meal.foods.map(([name]) => name);
-  const main = names[0];
-  const protein = names.find(name => /鸡|鱼|虾|牛|猪|鸭|蛋|豆腐|豆干|金枪鱼|蛤蜊/.test(name));
-  const vegetables = names.filter(name => /菜|瓜|番茄|西兰花|芦笋|彩椒|蘑菇|菌菇|胡萝卜|黄瓜|茄子|笋|豆芽|芹菜|洋葱/.test(name)).join("、");
-  const finish = "装盘后趁热食用；盐和酱料少量添加，并将实际使用的烹调油计入当天摄入。";
+  const first = names[0] || "食材";
+  const rest = names.slice(1);
+  const restText = rest.join("、");
+  const noCook = /酸奶|水果|坚果|奇亚籽|奶酪/.test(meal.name) || names.some(name => /酸奶|水果|坚果|奇亚籽|奶酪|巴旦木|杏仁|核桃|腰果|开心果|榛子/.test(name));
 
-  if (mealType === "加餐") {
-    if (/玉米|紫薯|红薯|鸡蛋|毛豆/.test(meal.name)) return { time: "10–20 分钟", steps: ["将需要加热的食材洗净；薯类保留外皮蒸制，鸡蛋或毛豆用清水煮熟。", "薯类蒸至筷子可轻松穿透，鸡蛋全熟后过凉水剥壳，毛豆沥干。", `按食谱份量搭配${names.join("、")}，坚果或海苔最后加入。`, "分装后即可食用；若提前准备，请冷藏并在当天吃完。"], tip: "加餐用于连接两顿正餐，不必额外叠加甜饮或糕点。" };
-    return { time: "5 分钟", steps: ["水果洗净，需去皮或去核的食材处理成一口大小。", "酸奶或奶酪从冰箱取出回温片刻；坚果保持原味，不额外加糖。", `按食谱份量将${names.join("、")}装入碗或便携餐盒。`, "食用前再混合，口感更好；制作后尽快食用。"], tip: "选择无糖乳制品与原味坚果，可减少隐形糖和盐。" };
+  if (noCook) {
+    return {
+      time: meal.time || "3–10 分钟",
+      steps: [
+        `将${names.filter(name => !/酸奶|奶酪|燕麦|奇亚籽|杏仁|核桃|腰果|开心果|榛子|巴旦木/.test(name)).join("、") || first}洗净切块。`,
+        `杯中加入${names.filter(name => /酸奶|奶酪|燕麦|奇亚籽/.test(name)).join("、") || first}。`,
+        restText ? `放入${restText}。` : `放入${first}。`,
+        `轻轻混合${names.join("、")}，摆盘即可。`
+      ],
+      tip: "此兜底做法只使用当前食材列表，不额外引入未列出的食材或加热动作。"
+    };
   }
-  if (/粥/.test(meal.name)) return { time: "30–40 分钟", steps: [`将${main}淘洗后浸泡 15 分钟；其余食材洗净切成小块。`, `锅中加入约食材体积 6–8 倍的水，大火煮开后转小火，期间搅拌防止粘底。`, `煮约 20 分钟后加入${protein || "配菜"}${vegetables ? `和${vegetables}` : ""}，继续煮至软熟。`, "根据稠度补少量热水，确认肉类和蛋类完全熟透后关火。", finish], tip: "谷物提前浸泡能缩短煮制时间；不要用大量糖或咸菜调味。" };
-  if (/面|意面/.test(meal.name)) return { time: "20–30 分钟", steps: [`将${protein || "主要食材"}切成适口大小，蔬菜洗净切好；肉类可用少量胡椒腌 5 分钟。`, `水沸后放入${main}，按包装时间煮至适口，捞出并保留半碗面汤。`, `另锅加入食谱中的油，先将${protein || "配菜"}炒至熟透，再加入${vegetables || "蔬菜"}翻炒。`, "加入面条和少量面汤翻拌 1–2 分钟，让汤汁均匀附着。", finish], tip: "面条煮好后无需过度冲洗；用番茄、菌菇和香辛料增加风味，可少放盐。" };
-  if (/汤|煲|炖|咖喱/.test(meal.name)) return { time: "30–45 分钟", steps: [`将${protein || main}处理成 2–3 厘米小块，${vegetables || "蔬菜"}洗净切块。`, `锅中放入食谱所列的油，将${protein || main}快速翻炒至表面变色；豆腐和鱼肉可省略煸炒。`, "加入耐煮食材和适量热水，大火煮开后转小火，加盖焖煮 15–25 分钟。", "最后加入叶菜或易熟食材，再煮 3–5 分钟，确认中心完全熟透。", finish], tip: "汤汁以能浸没大部分食材为宜；喝汤也会摄入盐分，不建议额外勾芡。" };
-  if (/沙拉|碗|盘/.test(meal.name)) return { time: "20–30 分钟", steps: [`将${protein || main}提前解冻并擦干，谷物或薯类按食谱份量煮熟。`, `平底锅用食谱中的油将${protein || main}煎至两面上色、中心熟透，静置 2 分钟后切块。`, `${vegetables || "蔬菜"}洗净沥干；需要熟食的蔬菜焯水或烤熟。`, "依次铺入主食、蔬菜和蛋白质食材，用少量醋、胡椒或柠檬汁拌匀。", finish], tip: "沙拉酱热量容易被忽略，优先用柠檬汁、醋和少量橄榄油调味。" };
-  if (/三明治|吐司|卷|饼|贝果|饭团|华夫|松饼/.test(meal.name)) return { time: "15–25 分钟", steps: [`将${protein || main}和需要加热的配菜分别煮熟或煎熟，蔬菜洗净并充分沥水。`, "面包或饼皮用无油平底锅小火加热 1–2 分钟，使表面微脆。", `按食谱份量依次放入${names.join("、")}，尽量铺放均匀。`, "卷紧或合上后从中间切开；饭团类用湿手压紧成形。", finish], tip: "选择全麦、低糖主食；酱料薄薄一层即可，避免同时使用多种高脂酱。" };
-  return { time: "25–35 分钟", steps: [`将${protein || main}切成均匀小块，${vegetables || "蔬菜"}洗净切好；主食提前煮熟。`, `肉类用少量胡椒腌 5–10 分钟；锅烧热后加入食谱所列的油，将${protein || main}炒至变色。`, `加入${vegetables || "配菜"}，按耐熟程度先后下锅，中火翻炒至断生。`, "加入少量水或低盐调味汁，翻炒均匀并确认所有蛋白质食材完全熟透。", `搭配${names.find(name => /饭|米|藜麦|薯|玉米/.test(name)) || "食谱中的主食"}装盘，${finish}`], tip: "肉类切成相近大小更容易均匀熟透；用葱姜蒜、黑胡椒等替代部分盐。" };
+
+  return {
+    time: meal.time || "15–30 分钟",
+    steps: [
+      `将${names.join("、")}按食谱份量准备好。`,
+      restText ? `处理${first}，并将${restText}洗净切好。` : `处理${first}至适口大小。`,
+      `按菜品需要完成${names.join("、")}的熟制或组合。`,
+      `确认${names.join("、")}状态适口后装盘。`
+    ],
+    tip: "此兜底做法只使用当前食材列表，不额外引入未列出的食材。"
+  };
 }
 
 function openRecipe(meal, mealType, trigger) {
-  const guide = recipeInstructions(meal, mealType);
+  const guide = meal.steps ? { time: meal.time, steps: meal.steps, tip: meal.tip || "按需微调盐和酱料，烹调油建议计量使用。" } : recipeInstructions(meal, mealType);
   recipeReturnFocus = trigger;
   document.querySelector("#recipe-detail-icon").textContent = meal.icon;
-  document.querySelector("#recipe-detail-meta").textContent = `${mealType} · 约 ${meal.kcal} kcal · ${guide.time}`;
+  document.querySelector("#recipe-detail-meta").textContent = `${mealType} · 约 ${meal.kcal} kcal · 蛋白 ${meal.protein || "-"}g · 脂肪 ${meal.fat || "-"}g · 碳水 ${meal.carbs || "-"}g · ${guide.time}`;
   document.querySelector("#recipe-title").textContent = meal.name;
   document.querySelector("#recipe-ingredients").innerHTML = meal.foods.map(([name, amount, unit]) => `<li><span>${name}</span><b>${amount}${unit}</b></li>`).join("");
   document.querySelector("#recipe-steps").innerHTML = guide.steps.map(step => `<li>${step}</li>`).join("");
@@ -235,13 +395,14 @@ document.addEventListener("keydown", event => {
 
 function render(profile) {
   const nutrition = calculate(profile);
-  const menu = createMenu(nutrition.calories);
+  const menu = createMenu(profile, nutrition);
   const actual = menu.reduce((sum, meal) => sum + meal.kcal, 0);
   const labels = ["早餐", "午餐", "加餐", "晚餐"];
   const goalLabels = { lose: "温和减脂", maintain: "保持体重", gain: "稳步增重" };
+  const stats = getRecipeDatabaseStats();
   results.innerHTML = `
     <div class="result-head">
-      <div><h2>今日食养方案</h2><p>${goalLabels[profile.goal]} · 预计维持热量 ${nutrition.maintenance} kcal · 菜谱库 ${Object.values(mealPools).reduce((sum, pool) => sum + pool.length, 0)} 道</p></div>
+      <div><h2>今日食养方案</h2><p>${goalLabels[profile.goal]} · 预计维持热量 ${nutrition.maintenance} kcal · ${stats.proteins}类蛋白 / ${stats.vegetables}种蔬菜 / ${stats.methods}种做法 · 可组合约 ${stats.comboEstimate.toLocaleString()} 种</p></div>
       <button class="refresh-btn" id="refresh-menu" type="button">换一组 ↻</button>
     </div>
     <div class="metrics">
@@ -255,7 +416,7 @@ function render(profile) {
       ${menu.map((meal, index) => `
         <article class="meal" data-meal-index="${index}" role="button" tabindex="0" aria-label="查看${meal.name}的详细做法">
           <div class="meal-icon">${meal.icon}</div>
-          <div><h3>${labels[index]} · ${meal.name}</h3><p>${meal.foods.map(([f, a, u]) => `${f} ${a}${u}`).join(" ／ ")}</p><span class="meal-action">查看详细做法 →</span></div>
+          <div><h3>${labels[index]} · ${meal.name}</h3><p>${meal.foods.map(([f, a, u]) => `${f} ${a}${u}`).join(" ／ ")}</p><span class="meal-action">${meal.method || "家常"} · 蛋白 ${meal.protein || 0}g · 脂肪 ${meal.fat || 0}g · 碳水 ${meal.carbs || 0}g · 查看详细做法 →</span></div>
           <span class="meal-kcal">${meal.kcal} kcal</span>
         </article>`).join("")}
     </div>
@@ -271,7 +432,653 @@ function render(profile) {
   });
 }
 
-form.addEventListener("submit", event => {
+const TRAINING_STORAGE_KEY = "dailyMealPlanner.trainingSettings.v1";
+const TRAINING_OPTION_GROUPS = {
+  equipment: ["无器械", "瑜伽垫", "弹力带", "弹力带固定点", "可调哑铃", "固定哑铃", "壶铃", "杠铃", "深蹲架", "史密斯机", "卧推凳", "可调节卧凳", "拉力器", "高位下拉器", "腿举机", "腿屈伸机", "腿弯举机", "跑步机", "椭圆机", "单车", "划船机", "引体向上杆", "双杠", "牧师椅", "爬楼机", "器械推胸", "器械肩推", "髋外展机", "跳绳"],
+  limitations: ["无明显限制", "肩部不适", "腰部不适", "膝盖不适", "手腕不适", "肘部不适", "不能做深蹲类动作", "不能做硬拉类动作", "不适合高冲击"],
+  muscles: ["全身均衡", "胸", "背", "肩", "手臂", "臀", "腿", "核心"],
+  styles: ["喜欢自由重量", "喜欢固定器械", "喜欢自重训练", "喜欢力量训练", "喜欢循环训练", "不喜欢跑步", "不喜欢高强度间歇训练"]
+};
+
+const goalLabelMap = {
+  fatLoss: "减脂",
+  muscleGain: "增肌",
+  shape: "塑形",
+  strength: "力量提升",
+  conditioning: "体能提升",
+  health: "健康活动"
+};
+const secondaryGoalDefault = "health";
+const WORKOUT_PLAN_STORAGE_KEY = "dailyMealPlanner.latestWorkoutPlan.v1";
+const WORKOUT_LOG_STORAGE_KEY = "dailyMealPlanner.workoutLogs.v1";
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+}
+
+function setupSectionTabs() {
+  document.querySelectorAll(".top-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.sectionTarget;
+      document.querySelectorAll(".top-tab").forEach(item => item.classList.toggle("is-active", item === tab));
+      document.querySelectorAll(".app-section").forEach(section => {
+        const active = section.id === `${target}-section`;
+        section.classList.toggle("is-active", active);
+        section.hidden = !active;
+      });
+    });
+  });
+}
+
+function renderTagOptions(id, values, name, selected = []) {
+  const container = document.querySelector(id);
+  if (!container) return;
+  container.innerHTML = renderTrainingOptionList(id, values, name, selected);
+}
+
+function checkedValues(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).flatMap(input => {
+    if (input.dataset.values) return input.dataset.values.split("|").filter(Boolean);
+    return [input.value];
+  });
+}
+
+function syncEquipmentVisibility() {
+  const location = document.querySelector("#training-location")?.value;
+  const equipmentCard = document.querySelector("#equipment-subcard");
+  const search = document.querySelector("#equipment-search");
+  const equipmentInputs = Array.from(document.querySelectorAll('input[name="training-equipment"]'));
+  const noEquipmentInput = equipmentInputs.find(input => input.value === "无器械");
+  const noEquipmentTile = noEquipmentInput?.closest(".selector-tile");
+  const isHomeNoEquipment = location === "homeNone";
+  if (equipmentCard) {
+    equipmentCard.classList.toggle("is-hidden", isHomeNoEquipment);
+    equipmentCard.setAttribute("aria-hidden", String(isHomeNoEquipment));
+  }
+  if (search) search.disabled = isHomeNoEquipment;
+  if (noEquipmentTile) {
+    noEquipmentTile.classList.toggle("is-hidden-option", !isHomeNoEquipment);
+  }
+  if (isHomeNoEquipment) {
+    equipmentInputs.forEach(input => {
+      input.checked = input === noEquipmentInput;
+    });
+  } else if (noEquipmentInput?.checked) {
+    noEquipmentInput.checked = false;
+    const fallbackInput = equipmentInputs.find(input => input !== noEquipmentInput);
+    if (fallbackInput && !equipmentInputs.some(input => input.checked)) fallbackInput.checked = true;
+  }
+}
+
+function loadTrainingSettings() {
+  try {
+    return JSON.parse(localStorage.getItem(TRAINING_STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveTrainingSettings(settings) {
+  localStorage.setItem(TRAINING_STORAGE_KEY, JSON.stringify(settings));
+}
+
+async function saveWorkoutPlanForCurrentUser(settings, plan) {
+  if (!currentUser) return;
+  await setDoc(doc(db, "trainingProfiles", currentUser.uid), {
+    userId: currentUser.uid,
+    ...settings,
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+  await setDoc(doc(db, "workoutPlans", `${currentUser.uid}_${plan.id}`), {
+    userId: currentUser.uid,
+    ...plan,
+    status: "active",
+    version: 1,
+    updatedAt: serverTimestamp(),
+    createdAt: serverTimestamp()
+  }, { merge: true });
+}
+
+function collectTrainingSettings() {
+  const dislikedRaw = document.querySelector("#disliked-exercises")?.value || "";
+  let limitations = checkedValues("training-limitations");
+  if (limitations.includes("无明显限制") && limitations.length > 1) limitations = limitations.filter(item => item !== "无明显限制");
+  const trainingLocation = document.querySelector("#training-location").value;
+  return {
+    primaryGoal: document.querySelector("#training-primary-goal").value,
+    secondaryGoal: document.querySelector("#training-secondary-goal").value || "",
+    experienceLevel: document.querySelector("#experience-level").value,
+    weeklyTrainingDays: Number(document.querySelector("#weekly-training-days").value),
+    sessionDuration: Number(document.querySelector("#session-duration").value),
+    trainingLocation,
+    availableEquipment: trainingLocation === "homeNone" ? ["无器械"] : checkedValues("training-equipment"),
+    limitations,
+    priorityMuscles: checkedValues("training-muscles"),
+    preferredStyles: checkedValues("training-styles"),
+    selectedSplit: document.querySelector("#selected-split").value,
+    cardioPreference: document.querySelector("#cardio-preference").value,
+    dislikedExercises: dislikedRaw.split(/[，,、\n]/).map(item => item.trim()).filter(Boolean)
+  };
+}
+
+function syncSecondaryGoalOptions() {
+  const primary = document.querySelector("#training-primary-goal")?.value;
+  const secondary = document.querySelector("#training-secondary-goal");
+  if (!secondary) return;
+  Array.from(secondary.options).forEach(option => {
+    option.disabled = Boolean(option.value && option.value === primary);
+  });
+  if (secondary.value && secondary.value === primary) secondary.value = "";
+}
+
+function validateTrainingSettings(settings) {
+  const errors = [];
+  if (settings.primaryGoal && settings.secondaryGoal && settings.primaryGoal === settings.secondaryGoal) {
+    errors.push("主要目标和次要目标不能相同，请重新选择。");
+  }
+  if (!settings.availableEquipment.length && settings.trainingLocation !== "homeNone") {
+    errors.push("请至少选择一种可用器械；如果没有器械，请选择“无器械”。");
+  }
+  const compatibility = validateSplitCompatibility(settings);
+  if (!compatibility.ok) errors.push(`${compatibility.message} 建议改为「${SPLITS[compatibility.recommended]?.name || compatibility.recommended}」。`);
+  return errors;
+}
+
+function calendarSlotsForTrainingCount(count) {
+  return {
+    1: [0],
+    2: [0, 3],
+    3: [0, 2, 4],
+    4: [0, 1, 3, 5],
+    5: [0, 1, 2, 4, 5],
+    6: [0, 1, 2, 3, 4, 5]
+  }[Number(count)] || [0, 2, 4];
+}
+
+function themeForCalendarDay(settings = {}, dayNumber = 1) {
+  const split = SPLITS[settings.selectedSplit] || SPLITS.fullBody;
+  const slots = calendarSlotsForTrainingCount(settings.weeklyTrainingDays);
+  const slotIndex = slots.indexOf(Number(dayNumber) - 1);
+  if (slotIndex < 0) return "";
+  return split.sequence[slotIndex % split.sequence.length] || "";
+}
+
+function readableThemeHint(theme) {
+  if (/推|胸/.test(theme)) return "推类";
+  if (/拉|背/.test(theme)) return "拉类/背部";
+  if (/腿|臀|下肢/.test(theme)) return "腿臀";
+  if (/全身/.test(theme)) return "全身";
+  if (/肩/.test(theme)) return "肩部";
+  if (/手臂/.test(theme)) return "手臂";
+  return theme || "对应主题";
+}
+
+function formatWorkoutGenerationError(errors = [], warnings = [], settings = {}) {
+  const messages = errors.map(error => {
+    if (/没有可用动作/.test(error)) {
+      const dayMatch = error.match(/第\s*(\d+)\s*天/);
+      const dayNumber = dayMatch?.[1] || "";
+      const themeHint = readableThemeHint(themeForCalendarDay(settings, dayNumber));
+      const noEquipment = (settings.availableEquipment || []).length === 1 && (settings.availableEquipment || []).includes("无器械");
+      const suggestion = noEquipment
+        ? "家中无器械也可以训练腿部；如果缺少的是拉类/背部动作，建议选择弹力带或引体向上杆，或者改为「全身训练」让动作分布更均衡。"
+        : "建议减少相关身体限制、补充对应器械，或者把训练分化改为「全身训练」。";
+      return `当前器械、地点或身体限制下，第 ${dayNumber || "某"} 天缺少${themeHint}可用动作。${suggestion}`;
+    }
+    return error;
+  });
+  if (!messages.length && warnings.length) messages.push(...warnings);
+  return messages.join("；") || "当前设置暂时无法生成安全计划，请减少限制或增加可用器械。";
+}
+
+function applyTrainingSettings(settings = {}) {
+  const setValue = (id, value) => {
+    const element = document.querySelector(id);
+    if (element && value !== undefined) element.value = value;
+  };
+  setValue("#training-primary-goal", settings.primaryGoal);
+  setValue("#training-secondary-goal", settings.secondaryGoal ?? secondaryGoalDefault);
+  setValue("#experience-level", settings.experienceLevel);
+  setValue("#weekly-training-days", settings.weeklyTrainingDays);
+  setValue("#session-duration", settings.sessionDuration);
+  setValue("#training-location", settings.trainingLocation);
+  setValue("#selected-split", settings.selectedSplit);
+  setValue("#cardio-preference", settings.cardioPreference);
+  const disliked = document.querySelector("#disliked-exercises");
+  if (disliked && settings.dislikedExercises) disliked.value = settings.dislikedExercises.join("、");
+  renderTagOptions("#equipment-options", TRAINING_OPTION_GROUPS.equipment, "training-equipment", settings.availableEquipment || ["瑜伽垫", "可调哑铃"]);
+  renderTagOptions("#limitation-options", TRAINING_OPTION_GROUPS.limitations, "training-limitations", settings.limitations || ["无明显限制"]);
+  renderTagOptions("#muscle-options", TRAINING_OPTION_GROUPS.muscles, "training-muscles", settings.priorityMuscles || ["全身均衡"]);
+  renderTagOptions("#style-options", TRAINING_OPTION_GROUPS.styles, "training-styles", settings.preferredStyles || ["喜欢力量训练"]);
+  const experience = settings.experienceLevel || "beginner";
+  const segment = document.querySelector(`input[name="experience-segment"][value="${experience}"]`);
+  if (segment) segment.checked = true;
+  syncSecondaryGoalOptions();
+  syncEquipmentVisibility();
+}
+
+function updateTrainingCompletion() {
+  const checks = Array.from(document.querySelectorAll(".exercise-done"));
+  const done = checks.filter(input => input.checked).length;
+  const percent = checks.length ? Math.round(done / checks.length * 100) : 0;
+  document.querySelectorAll("#training-completion, #hero-training-completion").forEach(target => target.textContent = `${percent}%`);
+  document.querySelectorAll("#training-progress-bar, #hero-training-progress-bar").forEach(target => target.style.width = `${percent}%`);
+}
+
+function setWorkoutLoading(loading) {
+  const button = document.querySelector("#generate-workout-button");
+  if (!button) return;
+  button.disabled = loading;
+  button.classList.toggle("is-loading", loading);
+  button.innerHTML = loading ? `<span class="spinner"></span> 正在生成...` : `<span class="button-icon icon-flash" aria-hidden="true"></span>生成训练计划`;
+}
+
+function exerciseIcon(exercise) {
+  if (/胸/.test(exercise.category)) return "🏋️";
+  if (/背/.test(exercise.category)) return "🪽";
+  if (/肩|手臂/.test(exercise.category)) return "💪";
+  if (/腿|臀/.test(exercise.category)) return "🦵";
+  if (/核心/.test(exercise.category)) return "🔥";
+  if (/有氧/.test(exercise.category)) return "🏃";
+  return "🏋️";
+}
+
+function fallbackTargetLabel(exercise) {
+  const raw = exercise.defaultRepRange || exercise.reps || "";
+  if (exercise.trackingMode === "reps_per_side" || exercise.trackingMode === "duration_per_side") {
+    return String(raw).replace(/次\/侧/g, "次").replace(/秒\/侧/g, "秒").replace(/分钟\/侧/g, "分钟").replace(/^每侧\s*/, "").replace(/^/, "每侧 ");
+  }
+  return raw;
+}
+
+function openExerciseSheet(dayIndex, exerciseIndex) {
+  const sheet = document.querySelector("#exercise-sheet");
+  const options = document.querySelector("#sheet-options");
+  const current = currentWorkoutPlan?.days?.[dayIndex]?.exercises?.[exerciseIndex];
+  if (!sheet || !options || !current) return;
+  const alternatives = getExerciseAlternatives(current.exerciseId, currentWorkoutPlan.settings)
+    .filter(item => !currentWorkoutPlan.days[dayIndex].exercises.some(row => row.exerciseId === item.id));
+  options.innerHTML = renderSheetOptions(alternatives, dayIndex, exerciseIndex);
+  sheet.classList.add("is-open");
+  sheet.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function closeExerciseSheet() {
+  const sheet = document.querySelector("#exercise-sheet");
+  if (!sheet) return;
+  sheet.classList.remove("is-open");
+  sheet.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+function replaceExercise(dayIndex, exerciseIndex, altId) {
+  const next = EXERCISES.find(item => item.id === altId);
+  if (!next || !currentWorkoutPlan) return;
+  const current = currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex];
+  const original = { ...current };
+  currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex] = {
+    ...current,
+    exerciseId: next.id,
+    name: next.name,
+    englishName: next.englishName,
+    category: next.category,
+    targetMuscles: [...next.primaryMuscles, ...next.secondaryMuscles].filter((value, i, arr) => arr.indexOf(value) === i),
+    equipment: next.equipment,
+    instructions: next.instructions,
+    commonMistakes: next.commonMistakes,
+    movementPattern: next.movementPattern,
+    difficultyLevel: next.difficultyLevel,
+    difficultyScore: next.difficultyScore,
+    technicalComplexity: next.technicalComplexity,
+    stabilityDemand: next.stabilityDemand,
+    reps: next.defaultRepRange || current.reps,
+    trackingMode: next.trackingMode,
+    targetLabel: fallbackTargetLabel(next),
+    targetUnitLabel: { reps: "次数", reps_per_side: "每侧次数", duration: "时长", duration_per_side: "每侧时长", distance: "距离" }[next.trackingMode] || "次数",
+    loadEntryMode: next.loadEntryMode,
+    loadDirection: next.loadDirection,
+    optionalLogFields: next.optionalLogFields || [],
+    recommendationReasons: next.recommendationReasons || [],
+    isCompound: next.isCompound,
+    alternatives: getExerciseAlternatives(next.id, currentWorkoutPlan.settings).map(alt => ({ id: alt.id, name: alt.name }))
+  };
+  const validation = validateWorkoutPlan(currentWorkoutPlan, currentWorkoutPlan.settings);
+  if (!validation.ok) {
+    currentWorkoutPlan.days[dayIndex].exercises[exerciseIndex] = original;
+    showToast(validation.errors[0] || "替换后校验未通过。");
+    return;
+  }
+  closeExerciseSheet();
+  renderWorkoutPlan(currentWorkoutPlan);
+  showToast("替换动作已通过器械、身体限制和训练量校验。");
+}
+
+function selectWorkoutDay(dayIndex) {
+  document.querySelectorAll("[data-day-panel]").forEach(panel => {
+    const active = Number(panel.dataset.dayPanel) === dayIndex;
+    panel.classList.toggle("is-active", active);
+    panel.hidden = !active;
+  });
+  document.querySelectorAll("[data-select-day]").forEach(item => {
+    const active = Number(item.dataset.selectDay) === dayIndex;
+    item.classList.toggle("is-active", active);
+    item.setAttribute("aria-pressed", String(active));
+  });
+  const activeDay = currentWorkoutPlan?.days?.[dayIndex];
+  const summary = document.querySelector(".progress-summary");
+  if (summary && activeDay) {
+    const calories = activeDay.estimatedCaloriesRange ? `${activeDay.estimatedCaloriesRange.min}–${activeDay.estimatedCaloriesRange.max}` : activeDay.estimatedCalories || 0;
+    summary.querySelector("strong b").textContent = calories;
+  }
+}
+
+function selectExercisePage(dayIndex, exerciseIndex) {
+  const dayPanel = document.querySelector(`[data-day-panel="${dayIndex}"]`);
+  if (!dayPanel) return;
+  const cards = Array.from(dayPanel.querySelectorAll(".exercise-page-panel"));
+  if (!cards.length) return;
+  const nextIndex = Math.max(0, Math.min(exerciseIndex, cards.length - 1));
+  cards.forEach(card => {
+    const active = Number(card.dataset.exerciseIndex) === nextIndex;
+    card.classList.toggle("is-active", active);
+    card.hidden = !active;
+  });
+  const pager = dayPanel.querySelector(`[data-exercise-pager="${dayIndex}"]`);
+  if (!pager) return;
+  pager.dataset.currentExercise = String(nextIndex);
+  pager.querySelector("[data-exercise-page-current]").textContent = String(nextIndex + 1);
+  const title = cards[nextIndex]?.querySelector(".exercise-title-block h3")?.textContent || "";
+  const titleNode = pager.querySelector("[data-exercise-page-title]");
+  if (titleNode) titleNode.textContent = title;
+  pager.querySelectorAll("[data-exercise-page]").forEach(button => {
+    const active = Number(button.dataset.exercisePage) === nextIndex;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  pager.querySelectorAll("[data-exercise-page-step]").forEach(button => {
+    const step = Number(button.dataset.exercisePageStep);
+    button.disabled = (step < 0 && nextIndex === 0) || (step > 0 && nextIndex === cards.length - 1);
+  });
+}
+
+function loadWorkoutLogs() {
+  try {
+    return JSON.parse(localStorage.getItem(WORKOUT_LOG_STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveWorkoutLogs(logs) {
+  localStorage.setItem(WORKOUT_LOG_STORAGE_KEY, JSON.stringify(logs));
+}
+
+function exerciseFromLogElement(input) {
+  const raw = input.dataset.logKey || input.dataset.noteKey || input.dataset.exerciseDone || "";
+  const [dayIndex, exerciseIndex] = raw.split(":").map(Number);
+  return currentWorkoutPlan?.days?.[dayIndex]?.exercises?.[exerciseIndex] || null;
+}
+
+function restoredWorkoutLogValue(log, field, exercise) {
+  if (!log) return undefined;
+  const normalized = normalizeWorkoutLogEntry(log, exercise);
+  if (field === "repsPerSide" && normalized.repsPerSide !== undefined) return normalized.repsPerSide;
+  if (field === "durationSeconds" || field === "durationPerSideSeconds" || field === "distanceMeters") return normalized[field] ?? log[field];
+  return normalized[field];
+}
+
+function restoreWorkoutLogs() {
+  const logs = loadWorkoutLogs();
+  document.querySelectorAll(".workout-log-input, .exercise-note-input").forEach(input => {
+    const key = input.dataset.logKey || input.dataset.noteKey;
+    const field = input.dataset.logField || "note";
+    const value = restoredWorkoutLogValue(logs[key], field, exerciseFromLogElement(input));
+    if (value !== undefined) input.value = value;
+  });
+  document.querySelectorAll(".set-complete, .exercise-done").forEach(input => {
+    const key = input.dataset.logKey || input.dataset.exerciseDone;
+    const field = input.dataset.logField || "done";
+    if (logs[key]?.[field] !== undefined) input.checked = Boolean(logs[key][field]);
+  });
+  document.querySelectorAll(".exercise-card").forEach(card => syncExerciseCompletionFromSets(card, false));
+}
+
+function syncExerciseCompletionFromSets(exerciseCard, persist = true) {
+  if (!exerciseCard) return;
+  const sets = Array.from(exerciseCard.querySelectorAll(".set-complete"));
+  const exerciseDone = exerciseCard.querySelector(".exercise-done");
+  if (!sets.length || !exerciseDone) return;
+  const shouldBeDone = sets.every(input => input.checked);
+  if (exerciseDone.checked === shouldBeDone) return;
+  exerciseDone.checked = shouldBeDone;
+  if (!persist) return;
+  const key = exerciseDone.dataset.exerciseDone;
+  if (!key) return;
+  const logs = loadWorkoutLogs();
+  logs[key] = logs[key] || {};
+  logs[key].done = shouldBeDone;
+  saveWorkoutLogs(logs);
+}
+
+function setExerciseSetsCompletion(exerciseCard, checked) {
+  if (!exerciseCard) return;
+  const logs = loadWorkoutLogs();
+  exerciseCard.querySelectorAll(".set-complete").forEach(input => {
+    input.checked = checked;
+    const key = input.dataset.logKey;
+    const field = input.dataset.logField || "done";
+    if (!key) return;
+    logs[key] = logs[key] || {};
+    logs[key][field] = checked;
+  });
+  const exerciseDone = exerciseCard.querySelector(".exercise-done");
+  if (exerciseDone) {
+    exerciseDone.checked = checked;
+    const key = exerciseDone.dataset.exerciseDone;
+    if (key) {
+      logs[key] = logs[key] || {};
+      logs[key].done = checked;
+    }
+  }
+  saveWorkoutLogs(logs);
+}
+
+function bindWorkoutLogEvents() {
+  const updateLog = event => {
+    const input = event.currentTarget;
+    const key = input.dataset.logKey || input.dataset.noteKey || input.dataset.exerciseDone;
+    if (!key) return;
+    const field = input.dataset.logField || (input.dataset.noteKey ? "note" : "done");
+    const logs = loadWorkoutLogs();
+    logs[key] = logs[key] || {};
+    logs[key][field] = input.type === "checkbox" ? input.checked : input.value;
+    if (input.dataset.trackingMode) logs[key].trackingMode = input.dataset.trackingMode;
+    if (input.dataset.loadEntryMode) logs[key].loadEntryMode = input.dataset.loadEntryMode;
+    if (input.dataset.loadDirection) logs[key].loadDirection = input.dataset.loadDirection;
+    saveWorkoutLogs(logs);
+    if (input.classList.contains("set-complete")) {
+      syncExerciseCompletionFromSets(input.closest(".exercise-card"));
+    }
+    if (input.classList.contains("exercise-done")) {
+      setExerciseSetsCompletion(input.closest(".exercise-card"), input.checked);
+    }
+  };
+  document.querySelectorAll(".workout-log-input, .exercise-note-input, .set-complete, .exercise-done").forEach(input => {
+    input.addEventListener("input", updateLog);
+    input.addEventListener("change", updateLog);
+  });
+}
+
+function renderWorkoutPlan(plan) {
+  currentWorkoutPlan = plan;
+  const resultsNode = document.querySelector("#training-results");
+  const activeIndex = Math.max(0, plan.days.findIndex(day => !day.isRest));
+  resultsNode.innerHTML = renderFitnessDashboard(plan, { activeIndex, splitName: SPLITS[plan.splitType]?.name || plan.splitType, goalLabel: goalLabelMap[plan.goal] || plan.goal });
+  localStorage.setItem(WORKOUT_PLAN_STORAGE_KEY, JSON.stringify(plan));
+  restoreWorkoutLogs();
+  bindWorkoutLogEvents();
+  document.querySelectorAll(".exercise-done, .set-complete").forEach(input => input.addEventListener("change", updateTrainingCompletion));
+  document.querySelectorAll("[data-select-day], [data-next-day]").forEach(button => {
+    button.addEventListener("click", () => {
+      const current = Number(document.querySelector(".workout-day-detail.is-active")?.dataset.dayPanel || activeIndex);
+      const target = button.dataset.nextDay !== undefined ? (current + 1) % plan.days.length : Number(button.dataset.selectDay);
+      selectWorkoutDay(target);
+    });
+  });
+  document.querySelectorAll("[data-open-sheet]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const [dayIndex, exerciseIndex] = button.dataset.openSheet.split(":").map(Number);
+      openExerciseSheet(dayIndex, exerciseIndex);
+    });
+  });
+  document.querySelectorAll("[data-exercise-page]").forEach(button => {
+    button.addEventListener("click", () => selectExercisePage(Number(button.dataset.dayIndex), Number(button.dataset.exercisePage)));
+  });
+  document.querySelectorAll("[data-exercise-page-step]").forEach(button => {
+    button.addEventListener("click", () => {
+      const dayIndex = Number(button.dataset.dayIndex);
+      const pager = document.querySelector(`[data-exercise-pager="${dayIndex}"]`);
+      const current = Number(pager?.dataset.currentExercise || 0);
+      selectExercisePage(dayIndex, current + Number(button.dataset.exercisePageStep));
+    });
+  });
+  plan.days.forEach((day, index) => {
+    if (!day.isRest) selectExercisePage(index, 0);
+  });
+  document.querySelectorAll(".save-set-button, .exercise-actions .solid-action").forEach(button => button.addEventListener("click", event => {
+    const exerciseCard = event.currentTarget.closest(".exercise-card");
+    if (exerciseCard) {
+      setExerciseSetsCompletion(exerciseCard, true);
+      updateTrainingCompletion();
+    }
+    showToast("训练记录已保存在当前页面。");
+  }));
+  updateTrainingCompletion();
+}
+
+function renderFitnessPlaceholder(panel) {
+  const titles = {
+    library: "动作库",
+    logs: "训练记录",
+    body: "身体数据",
+    settings: "设置"
+  };
+  const descriptions = {
+    library: "动作库正在整理中；当前生成和替换动作已使用内置动作库和安全过滤规则。",
+    logs: "训练记录会先保存在当前设备，登录后的云端同步会继续完善。",
+    body: "身体数据目前来自首页的年龄、性别、身高、体重和运动量。",
+    settings: "更多健身设置后续会集中到这里；当前可在训练计划页调整偏好。"
+  };
+  document.querySelector("#training-form").hidden = panel !== "plan";
+  const resultsNode = document.querySelector("#training-results");
+  if (panel === "plan") {
+    const savedPlan = localStorage.getItem(WORKOUT_PLAN_STORAGE_KEY);
+    if (savedPlan && currentWorkoutPlan) renderWorkoutPlan(currentWorkoutPlan);
+    return;
+  }
+  resultsNode.innerHTML = `
+    <div class="fitness-empty-card">
+      <div class="skeleton-hero"></div>
+      <div>
+        <span class="pill">暂未开放</span>
+        <h2>${escapeHtml(titles[panel] || "健身功能")}</h2>
+        <p>${escapeHtml(descriptions[panel] || "该功能正在建设中。")}</p>
+      </div>
+    </div>
+  `;
+}
+
+function setupTrainingUI() {
+  setupSectionTabs();
+  applyTrainingSettings(loadTrainingSettings());
+  document.querySelector("#training-primary-goal")?.addEventListener("change", syncSecondaryGoalOptions);
+  document.querySelector("#training-location")?.addEventListener("change", syncEquipmentVisibility);
+  document.querySelector("#training-secondary-goal")?.insertAdjacentHTML("afterbegin", `<option value="">不设置次要目标</option>`);
+  syncSecondaryGoalOptions();
+  document.querySelectorAll("[data-fitness-panel]").forEach(button => {
+    button.addEventListener("click", () => {
+      const panel = button.dataset.fitnessPanel;
+      document.querySelectorAll("[data-fitness-panel]").forEach(item => item.classList.toggle("is-active", item === button));
+      renderFitnessPlaceholder(panel);
+    });
+  });
+  document.querySelectorAll('input[name="experience-segment"]').forEach(input => {
+    input.addEventListener("change", () => {
+      const select = document.querySelector("#experience-level");
+      if (select) select.value = input.value;
+    });
+  });
+  document.querySelector("#equipment-search")?.addEventListener("input", event => {
+    const keyword = event.target.value.trim().toLocaleLowerCase();
+    document.querySelectorAll("#equipment-options .selector-tile").forEach(chip => {
+      chip.hidden = keyword && !chip.dataset.chipLabel.toLocaleLowerCase().includes(keyword);
+    });
+  });
+  document.querySelectorAll("[data-toggle-chips]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = document.querySelector(`#${button.dataset.toggleChips}`);
+      if (!target) return;
+      target.classList.toggle("is-collapsed");
+      button.textContent = target.classList.contains("is-collapsed") ? "展开更多" : "收起";
+    });
+  });
+  document.querySelectorAll("[data-close-sheet]").forEach(item => item.addEventListener("click", closeExerciseSheet));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeExerciseSheet();
+  });
+  document.querySelector("#sheet-options")?.addEventListener("click", event => {
+    const option = event.target.closest(".sheet-option");
+    if (!option) return;
+    replaceExercise(Number(option.dataset.dayIndex), Number(option.dataset.exerciseIndex), option.dataset.altId);
+  });
+  const trainingForm = document.querySelector("#training-form");
+  if (!trainingForm) return;
+  const savedPlan = localStorage.getItem(WORKOUT_PLAN_STORAGE_KEY);
+  if (savedPlan) {
+    try {
+      const plan = JSON.parse(savedPlan);
+      if (plan?.days?.length) renderWorkoutPlan(plan);
+    } catch {
+      localStorage.removeItem(WORKOUT_PLAN_STORAGE_KEY);
+    }
+  }
+  trainingForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const settings = collectTrainingSettings();
+    const error = document.querySelector("#training-error");
+    setWorkoutLoading(true);
+    const validationErrors = validateTrainingSettings(settings);
+    if (validationErrors.length) {
+      error.textContent = validationErrors.join("；");
+      setWorkoutLoading(false);
+      return;
+    }
+    error.textContent = "";
+    saveTrainingSettings(settings);
+    const { plan, errors, warnings } = generateWorkoutPlan(settings, latestProfile || currentUserProfile || {});
+    if (!plan) {
+      error.textContent = formatWorkoutGenerationError(errors, warnings, settings);
+      setWorkoutLoading(false);
+      return;
+    }
+    try {
+      await saveWorkoutPlanForCurrentUser(settings, plan);
+      if (currentUser) showToast("训练计划已保存到账号。");
+    } catch (saveError) {
+      showToast(formatFirebaseError(saveError));
+    }
+    renderWorkoutPlan(plan);
+    setWorkoutLoading(false);
+    if (window.innerWidth < 900) document.querySelector("#training-results").scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+setupTrainingUI();
+
+form.addEventListener("submit", async event => {
   event.preventDefault();
   const profile = {
     height: Number(document.querySelector("#height").value),
@@ -288,6 +1095,11 @@ form.addEventListener("submit", event => {
   }
   error.textContent = "";
   latestProfile = profile;
+  try {
+    await saveProfileForCurrentUser(profile);
+  } catch (saveError) {
+    showToast(formatFirebaseError(saveError));
+  }
   render(profile);
   if (window.innerWidth < 900) results.scrollIntoView({ behavior: "smooth" });
 });

@@ -1,0 +1,5473 @@
+{
+  "generatedAt": "2026-07-18T05:05:12.871Z",
+  "seed": "deterministic-v1",
+  "plannerScoreWeights": {
+    "priority": 1,
+    "legacyFit": 1,
+    "movementCoverage": 22,
+    "roleCoverage": 10,
+    "variationPenalty": 14,
+    "fatiguePenalty": 8,
+    "weeklyVolumePenalty": 10,
+    "familyPenalty": 35,
+    "recoveryPenalty": 5
+  },
+  "recommendedWeeklySets": {
+    "胸": {
+      "min": 10,
+      "max": 18
+    },
+    "背": {
+      "min": 12,
+      "max": 20
+    },
+    "肩": {
+      "min": 8,
+      "max": 16
+    },
+    "手臂": {
+      "min": 6,
+      "max": 14
+    },
+    "腿": {
+      "min": 10,
+      "max": 20
+    },
+    "臀": {
+      "min": 8,
+      "max": 18
+    },
+    "核心": {
+      "min": 4,
+      "max": 12
+    }
+  },
+  "familyStats": [
+    {
+      "Family": "anti_extension",
+      "动作数": 11
+    },
+    {
+      "Family": "cardio",
+      "动作数": 11
+    },
+    {
+      "Family": "squat",
+      "动作数": 10
+    },
+    {
+      "Family": "push_up",
+      "动作数": 8
+    },
+    {
+      "Family": "triceps_extension",
+      "动作数": 8
+    },
+    {
+      "Family": "vertical_pull",
+      "动作数": 6
+    },
+    {
+      "Family": "hinge",
+      "动作数": 6
+    },
+    {
+      "Family": "glute_bridge",
+      "动作数": 6
+    },
+    {
+      "Family": "bench_press",
+      "动作数": 5
+    },
+    {
+      "Family": "rear_delt",
+      "动作数": 5
+    },
+    {
+      "Family": "biceps_curl",
+      "动作数": 5
+    },
+    {
+      "Family": "horizontal_row",
+      "动作数": 4
+    },
+    {
+      "Family": "vertical_press",
+      "动作数": 4
+    },
+    {
+      "Family": "anti_lateral_flexion",
+      "动作数": 4
+    },
+    {
+      "Family": "lateral_raise",
+      "动作数": 3
+    },
+    {
+      "Family": "chest_fly",
+      "动作数": 2
+    },
+    {
+      "Family": "single_leg",
+      "动作数": 2
+    },
+    {
+      "Family": "anti_rotation",
+      "动作数": 2
+    },
+    {
+      "Family": "straight_arm_pulldown",
+      "动作数": 1
+    },
+    {
+      "Family": "hamstring_curl",
+      "动作数": 1
+    },
+    {
+      "Family": "calf_raise",
+      "动作数": 1
+    },
+    {
+      "Family": "carry",
+      "动作数": 1
+    }
+  ],
+  "priorityRows": [
+    {
+      "动作ID": "barbell_bench",
+      "动作名称": "杠铃卧推",
+      "Family": "bench_press",
+      "Priority": 100
+    },
+    {
+      "动作ID": "pull_up",
+      "动作名称": "引体向上",
+      "Family": "vertical_pull",
+      "Priority": 100
+    },
+    {
+      "动作ID": "barbell_squat",
+      "动作名称": "杠铃深蹲",
+      "Family": "squat",
+      "Priority": 100
+    },
+    {
+      "动作ID": "db_bench",
+      "动作名称": "哑铃卧推",
+      "Family": "bench_press",
+      "Priority": 95
+    },
+    {
+      "动作ID": "incline_db_bench",
+      "动作名称": "上斜哑铃卧推",
+      "Family": "bench_press",
+      "Priority": 92
+    },
+    {
+      "动作ID": "machine_chest_press",
+      "动作名称": "器械推胸",
+      "Family": "bench_press",
+      "Priority": 90
+    },
+    {
+      "动作ID": "lat_pulldown",
+      "动作名称": "高位下拉",
+      "Family": "vertical_pull",
+      "Priority": 90
+    },
+    {
+      "动作ID": "incline_barbell_bench",
+      "动作名称": "上斜杠铃卧推",
+      "Family": "bench_press",
+      "Priority": 88
+    },
+    {
+      "动作ID": "assisted_pull_up_machine",
+      "动作名称": "器械辅助引体向上",
+      "Family": "vertical_pull",
+      "Priority": 88
+    },
+    {
+      "动作ID": "smith_squat",
+      "动作名称": "史密斯深蹲",
+      "Family": "squat",
+      "Priority": 88
+    },
+    {
+      "动作ID": "rdl",
+      "动作名称": "罗马尼亚硬拉",
+      "Family": "hinge",
+      "Priority": 88
+    },
+    {
+      "动作ID": "one_arm_db_row",
+      "动作名称": "单臂哑铃划船",
+      "Family": "horizontal_row",
+      "Priority": 86
+    },
+    {
+      "动作ID": "db_rdl",
+      "动作名称": "哑铃罗马尼亚硬拉",
+      "Family": "hinge",
+      "Priority": 86
+    },
+    {
+      "动作ID": "barbell_hip_thrust",
+      "动作名称": "杠铃臀推",
+      "Family": "glute_bridge",
+      "Priority": 86
+    },
+    {
+      "动作ID": "goblet_squat",
+      "动作名称": "高脚杯深蹲",
+      "Family": "squat",
+      "Priority": 85
+    },
+    {
+      "动作ID": "seated_row",
+      "动作名称": "坐姿划船",
+      "Family": "horizontal_row",
+      "Priority": 84
+    },
+    {
+      "动作ID": "band_assisted_pull_up",
+      "动作名称": "弹力带辅助引体向上",
+      "Family": "vertical_pull",
+      "Priority": 82
+    },
+    {
+      "动作ID": "chest_supported_row",
+      "动作名称": "胸托划船",
+      "Family": "horizontal_row",
+      "Priority": 82
+    },
+    {
+      "动作ID": "barbell_row",
+      "动作名称": "杠铃划船",
+      "Family": "horizontal_row",
+      "Priority": 80
+    },
+    {
+      "动作ID": "leg_press",
+      "动作名称": "腿举",
+      "Family": "squat",
+      "Priority": 80
+    },
+    {
+      "动作ID": "db_hip_thrust",
+      "动作名称": "哑铃臀推",
+      "Family": "glute_bridge",
+      "Priority": 78
+    },
+    {
+      "动作ID": "bulgarian_split_squat",
+      "动作名称": "保加利亚分腿蹲",
+      "Family": "squat",
+      "Priority": 76
+    },
+    {
+      "动作ID": "band_pulldown",
+      "动作名称": "弹力带下拉",
+      "Family": "vertical_pull",
+      "Priority": 75
+    },
+    {
+      "动作ID": "db_shoulder_press",
+      "动作名称": "坐姿哑铃肩推",
+      "Family": "vertical_press",
+      "Priority": 72
+    },
+    {
+      "动作ID": "machine_shoulder_press",
+      "动作名称": "器械肩推",
+      "Family": "vertical_press",
+      "Priority": 72
+    }
+  ],
+  "recoveryRows": [
+    {
+      "RecoveryCost": "1",
+      "动作数": 50
+    },
+    {
+      "RecoveryCost": "2",
+      "动作数": 27
+    },
+    {
+      "RecoveryCost": "3",
+      "动作数": 16
+    },
+    {
+      "RecoveryCost": "4",
+      "动作数": 13
+    }
+  ],
+  "fatigueRows": [
+    {
+      "FatigueTag": "triceps",
+      "动作数": 26
+    },
+    {
+      "FatigueTag": "glutes",
+      "动作数": 25
+    },
+    {
+      "FatigueTag": "core",
+      "动作数": 22
+    },
+    {
+      "FatigueTag": "front_delt",
+      "动作数": 22
+    },
+    {
+      "FatigueTag": "biceps",
+      "动作数": 21
+    },
+    {
+      "FatigueTag": "chest",
+      "动作数": 20
+    },
+    {
+      "FatigueTag": "quads",
+      "动作数": 20
+    },
+    {
+      "FatigueTag": "back",
+      "动作数": 18
+    },
+    {
+      "FatigueTag": "grip",
+      "动作数": 17
+    },
+    {
+      "FatigueTag": "rear_delt",
+      "动作数": 16
+    },
+    {
+      "FatigueTag": "shoulder",
+      "动作数": 12
+    },
+    {
+      "FatigueTag": "low_back",
+      "动作数": 7
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "纯自重初学者全身 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "health",
+        "secondaryGoal": "muscleGain",
+        "experienceLevel": "beginner",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 30,
+        "trainingLocation": "homeNone",
+        "availableEquipment": [
+          "bodyweight"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 29,
+        "directSets": {
+          "腿": 8,
+          "胸": 9,
+          "臀": 3
+        },
+        "indirectSets": {
+          "臀": 4,
+          "手臂": 3,
+          "核心": 3
+        },
+        "movementPatterns": {
+          "弓步": 2,
+          "水平推": 3,
+          "抗伸展": 2,
+          "深蹲": 1,
+          "髋伸": 1,
+          "抗旋转": 1
+        },
+        "exerciseFamilies": {
+          "single_leg": 2,
+          "push_up": 3,
+          "anti_extension": 2,
+          "squat": 1,
+          "glute_bridge": 1,
+          "anti_rotation": 1
+        },
+        "fatigueTags": {
+          "quads": 3,
+          "glutes": 4,
+          "chest": 3,
+          "front_delt": 3,
+          "triceps": 3,
+          "core": 5
+        },
+        "recoveryCosts": {
+          "1": 6,
+          "2": 4
+        },
+        "difficultyBuckets": {
+          "1-2": 7,
+          "2.5-3": 3,
+          "3.5-4": 0,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 92,
+        "durationLimitMinutes": 30
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 33,
+          "estimatedCaloriesRange": {
+            "min": 200,
+            "max": 270,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 110,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 110",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 109,
+              "plannerReason": "Priority +65; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 109",
+              "sets": 3,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "push_up",
+                "wall_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "dead_bug",
+              "name": "死虫",
+              "movementPattern": "抗伸展",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 64,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 99,
+              "plannerReason": "Priority +64; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 99",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "plank",
+                "knee_plank"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 60,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 2,
+              "plannerScore": 66,
+              "plannerReason": "Priority +60; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 66",
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": []
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "全身B",
+          "estimatedDuration": 31,
+          "estimatedCaloriesRange": {
+            "min": 190,
+            "max": 250,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "glute_bridge",
+              "name": "臀桥",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 64,
+              "recoveryCost": 1,
+              "fatigueTags": "glutes",
+              "difficulty": 1.5,
+              "plannerScore": 108,
+              "plannerReason": "Priority +64; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 108",
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 108,
+              "plannerReason": "Priority +70; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 108",
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "kneeling_push_up",
+                "wall_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "plank",
+              "name": "平板支撑",
+              "movementPattern": "抗伸展",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 2,
+              "plannerScore": 89,
+              "plannerReason": "Priority +62; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 89",
+              "sets": 3,
+              "target": "20–60秒",
+              "trackingMode": "duration",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "knee_plank",
+                "dead_bug"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "全身C",
+          "estimatedDuration": 28,
+          "estimatedCaloriesRange": {
+            "min": 170,
+            "max": 230,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 76,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 76",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "wall_push_up",
+              "name": "墙壁俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 1,
+              "plannerScore": 100,
+              "plannerReason": "Priority +56; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 100",
+              "sets": 3,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "kneeling_push_up",
+                "push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "bird_dog",
+              "name": "鸟狗",
+              "movementPattern": "抗旋转",
+              "exerciseFamily": "anti_rotation",
+              "exerciseRole": "core",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 89,
+              "plannerReason": "Priority +62; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 89",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "纯自重 + 椅子初学者全身 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "health",
+        "secondaryGoal": "muscleGain",
+        "experienceLevel": "beginner",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 30,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "bodyweight",
+          "chair"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 31,
+        "directSets": {
+          "腿": 10,
+          "胸": 9,
+          "臀": 3
+        },
+        "indirectSets": {
+          "臀": 5,
+          "手臂": 3,
+          "核心": 3
+        },
+        "movementPatterns": {
+          "弓步": 2,
+          "水平推": 3,
+          "抗伸展": 2,
+          "深蹲": 2,
+          "髋伸": 1,
+          "抗旋转": 1
+        },
+        "exerciseFamilies": {
+          "single_leg": 2,
+          "push_up": 3,
+          "anti_extension": 2,
+          "squat": 2,
+          "glute_bridge": 1,
+          "anti_rotation": 1
+        },
+        "fatigueTags": {
+          "quads": 4,
+          "glutes": 5,
+          "chest": 3,
+          "front_delt": 3,
+          "triceps": 3,
+          "core": 5
+        },
+        "recoveryCosts": {
+          "1": 6,
+          "2": 5
+        },
+        "difficultyBuckets": {
+          "1-2": 8,
+          "2.5-3": 3,
+          "3.5-4": 0,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 96,
+        "durationLimitMinutes": 30
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 33,
+          "estimatedCaloriesRange": {
+            "min": 160,
+            "max": 230,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 110,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 110",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 109,
+              "plannerReason": "Priority +65; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 109",
+              "sets": 3,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "push_up",
+                "wall_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "dead_bug",
+              "name": "死虫",
+              "movementPattern": "抗伸展",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 64,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 99,
+              "plannerReason": "Priority +64; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 99",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "plank",
+                "knee_plank",
+                "incline_plank"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 60,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 2,
+              "plannerScore": 66,
+              "plannerReason": "Priority +60; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 66",
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "chair_sit_to_stand"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "全身B",
+          "estimatedDuration": 35,
+          "estimatedCaloriesRange": {
+            "min": 170,
+            "max": 240,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "glute_bridge",
+              "name": "臀桥",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 64,
+              "recoveryCost": 1,
+              "fatigueTags": "glutes",
+              "difficulty": 1.5,
+              "plannerScore": 108,
+              "plannerReason": "Priority +64; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 108",
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 108,
+              "plannerReason": "Priority +70; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 108",
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "kneeling_push_up",
+                "wall_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "plank",
+              "name": "平板支撑",
+              "movementPattern": "抗伸展",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 2,
+              "plannerScore": 89,
+              "plannerReason": "Priority +62; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 89",
+              "sets": 3,
+              "target": "20–60秒",
+              "trackingMode": "duration",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "knee_plank",
+                "incline_plank",
+                "dead_bug"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "chair_sit_to_stand",
+              "name": "椅子坐站",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 52,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 1,
+              "plannerScore": 63,
+              "plannerReason": "Priority +52; coverage +10; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 63",
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "chair"
+              ],
+              "estimatedMinutes": 4,
+              "alternatives": [
+                "bodyweight_squat"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "全身C",
+          "estimatedDuration": 28,
+          "estimatedCaloriesRange": {
+            "min": 140,
+            "max": 190,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 76,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 76",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "wall_push_up",
+              "name": "墙壁俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 1,
+              "plannerScore": 100,
+              "plannerReason": "Priority +56; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 100",
+              "sets": 3,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "kneeling_push_up",
+                "push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "bird_dog",
+              "name": "鸟狗",
+              "movementPattern": "抗旋转",
+              "exerciseFamily": "anti_rotation",
+              "exerciseRole": "core",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 89,
+              "plannerReason": "Priority +62; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 89",
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "家庭哑铃增肌 4 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 4,
+        "sessionDuration": 45,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "adjustable_bench",
+          "resistance_band",
+          "band_anchor"
+        ],
+        "selectedSplit": "upperLower",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 64,
+        "directSets": {
+          "胸": 16,
+          "背": 8,
+          "肩": 8,
+          "腿": 24,
+          "臀": 12,
+          "核心": 4
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 8
+        },
+        "movementPatterns": {
+          "水平推": 4,
+          "水平拉": 2,
+          "垂直推": 2,
+          "深蹲": 2,
+          "髋铰链": 2,
+          "弓步": 2,
+          "髋屈": 1,
+          "髋伸": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 2,
+          "horizontal_row": 2,
+          "vertical_press": 2,
+          "push_up": 2,
+          "squat": 2,
+          "hinge": 2,
+          "single_leg": 2,
+          "anti_extension": 1,
+          "glute_bridge": 1
+        },
+        "fatigueTags": {
+          "chest": 4,
+          "front_delt": 6,
+          "triceps": 6,
+          "back": 2,
+          "rear_delt": 2,
+          "biceps": 2,
+          "grip": 2,
+          "shoulder": 2,
+          "core": 2,
+          "quads": 6,
+          "glutes": 7,
+          "low_back": 2
+        },
+        "recoveryCosts": {
+          "1": 2,
+          "2": 7,
+          "3": 4,
+          "4": 3
+        },
+        "difficultyBuckets": {
+          "1-2": 3,
+          "2.5-3": 12,
+          "3.5-4": 1,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 5,
+        "estimatedTotalMinutes": 181,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "上肢A",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "incline_db_bench",
+              "name": "上斜哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 92,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 126,
+              "plannerReason": "Priority +92; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 126",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "adjustable_bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up",
+                "kneeling_push_up",
+                "wall_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 136,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 136",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 3,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 67,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 67",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "kneeling_push_up",
+                "wall_push_up",
+                "incline_db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "下肢A",
+          "estimatedDuration": 45,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 390,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 85,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 132,
+              "plannerReason": "Priority +85; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 132",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 117,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 117",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 3,
+              "plannerScore": 86,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 86",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "上肢B",
+          "estimatedDuration": 45,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 390,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 101,
+              "plannerReason": "Priority +65; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 101",
+              "sets": 4,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "push_up",
+                "wall_push_up",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 102",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 3,
+              "exerciseId": "db_shoulder_press",
+              "name": "坐姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 96,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 96",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "adjustable_bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "incline_db_bench",
+              "name": "上斜哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 92,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 46,
+              "plannerReason": "Priority +92; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -5; variation -14; final 46",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "adjustable_bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up",
+                "kneeling_push_up",
+                "wall_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "下肢B",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 380,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 85,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 98,
+              "plannerReason": "Priority +85; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 98",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "weighted_glute_bridge",
+              "name": "负重臀桥",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "glutes",
+              "difficulty": 2,
+              "plannerScore": 102,
+              "plannerReason": "Priority +70; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "glute_bridge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -14; final 68",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "bodyweight_single_leg_hinge",
+              "name": "徒手单腿髋铰链",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3.5,
+              "plannerScore": 67,
+              "plannerReason": "Priority +72; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -5; variation -0; final 67",
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "完整健身房 PPL 增肌 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "machine_chest_press",
+          "machine_shoulder_press",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "parallel_bars",
+          "smith_machine",
+          "leg_extension_machine",
+          "leg_curl_machine"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 48,
+        "directSets": {
+          "胸": 8,
+          "肩": 8,
+          "手臂": 8,
+          "背": 8,
+          "腿": 12,
+          "臀": 8
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "臀": 4
+        },
+        "movementPatterns": {
+          "水平推": 3,
+          "垂直推": 1,
+          "垂直拉": 1,
+          "水平拉": 2,
+          "肘屈": 1,
+          "深蹲": 1,
+          "髋伸": 1,
+          "弓步": 1,
+          "髋铰链": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 1,
+          "vertical_press": 1,
+          "triceps_extension": 1,
+          "push_up": 1,
+          "vertical_pull": 1,
+          "horizontal_row": 1,
+          "rear_delt": 1,
+          "biceps_curl": 1,
+          "squat": 1,
+          "glute_bridge": 1,
+          "single_leg": 1,
+          "hinge": 1
+        },
+        "fatigueTags": {
+          "chest": 3,
+          "front_delt": 4,
+          "triceps": 4,
+          "shoulder": 2,
+          "core": 1,
+          "back": 2,
+          "rear_delt": 3,
+          "biceps": 4,
+          "grip": 3,
+          "quads": 3,
+          "glutes": 4,
+          "low_back": 1
+        },
+        "recoveryCosts": {
+          "1": 3,
+          "2": 3,
+          "3": 4,
+          "4": 2
+        },
+        "difficultyBuckets": {
+          "1-2": 3,
+          "2.5-3": 5,
+          "3.5-4": 4,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 2,
+        "estimatedTotalMinutes": 138,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "dip",
+              "name": "双杠臂屈伸",
+              "movementPattern": "水平推",
+              "exerciseFamily": "triceps_extension",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 1,
+              "fatigueTags": "triceps, chest, front_delt",
+              "difficulty": 4,
+              "plannerScore": 85,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 85",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "parallel_bars"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_grip_bench",
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 68",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "kneeling_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "拉",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 131,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 131",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 104,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 104",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 43,
+              "plannerReason": "Priority +62; coverage +0; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 43",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "腿",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "smith_squat",
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_hip_thrust",
+              "name": "杠铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "glutes",
+              "difficulty": 4,
+              "plannerScore": 121,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 121",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 103,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 103",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "step_up",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 2 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 2,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 36,
+        "directSets": {
+          "腿": 12,
+          "胸": 8,
+          "背": 8,
+          "臀": 4
+        },
+        "indirectSets": {
+          "臀": 4
+        },
+        "movementPatterns": {
+          "深蹲": 2,
+          "水平推": 2,
+          "抗旋转": 1,
+          "水平拉": 1,
+          "髋铰链": 2,
+          "抗侧屈": 1,
+          "垂直拉": 1
+        },
+        "exerciseFamilies": {
+          "squat": 2,
+          "bench_press": 2,
+          "anti_rotation": 1,
+          "horizontal_row": 1,
+          "hinge": 2,
+          "anti_lateral_flexion": 1,
+          "vertical_pull": 1
+        },
+        "fatigueTags": {
+          "quads": 4,
+          "glutes": 4,
+          "chest": 2,
+          "front_delt": 2,
+          "triceps": 2,
+          "core": 2,
+          "back": 2,
+          "rear_delt": 2,
+          "biceps": 2,
+          "grip": 2,
+          "low_back": 2
+        },
+        "recoveryCosts": {
+          "1": 2,
+          "2": 1,
+          "3": 4,
+          "4": 3
+        },
+        "difficultyBuckets": {
+          "1-2": 2,
+          "2.5-3": 5,
+          "3.5-4": 3,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 98,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 49,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "pallof_press",
+              "name": "帕洛夫抗旋转推",
+              "movementPattern": "抗旋转",
+              "exerciseFamily": "anti_rotation",
+              "exerciseRole": "core",
+              "priority": 66,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 2,
+              "plannerScore": 97,
+              "plannerReason": "Priority +66; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 97",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bird_dog"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 136,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 136",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "全身B",
+          "estimatedDuration": 49,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 85,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 132,
+              "plannerReason": "Priority +85; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 132",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat",
+                "box_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_bench",
+              "name": "哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 95,
+              "recoveryCost": 3,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 135,
+              "plannerReason": "Priority +95; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 135",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "side_plank",
+              "name": "侧平板支撑",
+              "movementPattern": "抗侧屈",
+              "exerciseFamily": "anti_lateral_flexion",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 3,
+              "plannerScore": 90,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 90",
+              "sets": 4,
+              "target": "每侧 15–45秒",
+              "trackingMode": "duration_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "knee_side_plank"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 131,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 131",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "rdl",
+              "name": "罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 88,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 4,
+              "plannerScore": 88,
+              "plannerReason": "Priority +88; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -5; variation -0; final 88",
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "bodyweight_single_leg_hinge",
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 3 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 48,
+        "directSets": {
+          "胸": 8,
+          "肩": 12,
+          "背": 8,
+          "手臂": 4,
+          "腿": 12,
+          "臀": 8
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 4
+        },
+        "movementPatterns": {
+          "水平推": 2,
+          "垂直推": 1,
+          "肩外展": 1,
+          "垂直拉": 1,
+          "水平拉": 2,
+          "肘屈": 1,
+          "深蹲": 1,
+          "髋伸": 1,
+          "弓步": 1,
+          "髋铰链": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 1,
+          "vertical_press": 1,
+          "lateral_raise": 1,
+          "push_up": 1,
+          "vertical_pull": 1,
+          "horizontal_row": 1,
+          "rear_delt": 1,
+          "biceps_curl": 1,
+          "squat": 1,
+          "glute_bridge": 1,
+          "single_leg": 1,
+          "hinge": 1
+        },
+        "fatigueTags": {
+          "chest": 2,
+          "front_delt": 3,
+          "triceps": 3,
+          "shoulder": 3,
+          "core": 1,
+          "back": 2,
+          "rear_delt": 3,
+          "biceps": 4,
+          "grip": 3,
+          "quads": 3,
+          "glutes": 4,
+          "low_back": 1
+        },
+        "recoveryCosts": {
+          "1": 3,
+          "2": 3,
+          "3": 4,
+          "4": 2
+        },
+        "difficultyBuckets": {
+          "1-2": 3,
+          "2.5-3": 6,
+          "3.5-4": 3,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 2,
+        "estimatedTotalMinutes": 136,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 45,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 380,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +68; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 68",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "kneeling_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "拉",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 270,
+            "max": 370,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 131,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 131",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 104,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 104",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 43,
+              "plannerReason": "Priority +62; coverage +0; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 43",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "腿",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 290,
+            "max": 400,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_hip_thrust",
+              "name": "杠铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "glutes",
+              "difficulty": 4,
+              "plannerScore": 121,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 121",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 103,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 103",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "step_up",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 4 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 4,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "upperLower",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 80,
+        "directSets": {
+          "胸": 16,
+          "背": 12,
+          "肩": 12,
+          "腿": 24,
+          "臀": 16,
+          "核心": 4
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 8
+        },
+        "movementPatterns": {
+          "水平推": 4,
+          "水平拉": 2,
+          "垂直推": 1,
+          "肩外展": 2,
+          "深蹲": 2,
+          "髋伸": 2,
+          "弓步": 2,
+          "髋屈": 1,
+          "髋铰链": 2,
+          "垂直拉": 1,
+          "抗侧屈": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 2,
+          "horizontal_row": 2,
+          "vertical_press": 1,
+          "lateral_raise": 2,
+          "push_up": 2,
+          "squat": 2,
+          "glute_bridge": 2,
+          "single_leg": 2,
+          "anti_extension": 1,
+          "hinge": 2,
+          "vertical_pull": 1,
+          "anti_lateral_flexion": 1
+        },
+        "fatigueTags": {
+          "chest": 4,
+          "front_delt": 5,
+          "triceps": 5,
+          "back": 3,
+          "rear_delt": 3,
+          "biceps": 3,
+          "grip": 3,
+          "shoulder": 3,
+          "core": 3,
+          "quads": 6,
+          "glutes": 8,
+          "low_back": 2
+        },
+        "recoveryCosts": {
+          "1": 5,
+          "2": 6,
+          "3": 6,
+          "4": 3
+        },
+        "difficultyBuckets": {
+          "1-2": 6,
+          "2.5-3": 10,
+          "3.5-4": 4,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 214,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "上肢A",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 136,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 136",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 3,
+              "plannerScore": 73,
+              "plannerReason": "Priority +68; coverage +0; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 73",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 68",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "kneeling_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "下肢A",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_hip_thrust",
+              "name": "杠铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "glutes",
+              "difficulty": 4,
+              "plannerScore": 121,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 121",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 103,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 103",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "step_up",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 3,
+              "plannerScore": 87,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 87",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "上肢B",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "db_bench",
+              "name": "哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 95,
+              "recoveryCost": 3,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 135,
+              "plannerReason": "Priority +95; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 135",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "seated_row",
+              "name": "坐姿划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 84,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 125,
+              "plannerReason": "Priority +84; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 125",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "chest_supported_row",
+                "one_arm_db_row",
+                "barbell_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 99,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 99",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lateral_raise",
+              "name": "哑铃侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 66,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 2,
+              "plannerScore": 71,
+              "plannerReason": "Priority +66; coverage +0; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 71",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "cable_lateral_raise"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 56,
+              "plannerReason": "Priority +65; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 56",
+              "sets": 4,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "push_up",
+                "low_incline_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "下肢B",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 85,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 132,
+              "plannerReason": "Priority +85; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 132",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat",
+                "box_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_hip_thrust",
+              "name": "哑铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 78,
+              "recoveryCost": 2,
+              "fatigueTags": "glutes",
+              "difficulty": 3,
+              "plannerScore": 117,
+              "plannerReason": "Priority +78; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 117",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_hip_thrust",
+                "weighted_glute_bridge",
+                "glute_bridge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "step_up",
+              "name": "台阶踏步",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 68,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 2,
+              "plannerScore": 95,
+              "plannerReason": "Priority +68; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "knee_side_plank",
+              "name": "屈膝侧平板",
+              "movementPattern": "抗侧屈",
+              "exerciseFamily": "anti_lateral_flexion",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 80,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 80",
+              "sets": 4,
+              "target": "每侧 15–30秒",
+              "trackingMode": "duration_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "side_plank"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "rdl",
+              "name": "罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 88,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 4,
+              "plannerScore": 88,
+              "plannerReason": "Priority +88; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -5; variation -0; final 88",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge",
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 5 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 5,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 100,
+        "directSets": {
+          "胸": 16,
+          "肩": 24,
+          "手臂": 16,
+          "背": 24,
+          "腿": 12,
+          "臀": 8,
+          "核心": 4
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 4,
+          "背": 2
+        },
+        "movementPatterns": {
+          "水平推": 4,
+          "垂直推": 2,
+          "肩外展": 2,
+          "肘伸": 2,
+          "垂直拉": 4,
+          "水平拉": 4,
+          "肘屈": 2,
+          "深蹲": 1,
+          "髋伸": 1,
+          "弓步": 1,
+          "髋屈": 1,
+          "髋铰链": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 2,
+          "vertical_press": 2,
+          "lateral_raise": 2,
+          "triceps_extension": 2,
+          "push_up": 2,
+          "vertical_pull": 2,
+          "horizontal_row": 2,
+          "rear_delt": 2,
+          "biceps_curl": 2,
+          "straight_arm_pulldown": 2,
+          "squat": 1,
+          "glute_bridge": 1,
+          "single_leg": 1,
+          "anti_extension": 1,
+          "hinge": 1
+        },
+        "fatigueTags": {
+          "chest": 4,
+          "front_delt": 6,
+          "triceps": 8,
+          "shoulder": 6,
+          "core": 2,
+          "back": 7,
+          "rear_delt": 8,
+          "biceps": 10,
+          "grip": 8,
+          "quads": 3,
+          "glutes": 4,
+          "low_back": 1
+        },
+        "recoveryCosts": {
+          "1": 10,
+          "2": 6,
+          "3": 7,
+          "4": 2
+        },
+        "difficultyBuckets": {
+          "1-2": 10,
+          "2.5-3": 11,
+          "3.5-4": 4,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 2,
+        "estimatedTotalMinutes": 259,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +68; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "overhead_extension",
+              "name": "过头臂屈伸",
+              "movementPattern": "肘伸",
+              "exerciseFamily": "triceps_extension",
+              "exerciseRole": "isolation",
+              "priority": 52,
+              "recoveryCost": 1,
+              "fatigueTags": "triceps",
+              "difficulty": 3,
+              "plannerScore": 79,
+              "plannerReason": "Priority +52; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 79",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "triceps_pushdown",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 68",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "kneeling_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 131,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 131",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 104,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 104",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 43,
+              "plannerReason": "Priority +62; coverage +0; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 43",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "straight_arm_pulldown",
+              "exerciseRole": "isolation",
+              "priority": 40,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 21,
+              "plannerReason": "Priority +40; coverage +0; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 21",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_hip_thrust",
+              "name": "杠铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "glutes",
+              "difficulty": 4,
+              "plannerScore": 121,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 121",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 103,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 103",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "step_up",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 3,
+              "plannerScore": 87,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 87",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "推",
+          "estimatedDuration": 50,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 420,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "db_bench",
+              "name": "哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 95,
+              "recoveryCost": 3,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 135,
+              "plannerReason": "Priority +95; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 135",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_press",
+              "name": "杠铃推举",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 99,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 99",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lateral_raise",
+              "name": "哑铃侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 66,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 2,
+              "plannerScore": 85,
+              "plannerReason": "Priority +66; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 85",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "cable_lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "triceps_pushdown",
+              "name": "绳索下压",
+              "movementPattern": "肘伸",
+              "exerciseFamily": "triceps_extension",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "triceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "overhead_extension",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 56,
+              "plannerReason": "Priority +65; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 56",
+              "sets": 4,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "push_up",
+                "low_incline_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "拉",
+          "estimatedDuration": 51,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 430,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 97,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 97",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "seated_row",
+              "name": "坐姿划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 84,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 93,
+              "plannerReason": "Priority +84; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 93",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "chest_supported_row",
+                "one_arm_db_row",
+                "barbell_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": -38,
+              "plannerReason": "Priority +68; coverage +0; family -0; fatigue -32; weeklyVolume -80; recovery -0; variation -0; final -38",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_curl",
+              "name": "绳索弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 56,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -8; weeklyVolume -20; recovery -0; variation -0; final 56",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "barbell_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "straight_arm_pulldown",
+              "exerciseRole": "isolation",
+              "priority": 40,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": -13,
+              "plannerReason": "Priority +40; coverage +0; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -14; final -13",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 6 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 6,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 120,
+        "directSets": {
+          "胸": 16,
+          "肩": 24,
+          "手臂": 16,
+          "背": 24,
+          "腿": 24,
+          "臀": 16,
+          "核心": 4
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 8,
+          "背": 2
+        },
+        "movementPatterns": {
+          "水平推": 4,
+          "垂直推": 2,
+          "肩外展": 2,
+          "肘伸": 2,
+          "垂直拉": 4,
+          "水平拉": 4,
+          "肘屈": 2,
+          "深蹲": 2,
+          "髋伸": 2,
+          "弓步": 2,
+          "髋屈": 1,
+          "髋铰链": 2,
+          "抗侧屈": 1
+        },
+        "exerciseFamilies": {
+          "bench_press": 2,
+          "vertical_press": 2,
+          "lateral_raise": 2,
+          "triceps_extension": 2,
+          "push_up": 2,
+          "vertical_pull": 2,
+          "horizontal_row": 2,
+          "rear_delt": 2,
+          "biceps_curl": 2,
+          "straight_arm_pulldown": 2,
+          "squat": 2,
+          "glute_bridge": 2,
+          "single_leg": 2,
+          "anti_extension": 1,
+          "hinge": 2,
+          "anti_lateral_flexion": 1
+        },
+        "fatigueTags": {
+          "chest": 4,
+          "front_delt": 6,
+          "triceps": 8,
+          "shoulder": 6,
+          "core": 3,
+          "back": 7,
+          "rear_delt": 8,
+          "biceps": 10,
+          "grip": 8,
+          "quads": 6,
+          "glutes": 8,
+          "low_back": 2
+        },
+        "recoveryCosts": {
+          "1": 11,
+          "2": 8,
+          "3": 8,
+          "4": 3
+        },
+        "difficultyBuckets": {
+          "1-2": 12,
+          "2.5-3": 13,
+          "3.5-4": 5,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 313,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 3,
+              "plannerScore": 102,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 102",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +68; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "overhead_extension",
+              "name": "过头臂屈伸",
+              "movementPattern": "肘伸",
+              "exerciseFamily": "triceps_extension",
+              "exerciseRole": "isolation",
+              "priority": 52,
+              "recoveryCost": 1,
+              "fatigueTags": "triceps",
+              "difficulty": 3,
+              "plannerScore": 79,
+              "plannerReason": "Priority +52; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 79",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "triceps_pushdown",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 70,
+              "recoveryCost": 2,
+              "fatigueTags": "chest, triceps, core, front_delt",
+              "difficulty": 3,
+              "plannerScore": 68,
+              "plannerReason": "Priority +70; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 68",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "kneeling_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 131,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 131",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 104,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 104",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "chest_supported_row",
+                "barbell_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 62,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 43,
+              "plannerReason": "Priority +62; coverage +0; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 43",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "straight_arm_pulldown",
+              "exerciseRole": "isolation",
+              "priority": 40,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": 21,
+              "plannerReason": "Priority +40; coverage +0; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 21",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 100,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 4,
+              "plannerScore": 138,
+              "plannerReason": "Priority +100; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -5; variation -0; final 138",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat",
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_hip_thrust",
+              "name": "杠铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "glutes",
+              "difficulty": 4,
+              "plannerScore": 121,
+              "plannerReason": "Priority +86; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 121",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 103,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 103",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "step_up",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseFamily": "anti_extension",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 3,
+              "plannerScore": 87,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 87",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 86,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 3,
+              "plannerScore": 95,
+              "plannerReason": "Priority +86; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "推",
+          "estimatedDuration": 50,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 420,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "db_bench",
+              "name": "哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseFamily": "bench_press",
+              "exerciseRole": "primary_compound",
+              "priority": 95,
+              "recoveryCost": 3,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2.5,
+              "plannerScore": 135,
+              "plannerReason": "Priority +95; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 135",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_bench",
+                "machine_chest_press",
+                "incline_db_bench"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_press",
+              "name": "杠铃推举",
+              "movementPattern": "垂直推",
+              "exerciseFamily": "vertical_press",
+              "exerciseRole": "primary_compound",
+              "priority": 72,
+              "recoveryCost": 3,
+              "fatigueTags": "shoulder, front_delt, triceps",
+              "difficulty": 4,
+              "plannerScore": 99,
+              "plannerReason": "Priority +72; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 99",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lateral_raise",
+              "name": "哑铃侧平举",
+              "movementPattern": "肩外展",
+              "exerciseFamily": "lateral_raise",
+              "exerciseRole": "isolation",
+              "priority": 66,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder",
+              "difficulty": 2,
+              "plannerScore": 85,
+              "plannerReason": "Priority +66; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 85",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "cable_lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "triceps_pushdown",
+              "name": "绳索下压",
+              "movementPattern": "肘伸",
+              "exerciseFamily": "triceps_extension",
+              "exerciseRole": "isolation",
+              "priority": 58,
+              "recoveryCost": 1,
+              "fatigueTags": "triceps",
+              "difficulty": 2,
+              "plannerScore": 78,
+              "plannerReason": "Priority +58; coverage +22; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 78",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "overhead_extension",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseFamily": "push_up",
+              "exerciseRole": "primary_compound",
+              "priority": 65,
+              "recoveryCost": 1,
+              "fatigueTags": "chest, front_delt, triceps",
+              "difficulty": 2,
+              "plannerScore": 56,
+              "plannerReason": "Priority +65; coverage +10; family -0; fatigue -24; weeklyVolume -0; recovery -0; variation -0; final 56",
+              "sets": 4,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "push_up",
+                "low_incline_push_up",
+                "high_incline_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "拉",
+          "estimatedDuration": 51,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 430,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "vertical_pull",
+              "exerciseRole": "primary_compound",
+              "priority": 90,
+              "recoveryCost": 3,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 97,
+              "plannerReason": "Priority +90; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -14; final 97",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "seated_row",
+              "name": "坐姿划船",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "horizontal_row",
+              "exerciseRole": "primary_compound",
+              "priority": 84,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": 93,
+              "plannerReason": "Priority +84; coverage +32; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -0; final 93",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "chest_supported_row",
+                "one_arm_db_row",
+                "barbell_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseFamily": "rear_delt",
+              "exerciseRole": "accessory",
+              "priority": 68,
+              "recoveryCost": 1,
+              "fatigueTags": "shoulder, back, rear_delt, biceps, grip",
+              "difficulty": 2,
+              "plannerScore": -38,
+              "plannerReason": "Priority +68; coverage +0; family -0; fatigue -32; weeklyVolume -80; recovery -0; variation -0; final -38",
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_curl",
+              "name": "绳索弯举",
+              "movementPattern": "肘屈",
+              "exerciseFamily": "biceps_curl",
+              "exerciseRole": "isolation",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "biceps",
+              "difficulty": 2,
+              "plannerScore": 56,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -8; weeklyVolume -20; recovery -0; variation -0; final 56",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "barbell_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseFamily": "straight_arm_pulldown",
+              "exerciseRole": "isolation",
+              "priority": 40,
+              "recoveryCost": 2,
+              "fatigueTags": "back, rear_delt, biceps, grip",
+              "difficulty": 3,
+              "plannerScore": -13,
+              "plannerReason": "Priority +40; coverage +0; family -0; fatigue -32; weeklyVolume -0; recovery -0; variation -14; final -13",
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseFamily": "squat",
+              "exerciseRole": "primary_compound",
+              "priority": 85,
+              "recoveryCost": 3,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 3,
+              "plannerScore": 132,
+              "plannerReason": "Priority +85; coverage +32; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 132",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat",
+                "box_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_hip_thrust",
+              "name": "哑铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseFamily": "glute_bridge",
+              "exerciseRole": "primary_compound",
+              "priority": 78,
+              "recoveryCost": 2,
+              "fatigueTags": "glutes",
+              "difficulty": 3,
+              "plannerScore": 117,
+              "plannerReason": "Priority +78; coverage +32; family -0; fatigue -8; weeklyVolume -0; recovery -0; variation -0; final 117",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_hip_thrust",
+                "weighted_glute_bridge",
+                "glute_bridge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "step_up",
+              "name": "台阶踏步",
+              "movementPattern": "弓步",
+              "exerciseFamily": "single_leg",
+              "exerciseRole": "primary_compound",
+              "priority": 68,
+              "recoveryCost": 2,
+              "fatigueTags": "quads, glutes",
+              "difficulty": 2,
+              "plannerScore": 95,
+              "plannerReason": "Priority +68; coverage +32; family -0; fatigue -16; weeklyVolume -0; recovery -0; variation -0; final 95",
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge",
+                "bulgarian_split_squat"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "knee_side_plank",
+              "name": "屈膝侧平板",
+              "movementPattern": "抗侧屈",
+              "exerciseFamily": "anti_lateral_flexion",
+              "exerciseRole": "core",
+              "priority": 56,
+              "recoveryCost": 1,
+              "fatigueTags": "core",
+              "difficulty": 1,
+              "plannerScore": 80,
+              "plannerReason": "Priority +56; coverage +22; family -0; fatigue -0; weeklyVolume -0; recovery -0; variation -0; final 80",
+              "sets": 4,
+              "target": "每侧 15–30秒",
+              "trackingMode": "duration_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "side_plank"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "rdl",
+              "name": "罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseFamily": "hinge",
+              "exerciseRole": "primary_compound",
+              "priority": 88,
+              "recoveryCost": 4,
+              "fatigueTags": "quads, glutes, low_back",
+              "difficulty": 4,
+              "plannerScore": 88,
+              "plannerReason": "Priority +88; coverage +10; family -0; fatigue -16; weeklyVolume -0; recovery -5; variation -0; final 88",
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge",
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "失败场景：只有跳绳却要求增肌",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "jump_rope"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [
+        "第 1 天 没有可用动作。",
+        "第 3 天 没有可用动作。",
+        "第 5 天 没有可用动作。"
+      ],
+      "warnings": [],
+      "expectedFailure": true,
+      "invariantErrors": [],
+      "summary": null,
+      "days": []
+    }
+  ]
+}

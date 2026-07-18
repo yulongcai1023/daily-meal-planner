@@ -1,0 +1,16 @@
+node_modules/
+dist/
+
+# Capacitor / Android build outputs
+android/.gradle/
+android/app/build/
+android/build/
+*.apk
+
+# Local environment files
+.env
+.env.*
+.firebase/
+.vercel/
+
+.vercel

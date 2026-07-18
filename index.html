@@ -5,10 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="根据身体信息、活动量和目标估算每日营养需求并生成一日食谱。" />
   <title>今日食养 · 每日食谱推荐</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260716-fitness-ui25" />
 </head>
 <body>
   <main class="page-shell">
+    <nav class="account-bar" aria-label="账户">
+      <div class="account-copy"><span class="account-dot"></span><span class="brand-word">FitMeal</span></div>
+      <div class="top-tabs" aria-label="主导航">
+        <button class="top-tab is-active" type="button" data-section-target="meal">食谱</button>
+        <button class="top-tab" type="button" data-section-target="fitness">健身</button>
+        <button class="top-tab" type="button" data-section-target="progress">进度</button>
+        <button class="top-tab" type="button" data-section-target="mine">我的</button>
+      </div>
+      <div id="guest-actions">
+        <button id="open-auth" class="account-button" type="button">登录 / 注册</button>
+      </div>
+      <div id="user-actions" class="user-actions" hidden>
+        <span class="user-avatar" aria-hidden="true">食</span>
+        <span>你好，<b id="current-username"></b></span>
+        <button id="logout-button" type="button">退出</button>
+      </div>
+      <div class="nav-tools" aria-label="快捷操作">
+        <button type="button" aria-label="通知">🔔</button>
+        <button type="button" aria-label="设置">⚙️</button>
+        <span class="nav-avatar" aria-hidden="true">C</span>
+      </div>
+    </nav>
     <header class="hero">
       <div>
         <p class="eyebrow">DAILY NOURISHMENT</p>
@@ -18,11 +40,11 @@
       <div class="hero-mark" aria-hidden="true"><span>食</span></div>
     </header>
 
-    <section class="workspace">
+    <section class="workspace app-section is-active" id="meal-section">
       <form id="profile-form" class="profile-card">
         <div class="section-heading">
           <span>01</span>
-          <div><h2>认识你</h2><p>112 道菜谱智能轮换</p></div>
+          <div><h2>认识你</h2><p>模块化健康食谱库智能组合</p></div>
         </div>
 
         <div class="field-grid">
@@ -67,6 +89,127 @@
       </section>
     </section>
 
+    <section class="fitness-section app-section" id="fitness-section" hidden>
+      <div class="fitness-shell">
+        <aside class="fitness-sidebar" aria-label="健身功能导航">
+          <button class="fitness-side-link is-active" type="button" data-fitness-panel="plan"><span class="side-icon icon-plan" aria-hidden="true"></span>训练计划</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="library"><span class="side-icon icon-library" aria-hidden="true"></span>动作库</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="logs"><span class="side-icon icon-log" aria-hidden="true"></span>训练记录</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="body"><span class="side-icon icon-body-data" aria-hidden="true"></span>身体数据</button>
+          <button class="fitness-side-link" type="button" data-fitness-panel="settings"><span class="side-icon icon-settings" aria-hidden="true"></span>设置</button>
+        </aside>
+
+        <main class="fitness-main">
+          <form id="training-form" class="preference-card">
+            <div class="preference-head">
+              <div>
+                <h2>训练偏好设置</h2>
+                <p>选择可用器械、身体限制和重点部位，系统会继续使用现有训练算法生成计划。</p>
+              </div>
+              <div class="plan-cycle-pill"><span class="calendar-icon" aria-hidden="true"></span>本周计划</div>
+            </div>
+
+            <div class="preference-controls">
+              <label>主要目标<select id="training-primary-goal"><option value="fatLoss">减脂</option><option value="muscleGain" selected>增肌</option><option value="shape">塑形</option><option value="strength">提升力量</option><option value="conditioning">提升体能</option><option value="health">保持健康</option></select></label>
+              <label>次要目标<select id="training-secondary-goal"><option value="health">保持健康</option><option value="fatLoss">减脂</option><option value="muscleGain">增肌</option><option value="conditioning">提升体能</option></select></label>
+              <label>训练地点<select id="training-location"><option value="homeNone">家中无器械</option><option value="homeSimple" selected>家中简单器械</option><option value="apartmentGym">公寓健身房</option><option value="commercialGym">商业健身房</option><option value="outdoor">户外</option></select></label>
+              <label>每周天数<select id="weekly-training-days"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
+              <label>单次时长<select id="session-duration"><option>20</option><option>30</option><option selected>45</option><option>60</option><option>75</option><option>90</option></select></label>
+              <label>训练分化<select id="selected-split"><option value="fullBody">全身训练</option><option value="upperLower">上下肢二分化</option><option value="ppl">推拉腿三分化</option><option value="four">四分化</option><option value="five">五分化</option><option value="six">六分化</option></select></label>
+              <label>有氧安排<select id="cardio-preference"><option value="after">训练后有氧</option><option value="separate">独立有氧日</option><option value="steps">步数目标</option><option value="none">不做有氧</option></select></label>
+            </div>
+
+            <div class="segment-row" aria-label="训练经验">
+              <span>训练经验</span>
+              <div class="segment-group">
+                <label><input type="radio" name="experience-segment" value="beginner0"><span>完全新手</span></label>
+                <label><input type="radio" name="experience-segment" value="beginner" checked><span>新手</span></label>
+                <label><input type="radio" name="experience-segment" value="novice"><span>初级</span></label>
+                <label><input type="radio" name="experience-segment" value="intermediate"><span>中级</span></label>
+                <label><input type="radio" name="experience-segment" value="advanced"><span>高级</span></label>
+              </div>
+              <input id="experience-level" type="hidden" value="beginner">
+            </div>
+
+            <div class="preference-grid">
+              <section id="equipment-subcard" class="preference-subcard">
+                <div class="subcard-head"><h3>可用器械</h3><button class="chip-toggle" type="button" data-toggle-chips="equipment-options">更多</button></div>
+                <input id="equipment-search" class="chip-search" type="text" placeholder="搜索器械，例如：哑铃、跑步机" />
+                <div id="equipment-options" class="selector-grid is-collapsed"></div>
+              </section>
+              <section class="preference-subcard">
+                <div class="subcard-head"><h3>身体限制</h3><span class="info-hint" title="身体限制只用于筛选动作，不能替代专业医疗建议。">i</span></div>
+                <div id="limitation-options" class="selector-grid selector-grid-limits"></div>
+              </section>
+              <section class="preference-subcard">
+                <div class="subcard-head"><h3>重点训练部位</h3><span>可多选</span></div>
+                <div id="muscle-options" class="selector-grid selector-grid-muscles"></div>
+              </section>
+            </div>
+
+            <div class="preference-footer">
+              <div>
+                <h3>用户偏好</h3>
+                <div id="style-options" class="preference-pill-row"></div>
+              </div>
+              <label class="disliked-field">排除动作<input id="disliked-exercises" type="text" placeholder="例如：跑步、杠铃深蹲、开合跳" /></label>
+              <div id="training-error" class="form-error"></div>
+              <button id="generate-workout-button" class="generate-workout-button" type="submit"><span class="button-icon icon-flash" aria-hidden="true"></span>生成训练计划</button>
+            </div>
+          </form>
+
+          <section id="training-results" class="training-results fitness-dashboard" aria-live="polite">
+            <div class="fitness-empty-card">
+              <div class="skeleton-hero"></div>
+              <div>
+                <span class="pill">待生成</span>
+                <h2>生成后，这里会显示本周训练计划。</h2>
+                <p>你会先看到 7 天概览，再进入当前训练日详情和动作记录。</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <div id="exercise-sheet" class="bottom-sheet" aria-hidden="true">
+        <div class="sheet-backdrop" data-close-sheet></div>
+        <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+          <button class="sheet-close" type="button" data-close-sheet>×</button>
+          <h3 id="sheet-title">推荐替换动作</h3>
+          <div id="sheet-options" class="sheet-options"></div>
+        </section>
+      </div>
+
+    </section>
+
+    <section class="app-section placeholder-section" id="progress-section" hidden><h2>进度</h2><p>训练和饮食记录功能可在后续继续扩展。</p></section>
+    <section class="app-section placeholder-section" id="mine-section" hidden><h2>我的</h2><p>这里将集中管理个人资料、训练模板和历史记录。</p></section>
+
+    <div id="auth-modal" class="auth-modal" aria-hidden="true">
+      <div class="auth-backdrop" data-close-auth></div>
+      <section class="auth-panel" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <button class="auth-close" type="button" data-close-auth aria-label="关闭登录窗口">×</button>
+        <p class="eyebrow">YOUR HEALTH PROFILE</p>
+        <h2 id="auth-title">欢迎回来</h2>
+        <p id="auth-description" class="auth-description">登录后自动恢复你上次填写的身体数据。</p>
+        <div class="auth-tabs" role="tablist" aria-label="账户操作">
+          <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">登录</button>
+          <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">注册</button>
+        </div>
+        <form id="auth-form">
+          <label>用户名<input id="auth-username" type="text" minlength="3" maxlength="20" autocomplete="username" placeholder="3–20 个字符" required /></label>
+          <label data-auth-field="password">密码<input id="auth-password" type="password" minlength="6" autocomplete="current-password" placeholder="至少 6 个字符" /></label>
+          <label data-auth-field="confirm-password" hidden>确认密码<input id="auth-confirm-password" type="password" minlength="6" autocomplete="new-password" placeholder="再次输入密码" /></label>
+          <label data-auth-field="security-code" hidden>安全码<input id="auth-security-code" type="password" minlength="6" maxlength="40" autocomplete="off" placeholder="用于忘记密码时验证身份" /></label>
+          <label data-auth-field="new-password" hidden>新密码<input id="auth-new-password" type="password" minlength="6" autocomplete="new-password" placeholder="至少 6 个字符" /></label>
+          <div id="auth-error" class="auth-error" role="alert"></div>
+          <button id="auth-submit" class="primary-button" type="submit">登录并恢复档案</button>
+        </form>
+        <button id="forgot-password" class="auth-link-button" type="button">忘记密码？用安全码找回</button>
+        <p class="auth-local-note">用户名用于登录；安全码仅用于忘记密码时验证身份，请妥善保存。</p>
+      </section>
+    </div>
+
     <div id="recipe-modal" class="recipe-modal" aria-hidden="true">
       <div class="recipe-backdrop" data-close-recipe></div>
       <section class="recipe-panel" role="dialog" aria-modal="true" aria-labelledby="recipe-title">
@@ -92,10 +235,12 @@
       </section>
     </div>
 
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
     <footer>
       <p>营养估算仅供一般健康管理参考，不替代医生或注册营养师建议。孕期、哺乳期、未成年人、运动员或患有代谢/消化疾病者请先咨询专业人士。</p>
     </footer>
   </main>
-  <script src="app.js"></script>
+  <script type="module" src="app.js?v=20260716-fitness-ui25"></script>
 </body>
 </html>
