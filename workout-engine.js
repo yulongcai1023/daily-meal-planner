@@ -592,6 +592,160 @@ const UNILATERAL_REP_IDS = new Set([
 
 const UNILATERAL_DURATION_IDS = new Set(["side_plank", "knee_side_plank", "weighted_side_plank"]);
 
+export const PLANNER_SCORE_WEIGHTS = {
+  priority: 1,
+  legacyFit: 1,
+  movementCoverage: 22,
+  roleCoverage: 10,
+  variationPenalty: 14,
+  fatiguePenalty: 8,
+  weeklyVolumePenalty: 10,
+  familyPenalty: 35,
+  recoveryPenalty: 5
+};
+
+export const RECOMMENDED_WEEKLY_SETS = {
+  "胸": { min: 10, max: 18 },
+  "背": { min: 12, max: 20 },
+  "肩": { min: 8, max: 16 },
+  "手臂": { min: 6, max: 14 },
+  "腿": { min: 10, max: 20 },
+  "臀": { min: 8, max: 18 },
+  "核心": { min: 4, max: 12 }
+};
+
+const FAMILY_CAP_PER_DAY = {
+  bench_press: 1,
+  push_up: 1,
+  chest_fly: 1,
+  vertical_pull: 1,
+  horizontal_row: 1,
+  single_leg: 1,
+  biceps_curl: 1,
+  triceps_extension: 1,
+  lateral_raise: 1
+};
+
+const EXERCISE_PRIORITY_BY_ID = {
+  barbell_bench: 100,
+  db_bench: 95,
+  incline_db_bench: 92,
+  machine_chest_press: 90,
+  incline_barbell_bench: 88,
+  push_up: 70,
+  kneeling_push_up: 65,
+  high_incline_push_up: 62,
+  low_incline_push_up: 66,
+  wall_push_up: 56,
+  close_push_up: 55,
+  close_grip_bench: 45,
+  pull_up: 100,
+  assisted_pull_up_machine: 88,
+  lat_pulldown: 90,
+  band_assisted_pull_up: 82,
+  band_pulldown: 75,
+  one_arm_db_row: 86,
+  seated_row: 84,
+  chest_supported_row: 82,
+  barbell_row: 80,
+  straight_arm_pulldown: 40,
+  barbell_squat: 100,
+  smith_squat: 88,
+  goblet_squat: 85,
+  leg_press: 80,
+  bodyweight_squat: 60,
+  chair_sit_to_stand: 52,
+  box_squat: 55,
+  db_rdl: 86,
+  rdl: 88,
+  glute_bridge: 64,
+  weighted_glute_bridge: 70,
+  db_hip_thrust: 78,
+  barbell_hip_thrust: 86,
+  lunge: 72,
+  step_up: 68,
+  bulgarian_split_squat: 76,
+  lateral_raise: 66,
+  cable_lateral_raise: 68,
+  face_pull: 68,
+  reverse_fly: 62,
+  db_curl: 55,
+  hammer_curl: 55,
+  barbell_curl: 58,
+  cable_curl: 56,
+  triceps_pushdown: 58,
+  straight_bar_pushdown: 56,
+  overhead_extension: 52,
+  plank: 62,
+  dead_bug: 64,
+  bird_dog: 62,
+  pallof_press: 66
+};
+
+function inferExerciseFamily(exercise) {
+  const id = exercise.id;
+  if (exercise.exerciseRole === "cardio" || exercise.category === "有氧") return "cardio";
+  if (/bench/.test(id) || id === "machine_chest_press") return id === "close_grip_bench" ? "triceps_extension" : "bench_press";
+  if (/push_up/.test(id)) return "push_up";
+  if (/face_pull|reverse_fly|wall_angel|scapular/.test(id)) return "rear_delt";
+  if (/fly/.test(id)) return "chest_fly";
+  if (/shoulder_press|barbell_press/.test(id)) return "vertical_press";
+  if (/pull_up|pulldown|lat_pulldown/.test(id)) return id === "straight_arm_pulldown" ? "straight_arm_pulldown" : "vertical_pull";
+  if (/row/.test(id)) return "horizontal_row";
+  if (/squat|leg_press|leg_extension|chair_sit_to_stand/.test(id)) return "squat";
+  if (/rdl|hinge/.test(id)) return "hinge";
+  if (/lunge|step_up|bulgarian/.test(id)) return "single_leg";
+  if (/leg_curl/.test(id)) return "hamstring_curl";
+  if (/curl/.test(id)) return "biceps_curl";
+  if (/pushdown|extension|dip/.test(id)) return "triceps_extension";
+  if (/lateral_raise|front_raise/.test(id)) return "lateral_raise";
+  if (/side_plank/.test(id)) return "anti_lateral_flexion";
+  if (/plank|dead_bug|crunch|leg_raise/.test(id)) return "anti_extension";
+  if (/superman/.test(id)) return "anti_extension";
+  if (/bird_dog|pallof/.test(id)) return "anti_rotation";
+  if (/carry/.test(id)) return "carry";
+  if (/glute_bridge|hip_thrust|kickback|abduction/.test(id)) return "glute_bridge";
+  if (/calf/.test(id)) return "calf_raise";
+  if (/wall_sit/.test(id)) return "squat";
+  return exercise.movementPattern || exercise.category || "general";
+}
+
+function inferFatigueTags(exercise) {
+  const tags = new Set();
+  const text = `${exercise.id} ${exercise.category} ${exercise.movementPattern}`;
+  for (const muscle of [...(exercise.primaryMuscles || []), ...(exercise.secondaryMuscles || [])]) {
+    if (muscle === "胸") tags.add("chest");
+    if (muscle === "背") tags.add("back");
+    if (muscle === "肩") tags.add("shoulder");
+    if (muscle === "手臂") tags.add(/curl|肘屈/.test(text) ? "biceps" : "triceps");
+    if (muscle === "腿") tags.add("quads");
+    if (muscle === "臀") tags.add("glutes");
+    if (muscle === "核心") tags.add("core");
+  }
+  if (/水平推|垂直推|bench|push_up|dip/.test(text)) {
+    tags.add("front_delt");
+    tags.add("triceps");
+  }
+  if (/水平拉|垂直拉|row|pull/.test(text)) {
+    tags.add("rear_delt");
+    tags.add("biceps");
+    tags.add("grip");
+  }
+  if (/rdl|hinge|硬拉|划船|barbell_row/.test(text)) tags.add("low_back");
+  if (/farmer|carry/.test(text)) tags.add("grip");
+  return [...tags];
+}
+
+function inferRecoveryCost(exercise) {
+  const family = exercise.exerciseFamily || inferExerciseFamily(exercise);
+  const base = exercise.fatigueCost || 2;
+  if (["barbell_squat", "rdl", "barbell_row", "weighted_pull_up", "weighted_dip"].includes(exercise.id)) return 4;
+  if (["bench_press", "hinge", "squat", "vertical_pull"].includes(family)) return clamp(base, 2, 4);
+  if (["push_up", "glute_bridge", "single_leg", "vertical_press"].includes(family)) return clamp(base - 1, 1, 3);
+  if (["chest_fly", "biceps_curl", "triceps_extension", "lateral_raise", "calf_raise"].includes(family)) return 1;
+  return clamp(base - 1, 1, 4);
+}
+
 function isNonTrackedSegment(programRole, exerciseRole) {
   return ["warmup", "activation", "deprecated"].includes(programRole) || ["warmup", "activation", "skill_drill"].includes(exerciseRole);
 }
@@ -683,6 +837,10 @@ function inferExerciseMetadata(exercise) {
   ].flat().map(equipmentId);
   const defaultProgramRole = overrides.programRole || exercise.programRole || "workset";
   const defaultExerciseRole = overrides.exerciseRole || exercise.exerciseRole || (isCardio ? "cardio" : exercise.isCompound ? "primary_compound" : "accessory");
+  const plannerBase = { ...exercise, ...overrides, exerciseRole: defaultExerciseRole, programRole: defaultProgramRole };
+  const exerciseFamily = overrides.exerciseFamily || inferExerciseFamily(plannerBase);
+  const fatigueTags = overrides.fatigueTags || inferFatigueTags(plannerBase);
+  const exercisePriority = overrides.exercisePriority ?? EXERCISE_PRIORITY_BY_ID[exercise.id] ?? (defaultExerciseRole === "primary_compound" ? 72 : defaultExerciseRole === "secondary_compound" ? 62 : defaultExerciseRole === "core" ? 56 : defaultExerciseRole === "cardio" ? 48 : 42);
   const isNonWorkSegment = isNonTrackedSegment(defaultProgramRole, defaultExerciseRole);
   const defaultCountsAsWorkSet = !isNonWorkSegment;
   const defaultCountsTowardMuscleVolume = defaultCountsAsWorkSet && !isCardio && !["cardio", "core", "loaded_carry"].includes(defaultExerciseRole);
@@ -717,6 +875,11 @@ function inferExerciseMetadata(exercise) {
     recommendedEquipment: [...new Set([...(exercise.recommendedEquipment || []).map(equipmentId), ...defaultOptionalEquipment])],
     equipmentOptions: defaultEquipmentOptions,
     equipmentOptionSafety: (exercise.equipmentOptionSafety || []).map(rule => ({ ...rule, option: normalizeEquipmentOption(rule.option || []) })),
+    exerciseFamily,
+    exercisePriority,
+    fatigueTags,
+    recoveryCost: overrides.recoveryCost ?? inferRecoveryCost({ ...plannerBase, exerciseFamily, fatigueCost }),
+    recommendedWeeklySets: Object.fromEntries(Object.entries(RECOMMENDED_WEEKLY_SETS).map(([muscle, range]) => [muscle, { ...range }])),
     suggestedNextIds: [],
     replacedBy: exercise.replacedBy || [],
     contraindications: hardContraindications,
@@ -1375,10 +1538,21 @@ function slotDefinitionsForTheme(theme) {
   return [];
 }
 
-function pickBestCandidate(candidates, picked, themedSettings, usedGlobal) {
-  return candidates
-    .filter(item => !picked.some(row => row.id === item.id))
-    .sort((a, b) => experienceSelectionScore(b, themedSettings, usedGlobal) - experienceSelectionScore(a, themedSettings, usedGlobal))[0];
+function pickBestCandidate(candidates, picked, themedSettings, usedGlobal, slotKey = "") {
+  const familyCounts = dayFamilyCounts(picked);
+  const available = candidates.filter(item => !picked.some(row => row.id === item.id));
+  const familyLimited = available.filter(item => {
+    const family = item.exerciseFamily || inferExerciseFamily(item);
+    const cap = FAMILY_CAP_PER_DAY[family] || 1;
+    return (familyCounts[family] || 0) < cap;
+  });
+  const pool = familyLimited.length ? familyLimited : available;
+  const scored = pool
+    .map(item => ({ item, details: plannerScoreBreakdown(item, themedSettings, { picked, usedGlobal, slotKey }) }))
+    .sort((a, b) => b.details.finalScore - a.details.finalScore);
+  const selected = scored[0];
+  if (selected) selected.item.plannerScoreDetails = selected.details;
+  return selected?.item;
 }
 
 function pickExercises(theme, settings, usedGlobal) {
@@ -1396,23 +1570,23 @@ function pickExercises(theme, settings, usedGlobal) {
   const slots = slotDefinitionsForTheme(theme);
 
   for (const slot of slots) {
-    const next = pickBestCandidate(themePool.filter(slot.match), picked, themedSettings, usedGlobal);
+    const next = pickBestCandidate(themePool.filter(slot.match), picked, themedSettings, usedGlobal, slot.key);
     if (next) picked.push(next);
     if (picked.length >= count) break;
   }
 
   for (const category of categories) {
-    const candidates = themePool
-      .filter(item => item.category === category || item.primaryMuscles.includes(category))
-      .sort((a, b) => experienceSelectionScore(b, themedSettings, usedGlobal) - experienceSelectionScore(a, themedSettings, usedGlobal));
-    const next = candidates.find(item => !picked.some(row => row.id === item.id));
+    const candidates = themePool.filter(item => item.category === category || item.primaryMuscles.includes(category));
+    const next = pickBestCandidate(candidates, picked, themedSettings, usedGlobal, "category_fill");
     if (next) picked.push(next);
     if (picked.length >= count) break;
   }
 
   if (picked.length < count) {
-    for (const item of themePool.sort((a, b) => experienceSelectionScore(b, themedSettings, usedGlobal) - experienceSelectionScore(a, themedSettings, usedGlobal))) {
-      if (!picked.some(row => row.id === item.id)) picked.push(item);
+    while (picked.length < count) {
+      const item = pickBestCandidate(themePool, picked, themedSettings, usedGlobal, "fill");
+      if (!item) break;
+      picked.push(item);
       if (picked.length >= count) break;
     }
   }
@@ -1488,6 +1662,101 @@ function experienceSelectionScore(exercise, settings, usedGlobal) {
   return score;
 }
 
+function usedExerciseSet(plannerState) {
+  return plannerState instanceof Set ? plannerState : plannerState?.usedExerciseIds || new Set();
+}
+
+function weeklyVolumeState(plannerState) {
+  if (!plannerState) return {};
+  if (plannerState instanceof Set) {
+    if (!plannerState.weeklyVolume) plannerState.weeklyVolume = {};
+    return plannerState.weeklyVolume;
+  }
+  if (!plannerState.weeklyVolume) plannerState.weeklyVolume = {};
+  return plannerState.weeklyVolume;
+}
+
+function dayFamilyCounts(picked = []) {
+  return picked.reduce((counts, item) => {
+    const family = item.exerciseFamily || inferExerciseFamily(item);
+    counts[family] = (counts[family] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function dayFatigueTags(picked = []) {
+  return picked.flatMap(item => item.fatigueTags || []);
+}
+
+function projectedWeeklyVolumePenalty(exercise, settings, plannerState) {
+  if (!exercise.countsTowardMuscleVolume) return 0;
+  const weeklyVolume = weeklyVolumeState(plannerState);
+  const projectedSets = settings.sessionDuration <= 25 ? 2 : settings.experienceLevel === "beginner0" ? 2 : settings.experienceLevel === "intermediate" || settings.experienceLevel === "advanced" ? 4 : 3;
+  let penalty = 0;
+  for (const muscle of exercise.primaryMuscles || []) {
+    const range = RECOMMENDED_WEEKLY_SETS[muscle];
+    if (!range) continue;
+    const projected = (weeklyVolume[muscle] || 0) + projectedSets;
+    if (projected > range.max) penalty += projected - range.max;
+  }
+  return penalty;
+}
+
+function movementCoverageBonus(exercise, slotKey = "") {
+  if (!slotKey) return 0;
+  const family = exercise.exerciseFamily || inferExerciseFamily(exercise);
+  const pattern = exercise.movementPattern;
+  if (/main|horizontal|vertical|squat|hinge|lower|push|pull/.test(slotKey) && isPrimaryOrSecondaryCompound(exercise)) return 1;
+  if (slotKey.includes("core") && exercise.exerciseRole === "core") return 1;
+  if (slotKey.includes("triceps") && family === "triceps_extension") return 1;
+  if (slotKey.includes("biceps") && family === "biceps_curl") return 1;
+  if (slotKey.includes("single_leg") && family === "single_leg") return 1;
+  if (slotKey.includes("calf") && (family === "calf_raise" || exercise.exerciseRole === "core")) return 1;
+  if (slotKey.includes("isolation") && ["isolation", "accessory"].includes(exercise.exerciseRole)) return 1;
+  if (slotKey.includes("rear") && ["horizontal_row", "lateral_raise"].includes(family)) return 1;
+  if (slotKey.includes("vertical") && ["垂直拉", "垂直推"].includes(pattern)) return 1;
+  if (slotKey.includes("horizontal") && ["水平拉", "水平推"].includes(pattern)) return 1;
+  return 0;
+}
+
+export function plannerScoreBreakdown(exercise, settings = {}, context = {}) {
+  const used = usedExerciseSet(context.plannerState || context.usedGlobal);
+  const picked = context.picked || [];
+  const family = exercise.exerciseFamily || inferExerciseFamily(exercise);
+  const familyCounts = dayFamilyCounts(picked);
+  const fatigueOverlap = (exercise.fatigueTags || []).filter(tag => dayFatigueTags(picked).includes(tag)).length;
+  const familyPenaltyCount = familyCounts[family] || 0;
+  const weeklyVolumePenaltyCount = projectedWeeklyVolumePenalty(exercise, settings, context.plannerState || context.usedGlobal);
+  const recoveryPenaltyCount = Math.max(0, (exercise.recoveryCost || 1) - 3) + Math.max(0, picked.slice(-2).filter(item => (item.recoveryCost || 1) >= 4).length + ((exercise.recoveryCost || 1) >= 4 ? 1 : 0) - 2);
+  const variationPenaltyCount = used.has(exercise.id) ? 1 : 0;
+  const priority = exercise.exercisePriority || 40;
+  const legacyFit = experienceSelectionScore(exercise, settings, used) * PLANNER_SCORE_WEIGHTS.legacyFit;
+  const movementCoverage = movementCoverageBonus(exercise, context.slotKey) * PLANNER_SCORE_WEIGHTS.movementCoverage;
+  const roleCoverage = isPrimaryOrSecondaryCompound(exercise) ? PLANNER_SCORE_WEIGHTS.roleCoverage : 0;
+  const familyPenalty = familyPenaltyCount * PLANNER_SCORE_WEIGHTS.familyPenalty;
+  const fatiguePenalty = fatigueOverlap * PLANNER_SCORE_WEIGHTS.fatiguePenalty;
+  const weeklyVolumePenalty = weeklyVolumePenaltyCount * PLANNER_SCORE_WEIGHTS.weeklyVolumePenalty;
+  const recoveryPenalty = recoveryPenaltyCount * PLANNER_SCORE_WEIGHTS.recoveryPenalty;
+  const variationPenalty = variationPenaltyCount * PLANNER_SCORE_WEIGHTS.variationPenalty;
+  const finalScore = priority + legacyFit + movementCoverage + roleCoverage - familyPenalty - fatiguePenalty - weeklyVolumePenalty - recoveryPenalty - variationPenalty;
+  return {
+    priority,
+    legacyFit,
+    movementCoverage,
+    roleCoverage,
+    familyPenalty,
+    fatiguePenalty,
+    weeklyVolumePenalty,
+    recoveryPenalty,
+    variationPenalty,
+    finalScore: Math.round(finalScore * 10) / 10,
+    exerciseFamily: family,
+    fatigueTags: exercise.fatigueTags || [],
+    recoveryCost: exercise.recoveryCost || 1,
+    reason: `Priority +${priority}; coverage +${movementCoverage + roleCoverage}; family -${familyPenalty}; fatigue -${fatiguePenalty}; weeklyVolume -${weeklyVolumePenalty}; recovery -${recoveryPenalty}; variation -${variationPenalty}; final ${Math.round(finalScore * 10) / 10}`
+  };
+}
+
 function recommendationReasons(exercise, settings) {
   const reasons = [];
   if (exercise.beginnerFriendly) reasons.push("动作学习成本较低，适合当前训练经验。");
@@ -1497,6 +1766,17 @@ function recommendationReasons(exercise, settings) {
   if (equipmentAllowed(exercise, settings)) reasons.push("使用你已选择的可用器械。");
   if ((settings.priorityMuscles || []).includes(exercise.category)) reasons.push("匹配你设置的重点训练部位。");
   return reasons.slice(0, 4);
+}
+
+function recordWeeklyVolume(exercises, plannerState) {
+  const weeklyVolume = weeklyVolumeState(plannerState);
+  for (const row of exercises) {
+    const exercise = exerciseById.get(row.exerciseId);
+    if (!exercise?.countsTowardMuscleVolume) continue;
+    for (const muscle of exercise.primaryMuscles || []) {
+      weeklyVolume[muscle] = (weeklyVolume[muscle] || 0) + (row.sets || 0);
+    }
+  }
 }
 
 function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
@@ -1514,6 +1794,11 @@ function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
     alternatives: getExerciseAlternatives(item.id, settings).map(alt => ({ id: alt.id, name: alt.name })),
     alternativeDetails: item.alternativeDetails,
     movementPattern: item.movementPattern,
+    exerciseFamily: item.exerciseFamily,
+    exercisePriority: item.exercisePriority,
+    fatigueTags: item.fatigueTags,
+    recoveryCost: item.recoveryCost,
+    plannerScoreDetails: item.plannerScoreDetails || plannerScoreBreakdown(item, settings, { usedGlobal: new Set() }),
     difficultyLevel: item.difficultyLevel,
     difficultyScore: item.difficultyScore,
     skillDifficulty: item.skillDifficulty,
@@ -1571,6 +1856,7 @@ function buildDay(theme, index, settings, usedGlobal, userProfile = {}) {
     cardio = null;
     estimatedDuration = estimateWorkoutDuration(exercises, settings, cardio);
   }
+  recordWeeklyVolume(exercises, usedGlobal);
   const calories = calorieRange(estimatedDuration, settings, userProfile);
   return {
     id: `day_${index + 1}`,
@@ -1825,6 +2111,10 @@ export function getExerciseAlternatives(exerciseId, settings = {}) {
   return EXERCISES
     .filter(item => item.id !== exerciseId)
     .filter(item => item.movementPattern === original.movementPattern)
+    .filter(item => !(
+      [original.exerciseFamily, item.exerciseFamily].includes("hinge") &&
+      [original.exerciseFamily, item.exerciseFamily].includes("hamstring_curl")
+    ))
     .filter(item => !(original.movementPattern === "深蹲" && original.movementSubtype === "free_weight" && item.id === "leg_press"))
     .filter(item => item.primaryMuscles.some(muscle => original.primaryMuscles.includes(muscle)))
     .filter(item => item.autoCandidate !== false)
@@ -1837,14 +2127,26 @@ export function getExerciseAlternatives(exerciseId, settings = {}) {
       const risk = alternativeRiskFor(original, item);
       return !risk.tooDifferentForSilentReplacement;
     })
-    .filter(item => Math.abs((item.difficultyScore || 2) - (original.difficultyScore || 2)) <= (normalized.experienceLevel === "advanced" ? 2 : 1))
+    .filter(item => {
+      const difficultyDelta = Math.abs((item.difficultyScore || 2) - (original.difficultyScore || 2));
+      const sameFamily = item.exerciseFamily === original.exerciseFamily;
+      const sameRole = item.exerciseRole === original.exerciseRole;
+      const allowance = normalized.experienceLevel === "advanced" || sameFamily || sameRole ? 2 : 1;
+      return difficultyDelta <= allowance;
+    })
     .filter(item => isExerciseAllowed(item, normalized))
     .sort((a, b) => {
       const aChain = Number((original.regressionIds || []).includes(a.id) || (original.progressionIds || []).includes(a.id));
       const bChain = Number((original.regressionIds || []).includes(b.id) || (original.progressionIds || []).includes(b.id));
       const aSubtypeScore = Number(a.movementSubtype && a.movementSubtype === original.movementSubtype);
       const bSubtypeScore = Number(b.movementSubtype && b.movementSubtype === original.movementSubtype);
-      return bChain - aChain || bSubtypeScore - aSubtypeScore || experienceSelectionScore(b, normalized, new Set()) - experienceSelectionScore(a, normalized, new Set());
+      const aFamilyScore = Number(a.exerciseFamily === original.exerciseFamily);
+      const bFamilyScore = Number(b.exerciseFamily === original.exerciseFamily);
+      const aRoleScore = Number(a.exerciseRole === original.exerciseRole);
+      const bRoleScore = Number(b.exerciseRole === original.exerciseRole);
+      const aPriority = plannerScoreBreakdown(a, normalized, { slotKey: "replacement" }).finalScore;
+      const bPriority = plannerScoreBreakdown(b, normalized, { slotKey: "replacement" }).finalScore;
+      return bFamilyScore - aFamilyScore || bChain - aChain || bRoleScore - aRoleScore || bSubtypeScore - aSubtypeScore || bPriority - aPriority;
     })
     .slice(0, 5);
 }

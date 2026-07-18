@@ -10,12 +10,26 @@ const {
   generateWorkoutPlan,
   getExerciseAlternatives,
   isExerciseAllowed,
+  PLANNER_SCORE_WEIGHTS,
+  RECOMMENDED_WEEKLY_SETS,
+  plannerScoreBreakdown,
   validateWorkoutPlan
 } = await import(moduleUrl);
 
 const GENERATED_AT = new Date().toISOString();
 const SEED = "deterministic-v1";
 const byId = new Map(EXERCISES.map(item => [item.id, item]));
+const FAMILY_CAP_PER_DAY = new Map([
+  ["bench_press", 1],
+  ["push_up", 1],
+  ["chest_fly", 1],
+  ["vertical_pull", 1],
+  ["horizontal_row", 1],
+  ["single_leg", 1],
+  ["biceps_curl", 1],
+  ["triceps_extension", 1],
+  ["lateral_raise", 1]
+]);
 
 const scenarios = [
   {
@@ -161,6 +175,9 @@ function summarizePlan(plan, settings) {
   const directSets = {};
   const indirectSets = {};
   const movementPatterns = {};
+  const exerciseFamilies = {};
+  const fatigueTags = {};
+  const recoveryCosts = {};
   const difficultyBuckets = { "1-2": 0, "2.5-3": 0, "3.5-4": 0, "4.5-5": 0 };
   let totalWorkSets = 0;
   let highDifficultyCount = 0;
@@ -171,6 +188,9 @@ function summarizePlan(plan, settings) {
       const exercise = byId.get(row.exerciseId);
       if (!exercise) continue;
       movementPatterns[exercise.movementPattern] = (movementPatterns[exercise.movementPattern] || 0) + 1;
+      exerciseFamilies[exercise.exerciseFamily] = (exerciseFamilies[exercise.exerciseFamily] || 0) + 1;
+      recoveryCosts[exercise.recoveryCost] = (recoveryCosts[exercise.recoveryCost] || 0) + 1;
+      for (const tag of exercise.fatigueTags || []) fatigueTags[tag] = (fatigueTags[tag] || 0) + 1;
       if (exercise.countsAsWorkSet) totalWorkSets += row.sets || 0;
       if (exercise.countsTowardMuscleVolume) {
         for (const muscle of exercise.primaryMuscles || []) directSets[muscle] = (directSets[muscle] || 0) + (row.sets || 0);
@@ -191,6 +211,9 @@ function summarizePlan(plan, settings) {
     directSets,
     indirectSets,
     movementPatterns,
+    exerciseFamilies,
+    fatigueTags,
+    recoveryCosts,
     difficultyBuckets,
     highDifficultyCount,
     unilateralCount,
@@ -207,6 +230,9 @@ function validateScenario(plan, settings) {
   const trainingDays = plan.days.filter(day => !day.isRest);
   for (const day of trainingDays) {
     const ids = new Set();
+    const familyCounts = {};
+    const movementPatterns = new Set();
+    let highRecoveryStreak = 0;
     if (day.estimatedDuration > settings.sessionDuration * 1.2) {
       errors.push(`${day.day} estimatedDuration ${day.estimatedDuration} exceeds 20% tolerance for ${settings.sessionDuration} minutes`);
     }
@@ -216,14 +242,35 @@ function validateScenario(plan, settings) {
         errors.push(`${day.day}: missing exercise ${row.exerciseId}`);
         continue;
       }
+      familyCounts[exercise.exerciseFamily] = (familyCounts[exercise.exerciseFamily] || 0) + 1;
+      movementPatterns.add(exercise.movementPattern);
+      highRecoveryStreak = exercise.recoveryCost >= 4 ? highRecoveryStreak + 1 : 0;
+      if (highRecoveryStreak >= 3) errors.push(`${day.day}: stacks three high-recovery-cost exercises`);
       if (ids.has(row.exerciseId)) errors.push(`${day.day}: duplicate exercise ${row.exerciseId}`);
       ids.add(row.exerciseId);
       if (exercise.programRole === "deprecated") errors.push(`${day.day}: deprecated exercise ${row.exerciseId}`);
       if (!isExerciseAllowed(exercise, settings)) errors.push(`${day.day}: disallowed exercise ${row.exerciseId}`);
       if (!row.trackingMode) errors.push(`${day.day}: missing trackingMode ${row.exerciseId}`);
+      if (!row.plannerScoreDetails || !Number.isFinite(row.plannerScoreDetails.finalScore)) errors.push(`${day.day}: missing planner score details ${row.exerciseId}`);
       if (["reps_per_side", "duration_per_side"].includes(row.trackingMode) && !String(row.targetLabel).includes("每侧")) {
         errors.push(`${day.day}: unilateral target missing 每侧 ${row.exerciseId}`);
       }
+    }
+    for (const [family, count] of Object.entries(familyCounts)) {
+      const cap = FAMILY_CAP_PER_DAY.get(family);
+      if (cap && count > cap) errors.push(`${day.day}: family cap exceeded ${family} ${count}/${cap}`);
+    }
+    if (day.theme.includes("推")) {
+      if (!movementPatterns.has("水平推")) errors.push(`${day.day}: push day missing horizontal press`);
+      if (!movementPatterns.has("垂直推")) errors.push(`${day.day}: push day missing vertical press`);
+    }
+    if (day.theme.includes("拉")) {
+      if (!movementPatterns.has("垂直拉")) errors.push(`${day.day}: pull day missing vertical pull`);
+      if (!movementPatterns.has("水平拉")) errors.push(`${day.day}: pull day missing horizontal row`);
+    }
+    if (day.theme.includes("腿")) {
+      if (!Object.keys(familyCounts).includes("squat")) errors.push(`${day.day}: leg day missing squat family`);
+      if (!Object.keys(familyCounts).includes("hinge")) errors.push(`${day.day}: leg day missing hinge family`);
     }
   }
 
@@ -237,13 +284,20 @@ function validateScenario(plan, settings) {
 function dayRows(day, settings) {
   return day.exercises.map((row, index) => {
     const exercise = byId.get(row.exerciseId);
+    const score = row.plannerScoreDetails || (exercise ? plannerScoreBreakdown(exercise, settings, { picked: day.exercises.slice(0, index), slotKey: "audit" }) : null);
     return {
       order: index + 1,
       exerciseId: row.exerciseId,
       name: row.name,
       movementPattern: exercise?.movementPattern || "-",
+      exerciseFamily: exercise?.exerciseFamily || "-",
       exerciseRole: exercise?.exerciseRole || "-",
+      priority: exercise?.exercisePriority ?? "-",
+      recoveryCost: exercise?.recoveryCost ?? "-",
+      fatigueTags: exercise?.fatigueTags?.join(", ") || "-",
       difficulty: exercise?.difficultyScore ?? "-",
+      plannerScore: score?.finalScore ?? "-",
+      plannerReason: score?.reason || "-",
       sets: row.sets,
       target: row.targetLabel,
       trackingMode: row.trackingMode,
@@ -289,6 +343,31 @@ function table(rows, headers) {
   ].join("\n");
 }
 
+const familyStats = Object.entries(EXERCISES.reduce((counts, exercise) => {
+  counts[exercise.exerciseFamily] = (counts[exercise.exerciseFamily] || 0) + 1;
+  return counts;
+}, {})).sort((a, b) => b[1] - a[1]).map(([family, count]) => ({ Family: family, 动作数: count }));
+
+const priorityRows = [...EXERCISES]
+  .sort((a, b) => b.exercisePriority - a.exercisePriority)
+  .slice(0, 25)
+  .map(exercise => ({
+    动作ID: exercise.id,
+    动作名称: exercise.name,
+    Family: exercise.exerciseFamily,
+    Priority: exercise.exercisePriority
+  }));
+
+const recoveryRows = Object.entries(EXERCISES.reduce((counts, exercise) => {
+  counts[exercise.recoveryCost] = (counts[exercise.recoveryCost] || 0) + 1;
+  return counts;
+}, {})).sort((a, b) => Number(a[0]) - Number(b[0])).map(([cost, count]) => ({ RecoveryCost: cost, 动作数: count }));
+
+const fatigueRows = Object.entries(EXERCISES.reduce((counts, exercise) => {
+  for (const tag of exercise.fatigueTags || []) counts[tag] = (counts[tag] || 0) + 1;
+  return counts;
+}, {})).sort((a, b) => b[1] - a[1]).map(([tag, count]) => ({ FatigueTag: tag, 动作数: count }));
+
 const md = [
   "# 训练计划生成审计报告",
   "",
@@ -296,6 +375,30 @@ const md = [
   `随机 seed：${SEED}`,
   `动作数量：${EXERCISES.length}`,
   `真实生成器：${sourcePath}`,
+  "",
+  "## Planner V2 常量",
+  "",
+  table(Object.entries(PLANNER_SCORE_WEIGHTS).map(([权重项, 数值]) => ({ 权重项, 数值 })), ["权重项", "数值"]),
+  "",
+  "## Family 分类统计",
+  "",
+  table(familyStats, ["Family", "动作数"]),
+  "",
+  "## Priority Top 25",
+  "",
+  table(priorityRows, ["动作ID", "动作名称", "Family", "Priority"]),
+  "",
+  "## Recovery Cost 分布",
+  "",
+  table(recoveryRows, ["RecoveryCost", "动作数"]),
+  "",
+  "## Fatigue Tag 分布",
+  "",
+  table(fatigueRows, ["FatigueTag", "动作数"]),
+  "",
+  "## Recommended Weekly Sets",
+  "",
+  table(Object.entries(RECOMMENDED_WEEKLY_SETS).map(([肌群, range]) => ({ 肌群, 最低: range.min, 最高: range.max })), ["肌群", "最低", "最高"]),
   "",
   "## 场景总览",
   "",
@@ -319,6 +422,7 @@ const md = [
     `生成错误：${item.errors.join("; ") || "-"}`,
     `不变量错误：${item.invariantErrors.join("; ") || "-"}`,
     item.summary ? `有效组摘要：直接 ${JSON.stringify(item.summary.directSets)}；间接 ${JSON.stringify(item.summary.indirectSets)}；动作模式 ${JSON.stringify(item.summary.movementPatterns)}；难度 ${JSON.stringify(item.summary.difficultyBuckets)}` : "有效组摘要：-",
+    item.summary ? `Planner 摘要：Family ${JSON.stringify(item.summary.exerciseFamilies)}；Fatigue ${JSON.stringify(item.summary.fatigueTags)}；Recovery ${JSON.stringify(item.summary.recoveryCosts)}` : "Planner 摘要：-",
     "",
     ...item.days.flatMap(day => [
       `### ${day.day} · ${day.theme} · ${day.estimatedDuration} 分钟`,
@@ -328,7 +432,12 @@ const md = [
         动作ID: row.exerciseId,
         动作名称: row.name,
         模式: row.movementPattern,
+        Family: row.exerciseFamily,
         角色: row.exerciseRole,
+        Priority: row.priority,
+        Recovery: row.recoveryCost,
+        Fatigue: row.fatigueTags,
+        Score: row.plannerScore,
         难度: row.difficulty,
         组数: row.sets,
         目标: row.target,
@@ -337,7 +446,12 @@ const md = [
         匹配器械: row.matchedEquipmentOption?.join("+") || "-",
         估时: row.estimatedMinutes,
         替换候选: row.alternatives.join(", ") || "-"
-      })), ["顺序", "动作ID", "动作名称", "模式", "角色", "难度", "组数", "目标", "追踪", "肌肉量", "匹配器械", "估时", "替换候选"]),
+      })), ["顺序", "动作ID", "动作名称", "模式", "Family", "角色", "Priority", "Recovery", "Fatigue", "Score", "难度", "组数", "目标", "追踪", "肌肉量", "匹配器械", "估时", "替换候选"]),
+      "",
+      table(day.rows.map(row => ({
+        动作ID: row.exerciseId,
+        选择原因: row.plannerReason
+      })), ["动作ID", "选择原因"]),
       ""
     ])
   ]),
@@ -349,7 +463,17 @@ const md = [
   ""
 ].join("\n");
 
-await writeFile(jsonPath, JSON.stringify({ generatedAt: GENERATED_AT, seed: SEED, scenarios: audited }, null, 2), "utf8");
+await writeFile(jsonPath, JSON.stringify({
+  generatedAt: GENERATED_AT,
+  seed: SEED,
+  plannerScoreWeights: PLANNER_SCORE_WEIGHTS,
+  recommendedWeeklySets: RECOMMENDED_WEEKLY_SETS,
+  familyStats,
+  priorityRows,
+  recoveryRows,
+  fatigueRows,
+  scenarios: audited
+}, null, 2), "utf8");
 await writeFile(mdPath, md, "utf8");
 
 const failures = audited.filter(item => {

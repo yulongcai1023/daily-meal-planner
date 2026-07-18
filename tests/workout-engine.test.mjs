@@ -11,6 +11,9 @@ const {
   compareLoadProgress,
   isWorkoutSetComplete,
   normalizeWorkoutLogEntry,
+  PLANNER_SCORE_WEIGHTS,
+  RECOMMENDED_WEEKLY_SETS,
+  plannerScoreBreakdown,
   resolveExerciseTrackingMode,
   validateExerciseProgressionGraph,
   validateExerciseLibrary,
@@ -61,6 +64,9 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
 assert.ok(EXERCISES.every(exercise => exercise.difficultyScore >= 1 && exercise.difficultyScore <= 5), "difficultyScore must stay within 1-5");
 assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) && exercise.equipmentOptions.every(option => Array.isArray(option) && option.length)), "all exercises should have AND/OR equipmentOptions");
 assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && exercise.countsTowardMuscleVolume !== undefined), "all exercises should expose split counting semantics");
+assert.ok(EXERCISES.every(exercise => exercise.exerciseFamily && Number.isFinite(exercise.exercisePriority) && Array.isArray(exercise.fatigueTags) && Number.isFinite(exercise.recoveryCost)), "all exercises should expose Planner V2 metadata");
+assert.ok(Object.keys(PLANNER_SCORE_WEIGHTS).length >= 8, "planner score weights should be explicit constants");
+assert.ok(RECOMMENDED_WEEKLY_SETS["胸"]?.max >= RECOMMENDED_WEEKLY_SETS["胸"]?.min, "recommended weekly set ranges should be exported");
 assert.ok(EXERCISES.every(exercise => {
   const keys = exercise.equipmentOptions.map(option => [...option].sort().join("+"));
   return keys.length === new Set(keys).size;
@@ -752,4 +758,109 @@ assert.ok(EXERCISES.every(exercise => {
   assert.ok(impossible.errors.length);
 }
 
-console.log("Workout engine tests passed: 44 cases");
+{
+  const plan = makePlan({
+    experienceLevel: "intermediate",
+    weeklyTrainingDays: 3,
+    sessionDuration: 45,
+    trainingLocation: "commercialGym",
+    availableEquipment: [
+      "bodyweight",
+      "barbell",
+      "squat_rack",
+      "bench",
+      "adjustable_bench",
+      "cable_machine",
+      "lat_pulldown_machine",
+      "leg_press",
+      "machine_chest_press",
+      "machine_shoulder_press",
+      "adjustable_dumbbells",
+      "fixed_dumbbells",
+      "parallel_bars",
+      "smith_machine",
+      "leg_extension_machine",
+      "leg_curl_machine"
+    ],
+    selectedSplit: "ppl",
+    cardioPreference: "none"
+  });
+  const days = trainingDays(plan);
+  for (const day of days) {
+    const familyCounts = {};
+    const highestRecoveryStreak = day.exercises.reduce((state, row) => {
+      const exercise = byId[row.exerciseId];
+      familyCounts[exercise.exerciseFamily] = (familyCounts[exercise.exerciseFamily] || 0) + 1;
+      const nextStreak = exercise.recoveryCost >= 4 ? state.current + 1 : 0;
+      return { current: nextStreak, max: Math.max(state.max, nextStreak) };
+    }, { current: 0, max: 0 });
+    for (const [family, count] of Object.entries(familyCounts)) {
+      if (["bench_press", "push_up", "chest_fly", "vertical_pull", "horizontal_row", "single_leg", "biceps_curl", "triceps_extension", "lateral_raise"].includes(family)) {
+        assert.ok(count <= 1, `${day.theme} should not repeat planner family ${family}`);
+      }
+    }
+    assert.ok(highestRecoveryStreak.max < 3, `${day.theme} should not stack three highest-recovery actions`);
+    assert.ok(day.exercises.every(row => row.plannerScoreDetails && Number.isFinite(row.plannerScoreDetails.finalScore)), `${day.theme} rows should expose planner score details`);
+  }
+
+  const pushDay = days.find(day => day.theme.includes("推"));
+  assert.ok(pushDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "水平推"), "push day needs horizontal press coverage");
+  assert.ok(pushDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "垂直推"), "push day needs vertical press coverage");
+  assert.ok(!["barbell_bench", "db_bench", "machine_chest_press", "push_up", "close_grip_bench"].every(id => pushDay.exercises.some(row => row.exerciseId === id)), "push day must not stack every press variant");
+
+  const pullDay = days.find(day => day.theme.includes("拉"));
+  assert.ok(pullDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "垂直拉"), "pull day needs vertical pull coverage");
+  assert.ok(pullDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "水平拉"), "pull day needs horizontal row coverage");
+  assert.ok(!["lat_pulldown", "pull_up", "band_pulldown", "straight_arm_pulldown"].every(id => pullDay.exercises.some(row => row.exerciseId === id)), "pull day must not stack every vertical pull variant");
+
+  const legDay = days.find(day => day.theme.includes("腿"));
+  assert.ok(legDay.exercises.some(row => byId[row.exerciseId]?.exerciseFamily === "squat"), "leg day needs squat-family coverage");
+  assert.ok(legDay.exercises.some(row => byId[row.exerciseId]?.exerciseFamily === "hinge"), "leg day needs hinge-family coverage");
+  assert.ok(!["lunge", "bulgarian_split_squat", "step_up"].every(id => legDay.exercises.some(row => row.exerciseId === id)), "leg day must not stack every single-leg variant");
+
+  const weeklySets = {};
+  for (const row of allExercises(plan)) {
+    const exercise = byId[row.exerciseId];
+    if (!exercise.countsTowardMuscleVolume) continue;
+    for (const muscle of exercise.primaryMuscles || []) weeklySets[muscle] = (weeklySets[muscle] || 0) + row.sets;
+  }
+  for (const [muscle, sets] of Object.entries(weeklySets)) {
+    if (RECOMMENDED_WEEKLY_SETS[muscle]) assert.ok(sets <= RECOMMENDED_WEEKLY_SETS[muscle].max, `${muscle} weekly volume should stay below planner cap`);
+  }
+}
+
+{
+  const commercialSettings = {
+    ...base,
+    experienceLevel: "intermediate",
+    trainingLocation: "commercialGym",
+    availableEquipment: [
+      "bodyweight",
+      "barbell",
+      "squat_rack",
+      "bench",
+      "adjustable_bench",
+      "cable_machine",
+      "lat_pulldown_machine",
+      "machine_chest_press",
+      "adjustable_dumbbells",
+      "fixed_dumbbells",
+      "resistance_band",
+      "band_anchor",
+      "pull_up_bar"
+    ]
+  };
+  const benchAlternatives = getExerciseAlternatives("barbell_bench", commercialSettings).map(item => item.id);
+  assert.ok(benchAlternatives.some(id => ["db_bench", "machine_chest_press", "incline_db_bench"].includes(id)), "bench replacement should prioritize press-family equivalents");
+  assert.ok(!benchAlternatives.some(id => ["front_raise", "triceps_pushdown"].includes(id)), "bench replacement should not fall through to unrelated accessories");
+
+  const pulldownAlternatives = getExerciseAlternatives("lat_pulldown", commercialSettings).map(item => item.id);
+  assert.ok(pulldownAlternatives.some(id => ["pull_up", "band_pulldown"].includes(id)), "lat pulldown replacement should prefer vertical-pull equivalents");
+  assert.notEqual(pulldownAlternatives[0], "straight_arm_pulldown", "straight-arm pulldown should not be the first direct replacement");
+
+  const score = plannerScoreBreakdown(byId.barbell_bench, commercialSettings, { slotKey: "horizontal_push" });
+  assert.ok(Number.isFinite(score.finalScore));
+  assert.ok(score.reason.includes("Priority"));
+}
+
+console.log("Workout engine tests passed: 47 cases");
