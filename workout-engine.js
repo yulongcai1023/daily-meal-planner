@@ -1319,6 +1319,68 @@ function dayFocus(theme) {
   return "动作质量、稳定节奏和适度训练量";
 }
 
+function hasPattern(exercise, patterns) {
+  return patterns.includes(exercise.movementPattern);
+}
+
+function hasRole(exercise, roles) {
+  return roles.includes(exercise.exerciseRole);
+}
+
+function isPrimaryOrSecondaryCompound(exercise) {
+  return hasRole(exercise, ["primary_compound", "secondary_compound"]);
+}
+
+function slotDefinitionsForTheme(theme) {
+  if (theme.includes("全身")) {
+    return [
+      { key: "lower", match: item => hasPattern(item, ["深蹲", "弓步", "髋铰链", "髋伸"]) && isPrimaryOrSecondaryCompound(item) },
+      { key: "push", match: item => hasPattern(item, ["水平推", "垂直推"]) && isPrimaryOrSecondaryCompound(item) },
+      { key: "core", match: item => item.exerciseRole === "core" || item.category === "核心" },
+      { key: "pull", match: item => hasPattern(item, ["水平拉", "垂直拉"]) && isPrimaryOrSecondaryCompound(item) }
+    ];
+  }
+  if (theme.includes("推")) {
+    return [
+      { key: "main_push", match: item => hasPattern(item, ["水平推", "垂直推"]) && isPrimaryOrSecondaryCompound(item) },
+      { key: "secondary_push", match: item => hasPattern(item, ["水平推", "垂直推"]) && isPrimaryOrSecondaryCompound(item) },
+      { key: "shoulder_or_chest_isolation", match: item => hasPattern(item, ["肩外展", "夹胸"]) || (item.exerciseRole === "isolation" && ["胸", "肩"].includes(item.category)) },
+      { key: "triceps", match: item => item.movementPattern === "肘伸" || (item.category === "手臂" && /下压|伸/.test(item.name)) }
+    ];
+  }
+  if (theme.includes("拉")) {
+    return [
+      { key: "vertical_pull", match: item => item.movementPattern === "垂直拉" && isPrimaryOrSecondaryCompound(item) },
+      { key: "horizontal_pull", match: item => item.movementPattern === "水平拉" && isPrimaryOrSecondaryCompound(item) },
+      { key: "rear_delt_or_scapular", match: item => ["水平拉", "肩胛控制"].includes(item.movementPattern) && !["primary_compound"].includes(item.exerciseRole) },
+      { key: "biceps", match: item => item.movementPattern === "肘屈" || (item.category === "手臂" && /弯举|Curl/i.test(`${item.name}${item.englishName}`)) }
+    ];
+  }
+  if (theme.includes("腿") || theme.includes("下肢")) {
+    return [
+      { key: "squat", match: item => item.movementPattern === "深蹲" && isPrimaryOrSecondaryCompound(item) },
+      { key: "hinge_or_glute", match: item => ["髋铰链", "髋伸"].includes(item.movementPattern) && isPrimaryOrSecondaryCompound(item) },
+      { key: "single_leg", match: item => item.movementPattern === "弓步" && isPrimaryOrSecondaryCompound(item) },
+      { key: "calf_or_core", match: item => item.movementPattern === "踝伸" || item.exerciseRole === "core" || item.category === "核心" }
+    ];
+  }
+  if (theme.includes("上肢")) {
+    return [
+      { key: "horizontal_push", match: item => item.movementPattern === "水平推" && isPrimaryOrSecondaryCompound(item) },
+      { key: "horizontal_pull", match: item => item.movementPattern === "水平拉" && isPrimaryOrSecondaryCompound(item) },
+      { key: "vertical_push_or_pull", match: item => ["垂直推", "垂直拉"].includes(item.movementPattern) && isPrimaryOrSecondaryCompound(item) },
+      { key: "upper_accessory", match: item => ["isolation", "accessory", "core"].includes(item.exerciseRole) }
+    ];
+  }
+  return [];
+}
+
+function pickBestCandidate(candidates, picked, themedSettings, usedGlobal) {
+  return candidates
+    .filter(item => !picked.some(row => row.id === item.id))
+    .sort((a, b) => experienceSelectionScore(b, themedSettings, usedGlobal) - experienceSelectionScore(a, themedSettings, usedGlobal))[0];
+}
+
 function pickExercises(theme, settings, usedGlobal) {
   const categories = categoriesForTheme(theme);
   const count = targetExerciseCount(settings);
@@ -1331,6 +1393,13 @@ function pickExercises(theme, settings, usedGlobal) {
       .filter(item => exerciseMatchesTheme(item, theme));
   }
   const picked = [];
+  const slots = slotDefinitionsForTheme(theme);
+
+  for (const slot of slots) {
+    const next = pickBestCandidate(themePool.filter(slot.match), picked, themedSettings, usedGlobal);
+    if (next) picked.push(next);
+    if (picked.length >= count) break;
+  }
 
   for (const category of categories) {
     const candidates = themePool
@@ -1348,8 +1417,8 @@ function pickExercises(theme, settings, usedGlobal) {
     }
   }
 
-  if (theme.includes("全身") && count >= 4 && !picked.some(item => item.category === "核心")) {
-    const coreCandidate = themePool.find(item => item.category === "核心" && !picked.some(row => row.id === item.id));
+  if (theme.includes("全身") && count >= 3 && !picked.some(item => item.exerciseRole === "core" || item.category === "核心")) {
+    const coreCandidate = pickBestCandidate(themePool.filter(item => item.exerciseRole === "core" || item.category === "核心"), picked, themedSettings, usedGlobal);
     if (coreCandidate) picked[Math.max(0, picked.length - 1)] = coreCandidate;
   }
 

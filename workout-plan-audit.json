@@ -1,0 +1,3854 @@
+{
+  "generatedAt": "2026-07-18T03:56:18.410Z",
+  "seed": "deterministic-v1",
+  "scenarios": [
+    {
+      "name": "纯自重初学者全身 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "health",
+        "secondaryGoal": "muscleGain",
+        "experienceLevel": "beginner",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 30,
+        "trainingLocation": "homeNone",
+        "availableEquipment": [
+          "bodyweight"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 29,
+        "directSets": {
+          "腿": 8,
+          "胸": 9,
+          "臀": 3
+        },
+        "indirectSets": {
+          "臀": 4,
+          "手臂": 3,
+          "核心": 3
+        },
+        "movementPatterns": {
+          "深蹲": 2,
+          "水平推": 3,
+          "抗伸展": 2,
+          "髋伸": 1,
+          "弓步": 1,
+          "抗旋转": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 8,
+          "2.5-3": 2,
+          "3.5-4": 0,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 92,
+        "durationLimitMinutes": 30
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 30,
+          "estimatedCaloriesRange": {
+            "min": 180,
+            "max": 250,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "wall_push_up",
+                "push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "plank",
+              "name": "平板支撑",
+              "movementPattern": "抗伸展",
+              "exerciseRole": "core",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "20–60秒",
+              "trackingMode": "duration",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "knee_plank",
+                "dead_bug"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "全身B",
+          "estimatedDuration": 28,
+          "estimatedCaloriesRange": {
+            "min": 170,
+            "max": 230,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "glute_bridge",
+              "name": "臀桥",
+              "movementPattern": "髋伸",
+              "exerciseRole": "primary_compound",
+              "difficulty": 1.5,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "wall_push_up",
+              "name": "墙壁俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "kneeling_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "dead_bug",
+              "name": "死虫",
+              "movementPattern": "抗伸展",
+              "exerciseRole": "core",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "plank",
+                "knee_plank"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "全身C",
+          "estimatedDuration": 34,
+          "estimatedCaloriesRange": {
+            "min": 200,
+            "max": 280,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "kneeling_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "bird_dog",
+              "name": "鸟狗",
+              "movementPattern": "抗旋转",
+              "exerciseRole": "core",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 2,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "纯自重 + 椅子初学者全身 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "health",
+        "secondaryGoal": "muscleGain",
+        "experienceLevel": "beginner",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 30,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "bodyweight",
+          "chair"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 29,
+        "directSets": {
+          "腿": 8,
+          "胸": 9,
+          "臀": 3
+        },
+        "indirectSets": {
+          "臀": 4,
+          "手臂": 3,
+          "核心": 3
+        },
+        "movementPatterns": {
+          "深蹲": 2,
+          "水平推": 3,
+          "抗伸展": 2,
+          "髋伸": 1,
+          "抗旋转": 1,
+          "弓步": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 8,
+          "2.5-3": 2,
+          "3.5-4": 0,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 91,
+        "durationLimitMinutes": 30
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 30,
+          "estimatedCaloriesRange": {
+            "min": 150,
+            "max": 200,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "chair_sit_to_stand"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "wall_push_up",
+                "push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "plank",
+              "name": "平板支撑",
+              "movementPattern": "抗伸展",
+              "exerciseRole": "core",
+              "difficulty": 2,
+              "sets": 3,
+              "target": "20–60秒",
+              "trackingMode": "duration",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "knee_plank",
+                "incline_plank",
+                "dead_bug"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "全身B",
+          "estimatedDuration": 28,
+          "estimatedCaloriesRange": {
+            "min": 140,
+            "max": 190,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "glute_bridge",
+              "name": "臀桥",
+              "movementPattern": "髋伸",
+              "exerciseRole": "primary_compound",
+              "difficulty": 1.5,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "wall_push_up",
+              "name": "墙壁俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 5,
+              "alternatives": [
+                "kneeling_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "dead_bug",
+              "name": "死虫",
+              "movementPattern": "抗伸展",
+              "exerciseRole": "core",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "plank",
+                "knee_plank",
+                "incline_plank"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "全身C",
+          "estimatedDuration": 33,
+          "estimatedCaloriesRange": {
+            "min": 160,
+            "max": 230,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "chair_sit_to_stand",
+              "name": "椅子坐站",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "chair"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 3,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "kneeling_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "bird_dog",
+              "name": "鸟狗",
+              "movementPattern": "抗旋转",
+              "exerciseRole": "core",
+              "difficulty": 1,
+              "sets": 3,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 2,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "家庭哑铃增肌 4 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 4,
+        "sessionDuration": 45,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "adjustable_bench",
+          "resistance_band",
+          "band_anchor"
+        ],
+        "selectedSplit": "upperLower",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 64,
+        "directSets": {
+          "胸": 12,
+          "背": 8,
+          "肩": 8,
+          "腿": 24,
+          "臀": 12,
+          "手臂": 4,
+          "小腿": 4
+        },
+        "indirectSets": {
+          "手臂": 2,
+          "核心": 2,
+          "臀": 8,
+          "胸": 2
+        },
+        "movementPatterns": {
+          "水平推": 4,
+          "水平拉": 2,
+          "垂直推": 2,
+          "深蹲": 2,
+          "髋铰链": 2,
+          "弓步": 2,
+          "髋伸": 1,
+          "踝伸": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 5,
+          "2.5-3": 9,
+          "3.5-4": 2,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 5,
+        "estimatedTotalMinutes": 181,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "上肢A",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "incline_db_bench",
+                "kneeling_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 3,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "incline_db_bench",
+              "name": "上斜哑铃卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2.5,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "adjustable_bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up",
+                "kneeling_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "下肢A",
+          "estimatedDuration": 45,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 390,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "bodyweight_single_leg_hinge",
+              "name": "徒手单腿髋铰链",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3.5,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "db_rdl"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "上肢B",
+          "estimatedDuration": 45,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 390,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_push_up",
+              "name": "窄距俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": []
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 3,
+              "exerciseId": "db_shoulder_press",
+              "name": "坐姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "adjustable_bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "kneeling_push_up",
+              "name": "跪姿俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "push_up",
+                "incline_db_bench",
+                "wall_push_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "下肢B",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 280,
+            "max": 380,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "bodyweight_squat",
+              "name": "自重深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "weighted_glute_bridge",
+              "name": "负重臀桥",
+              "movementPattern": "髋伸",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "glute_bridge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "calf_raise",
+              "name": "提踵",
+              "movementPattern": "踝伸",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "完整健身房 PPL 增肌 3 天",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "machine_chest_press",
+          "machine_shoulder_press",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "parallel_bars",
+          "smith_machine",
+          "leg_extension_machine",
+          "leg_curl_machine"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 44,
+        "directSets": {
+          "手臂": 8,
+          "肩": 8,
+          "胸": 4,
+          "背": 8,
+          "腿": 16,
+          "臀": 4
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "背": 2,
+          "臀": 6
+        },
+        "movementPatterns": {
+          "水平推": 2,
+          "垂直推": 1,
+          "垂直拉": 1,
+          "水平拉": 2,
+          "肘屈": 1,
+          "深蹲": 1,
+          "髋铰链": 1,
+          "弓步": 2
+        },
+        "difficultyBuckets": {
+          "1-2": 3,
+          "2.5-3": 7,
+          "3.5-4": 1,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 129,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 38,
+          "estimatedCaloriesRange": {
+            "min": 260,
+            "max": 350,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up",
+                "dip"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "barbell_bench",
+                "db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "拉",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "腿",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "smith_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 2 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 2,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 36,
+        "directSets": {
+          "腿": 12,
+          "手臂": 4,
+          "背": 8,
+          "臀": 4,
+          "肩": 4
+        },
+        "indirectSets": {
+          "臀": 4,
+          "胸": 2
+        },
+        "movementPatterns": {
+          "深蹲": 1,
+          "水平推": 1,
+          "负重行走": 1,
+          "水平拉": 2,
+          "弓步": 2,
+          "髋铰链": 1,
+          "垂直推": 1,
+          "抗侧屈": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 0,
+          "2.5-3": 8,
+          "3.5-4": 2,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 99,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "全身A",
+          "estimatedDuration": 50,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 420,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "farmer_carry",
+              "name": "农夫行走",
+              "movementPattern": "负重行走",
+              "exerciseRole": "loaded_carry",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "20–40米",
+              "trackingMode": "distance",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 2,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "全身B",
+          "estimatedDuration": 49,
+          "estimatedCaloriesRange": {
+            "min": 300,
+            "max": 410,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "side_plank",
+              "name": "侧平板支撑",
+              "movementPattern": "抗侧屈",
+              "exerciseRole": "core",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 15–45秒",
+              "trackingMode": "duration_per_side",
+              "countsTowardMuscleVolume": false,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": []
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_row",
+              "name": "杠铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "one_arm_db_row"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 2,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 6,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 3 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 44,
+        "directSets": {
+          "手臂": 8,
+          "肩": 8,
+          "胸": 4,
+          "背": 8,
+          "腿": 16,
+          "臀": 4
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "背": 2,
+          "臀": 6
+        },
+        "movementPatterns": {
+          "水平推": 2,
+          "垂直推": 1,
+          "垂直拉": 1,
+          "水平拉": 2,
+          "肘屈": 1,
+          "深蹲": 1,
+          "髋铰链": 1,
+          "弓步": 2
+        },
+        "difficultyBuckets": {
+          "1-2": 3,
+          "2.5-3": 7,
+          "3.5-4": 1,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 129,
+        "durationLimitMinutes": 45
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 38,
+          "estimatedCaloriesRange": {
+            "min": 230,
+            "max": 320,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "barbell_bench",
+                "db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "拉",
+          "estimatedDuration": 44,
+          "estimatedCaloriesRange": {
+            "min": 270,
+            "max": 370,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "腿",
+          "estimatedDuration": 47,
+          "estimatedCaloriesRange": {
+            "min": 290,
+            "max": 400,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 4 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 4,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "upperLower",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 80,
+        "directSets": {
+          "手臂": 4,
+          "背": 12,
+          "肩": 8,
+          "胸": 16,
+          "腿": 28,
+          "臀": 12,
+          "核心": 4,
+          "小腿": 4
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "臀": 10
+        },
+        "movementPatterns": {
+          "水平推": 3,
+          "水平拉": 2,
+          "垂直推": 2,
+          "夹胸": 2,
+          "深蹲": 2,
+          "髋铰链": 2,
+          "弓步": 3,
+          "髋屈": 1,
+          "垂直拉": 1,
+          "髋伸": 1,
+          "踝伸": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 2,
+          "2.5-3": 12,
+          "3.5-4": 6,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 217,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "上肢A",
+          "estimatedDuration": 55,
+          "estimatedCaloriesRange": {
+            "min": 340,
+            "max": 460,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_fly",
+              "name": "绳索夹胸",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "db_fly"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "barbell_bench",
+                "db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "下肢A",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseRole": "core",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "上肢B",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_row",
+              "name": "杠铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "one_arm_db_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "barbell_press",
+              "name": "杠铃推举",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_fly",
+              "name": "哑铃飞鸟",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_fly"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "下肢B",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_hip_thrust",
+              "name": "哑铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "step_up",
+              "name": "台阶踏步",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "calf_raise",
+              "name": "提踵",
+              "movementPattern": "踝伸",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "rdl",
+              "name": "罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge",
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 5 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 5,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 100,
+        "directSets": {
+          "手臂": 20,
+          "肩": 20,
+          "胸": 16,
+          "背": 24,
+          "腿": 16,
+          "臀": 4,
+          "核心": 4
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "背": 2,
+          "臀": 6
+        },
+        "movementPatterns": {
+          "水平推": 3,
+          "垂直推": 2,
+          "夹胸": 2,
+          "肘伸": 2,
+          "垂直拉": 3,
+          "水平拉": 5,
+          "肘屈": 2,
+          "深蹲": 1,
+          "髋铰链": 1,
+          "弓步": 2,
+          "髋屈": 1,
+          "肩外展": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 8,
+          "2.5-3": 13,
+          "3.5-4": 4,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 3,
+        "estimatedTotalMinutes": 262,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 53,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_fly",
+              "name": "绳索夹胸",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "db_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "overhead_extension",
+              "name": "过头臂屈伸",
+              "movementPattern": "肘伸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "triceps_pushdown",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "barbell_bench",
+                "db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseRole": "core",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "推",
+          "estimatedDuration": 51,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 430,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_press",
+              "name": "杠铃推举",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "triceps_pushdown",
+              "name": "绳索下压",
+              "movementPattern": "肘伸",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "overhead_extension",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_fly",
+              "name": "哑铃飞鸟",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_fly"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_row",
+              "name": "杠铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "one_arm_db_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_curl",
+              "name": "绳索弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "barbell_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "seated_row",
+              "name": "坐姿划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "chest_supported_row",
+                "one_arm_db_row"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "频率审计 6 天/周",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 6,
+        "sessionDuration": 60,
+        "trainingLocation": "commercialGym",
+        "availableEquipment": [
+          "bodyweight",
+          "adjustable_dumbbells",
+          "fixed_dumbbells",
+          "barbell",
+          "squat_rack",
+          "bench",
+          "adjustable_bench",
+          "cable_machine",
+          "lat_pulldown_machine",
+          "leg_press",
+          "leg_extension_machine",
+          "leg_curl_machine",
+          "machine_chest_press",
+          "machine_shoulder_press"
+        ],
+        "selectedSplit": "ppl",
+        "cardioPreference": "none"
+      },
+      "errors": [],
+      "warnings": [],
+      "expectedFailure": false,
+      "invariantErrors": [],
+      "summary": {
+        "totalWorkSets": 120,
+        "directSets": {
+          "手臂": 20,
+          "肩": 20,
+          "胸": 16,
+          "背": 24,
+          "腿": 28,
+          "臀": 12,
+          "核心": 4,
+          "小腿": 4
+        },
+        "indirectSets": {
+          "胸": 2,
+          "手臂": 2,
+          "核心": 2,
+          "背": 2,
+          "臀": 10
+        },
+        "movementPatterns": {
+          "水平推": 3,
+          "垂直推": 2,
+          "夹胸": 2,
+          "肘伸": 2,
+          "垂直拉": 3,
+          "水平拉": 5,
+          "肘屈": 2,
+          "深蹲": 2,
+          "髋铰链": 2,
+          "弓步": 3,
+          "髋屈": 1,
+          "肩外展": 1,
+          "髋伸": 1,
+          "踝伸": 1
+        },
+        "difficultyBuckets": {
+          "1-2": 10,
+          "2.5-3": 14,
+          "3.5-4": 6,
+          "4.5-5": 0
+        },
+        "highDifficultyCount": 0,
+        "unilateralCount": 4,
+        "estimatedTotalMinutes": 316,
+        "durationLimitMinutes": 60
+      },
+      "days": [
+        {
+          "day": "第 1 天",
+          "theme": "推",
+          "estimatedDuration": 53,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "close_grip_bench",
+              "name": "窄握卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "close_push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "standing_db_shoulder_press",
+              "name": "站姿哑铃肩推",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_press",
+                "db_shoulder_press",
+                "machine_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_fly",
+              "name": "绳索夹胸",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "db_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "overhead_extension",
+              "name": "过头臂屈伸",
+              "movementPattern": "肘伸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "triceps_pushdown",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "push_up",
+              "name": "俯卧撑",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "low_incline_push_up",
+                "barbell_bench",
+                "db_bench"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 2 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "one_arm_db_row",
+              "name": "单臂哑铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "barbell_row",
+                "chest_supported_row",
+                "seated_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "face_pull",
+              "name": "面拉",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "reverse_fly"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "barbell_curl",
+              "name": "杠铃弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "straight_arm_pulldown",
+              "name": "直臂下压",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "lat_pulldown"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 3 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "goblet_squat",
+              "name": "高脚杯深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_squat",
+                "barbell_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_rdl",
+              "name": "哑铃罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "rdl",
+                "bodyweight_single_leg_hinge"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "lunge",
+              "name": "箭步蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "bulgarian_split_squat",
+                "step_up"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "lying_leg_raise",
+              "name": "仰卧抬腿",
+              "movementPattern": "髋屈",
+              "exerciseRole": "core",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "bulgarian_split_squat",
+              "name": "保加利亚分腿蹲",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "每侧 8–10次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 4 天",
+          "theme": "推",
+          "estimatedDuration": 51,
+          "estimatedCaloriesRange": {
+            "min": 310,
+            "max": 430,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_bench",
+              "name": "杠铃卧推",
+              "movementPattern": "水平推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "bench",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "push_up"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_press",
+              "name": "杠铃推举",
+              "movementPattern": "垂直推",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "standing_db_shoulder_press"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "cable_lateral_raise",
+              "name": "绳索侧平举",
+              "movementPattern": "肩外展",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "lateral_raise"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "triceps_pushdown",
+              "name": "绳索下压",
+              "movementPattern": "肘伸",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "overhead_extension",
+                "straight_bar_pushdown"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "db_fly",
+              "name": "哑铃飞鸟",
+              "movementPattern": "夹胸",
+              "exerciseRole": "isolation",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 8,
+              "alternatives": [
+                "cable_fly"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 5 天",
+          "theme": "拉",
+          "estimatedDuration": 52,
+          "estimatedCaloriesRange": {
+            "min": 320,
+            "max": 440,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "lat_pulldown",
+              "name": "高位下拉",
+              "movementPattern": "垂直拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "lat_pulldown_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "straight_arm_pulldown"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "barbell_row",
+              "name": "杠铃划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "one_arm_db_row"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "reverse_fly",
+              "name": "反向飞鸟",
+              "movementPattern": "水平拉",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "face_pull"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "cable_curl",
+              "name": "绳索弯举",
+              "movementPattern": "肘屈",
+              "exerciseRole": "isolation",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "10–15次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": [
+                "barbell_curl",
+                "db_curl",
+                "hammer_curl"
+              ]
+            },
+            {
+              "order": 5,
+              "exerciseId": "seated_row",
+              "name": "坐姿划船",
+              "movementPattern": "水平拉",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "cable_machine"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "chest_supported_row",
+                "one_arm_db_row"
+              ]
+            }
+          ]
+        },
+        {
+          "day": "第 6 天",
+          "theme": "腿",
+          "estimatedDuration": 54,
+          "estimatedCaloriesRange": {
+            "min": 330,
+            "max": 450,
+            "basis": "按体重、训练时长和中等强度 MET 粗略估算；实际消耗会受动作速度、组间休息、心率、技术熟练度影响。"
+          },
+          "rows": [
+            {
+              "order": 1,
+              "exerciseId": "barbell_squat",
+              "name": "杠铃深蹲",
+              "movementPattern": "深蹲",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell",
+                "squat_rack"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "goblet_squat"
+              ]
+            },
+            {
+              "order": 2,
+              "exerciseId": "db_hip_thrust",
+              "name": "哑铃臀推",
+              "movementPattern": "髋伸",
+              "exerciseRole": "primary_compound",
+              "difficulty": 3,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "adjustable_dumbbells",
+                "bench"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "barbell_hip_thrust",
+                "weighted_glute_bridge",
+                "cable_kickback"
+              ]
+            },
+            {
+              "order": 3,
+              "exerciseId": "step_up",
+              "name": "台阶踏步",
+              "movementPattern": "弓步",
+              "exerciseRole": "primary_compound",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "每侧 8–12次",
+              "trackingMode": "reps_per_side",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bench"
+              ],
+              "estimatedMinutes": 11,
+              "alternatives": [
+                "lunge"
+              ]
+            },
+            {
+              "order": 4,
+              "exerciseId": "calf_raise",
+              "name": "提踵",
+              "movementPattern": "踝伸",
+              "exerciseRole": "accessory",
+              "difficulty": 2,
+              "sets": 4,
+              "target": "12–20次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "bodyweight"
+              ],
+              "estimatedMinutes": 7,
+              "alternatives": []
+            },
+            {
+              "order": 5,
+              "exerciseId": "rdl",
+              "name": "罗马尼亚硬拉",
+              "movementPattern": "髋铰链",
+              "exerciseRole": "primary_compound",
+              "difficulty": 4,
+              "sets": 4,
+              "target": "8–12次",
+              "trackingMode": "reps",
+              "countsTowardMuscleVolume": true,
+              "matchedEquipmentOption": [
+                "barbell"
+              ],
+              "estimatedMinutes": 9,
+              "alternatives": [
+                "bodyweight_single_leg_hinge",
+                "db_rdl"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "失败场景：只有跳绳却要求增肌",
+      "seed": "deterministic-v1",
+      "settings": {
+        "primaryGoal": "muscleGain",
+        "secondaryGoal": "health",
+        "experienceLevel": "intermediate",
+        "weeklyTrainingDays": 3,
+        "sessionDuration": 45,
+        "trainingLocation": "homeSimple",
+        "availableEquipment": [
+          "jump_rope"
+        ],
+        "selectedSplit": "fullBody",
+        "cardioPreference": "none"
+      },
+      "errors": [
+        "第 1 天 没有可用动作。",
+        "第 3 天 没有可用动作。",
+        "第 5 天 没有可用动作。"
+      ],
+      "warnings": [],
+      "expectedFailure": true,
+      "invariantErrors": [],
+      "summary": null,
+      "days": []
+    }
+  ]
+}

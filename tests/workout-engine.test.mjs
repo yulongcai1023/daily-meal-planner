@@ -693,4 +693,63 @@ assert.ok(EXERCISES.every(exercise => {
   assert.ok(regress.regressionExerciseIds.length);
 }
 
-console.log("Workout engine tests passed: 41 cases");
+{
+  const result = generateWorkoutPlan({
+    primaryGoal: "health",
+    secondaryGoal: "muscleGain",
+    experienceLevel: "beginner",
+    weeklyTrainingDays: 3,
+    sessionDuration: 30,
+    trainingLocation: "homeNone",
+    availableEquipment: ["bodyweight"],
+    selectedSplit: "fullBody",
+    cardioPreference: "none"
+  });
+  assert.deepEqual(result.errors, []);
+  const days = trainingDays(result.plan);
+  assert.equal(days.length, 3);
+  assert.ok(days.every(day => day.exercises.some(row => ["深蹲", "弓步", "髋伸", "髋铰链"].includes(byId[row.exerciseId]?.movementPattern))), "bodyweight full-body days need lower-body coverage");
+  assert.ok(days.every(day => day.exercises.some(row => ["水平推", "垂直推"].includes(byId[row.exerciseId]?.movementPattern))), "bodyweight full-body days need push coverage");
+  assert.ok(days.every(day => day.exercises.some(row => byId[row.exerciseId]?.exerciseRole === "core")), "bodyweight full-body days need core coverage");
+  assert.ok(!exerciseIds(result.plan).some(id => ["high_incline_push_up", "low_incline_push_up", "incline_push_up"].includes(id)));
+  assert.ok(days.every(day => day.estimatedDuration <= 36), "30-minute audit scenario should stay within 20% duration tolerance");
+}
+
+{
+  const result = generateWorkoutPlan({
+    primaryGoal: "muscleGain",
+    secondaryGoal: "health",
+    experienceLevel: "intermediate",
+    weeklyTrainingDays: 3,
+    sessionDuration: 45,
+    trainingLocation: "commercialGym",
+    availableEquipment: ["bodyweight", "barbell", "squat_rack", "bench", "adjustable_bench", "cable_machine", "lat_pulldown_machine", "leg_press", "machine_chest_press", "machine_shoulder_press", "adjustable_dumbbells", "fixed_dumbbells", "parallel_bars", "smith_machine", "leg_extension_machine", "leg_curl_machine"],
+    selectedSplit: "ppl",
+    cardioPreference: "none"
+  });
+  assert.deepEqual(result.errors, []);
+  const pullDay = trainingDays(result.plan).find(day => day.theme.includes("拉"));
+  assert.ok(pullDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "垂直拉"), "pull day needs a vertical pull");
+  assert.ok(pullDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "水平拉"), "pull day needs a horizontal pull");
+  assert.ok(!pullDay.exercises.some(row => byId[row.exerciseId]?.movementPattern === "肘伸"), "pull day should not fill biceps/accessory slot with triceps extension");
+  const pushDay = trainingDays(result.plan).find(day => day.theme.includes("推"));
+  assert.ok(["水平推", "垂直推"].includes(byId[pushDay.exercises[0].exerciseId]?.movementPattern), "push day should start with a compound push pattern");
+}
+
+{
+  const impossible = generateWorkoutPlan({
+    primaryGoal: "muscleGain",
+    secondaryGoal: "health",
+    experienceLevel: "intermediate",
+    weeklyTrainingDays: 3,
+    sessionDuration: 45,
+    trainingLocation: "homeSimple",
+    availableEquipment: ["jump_rope"],
+    selectedSplit: "fullBody",
+    cardioPreference: "none"
+  });
+  assert.equal(impossible.plan, null, "insufficient strength equipment should fail instead of silently filling strength plan with unusable actions");
+  assert.ok(impossible.errors.length);
+}
+
+console.log("Workout engine tests passed: 44 cases");
