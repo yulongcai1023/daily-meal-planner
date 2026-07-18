@@ -56,6 +56,10 @@ assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.regressionIds) && A
 assert.ok(EXERCISES.every(exercise => exercise.difficultyScore >= 1 && exercise.difficultyScore <= 5), "difficultyScore must stay within 1-5");
 assert.ok(EXERCISES.every(exercise => Array.isArray(exercise.equipmentOptions) && exercise.equipmentOptions.every(option => Array.isArray(option) && option.length)), "all exercises should have AND/OR equipmentOptions");
 assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && exercise.countsTowardMuscleVolume !== undefined), "all exercises should expose split counting semantics");
+assert.ok(EXERCISES.every(exercise => {
+  const keys = exercise.equipmentOptions.map(option => [...option].sort().join("+"));
+  return keys.length === new Set(keys).size;
+}), "equipmentOptions should not contain duplicate normalized combinations");
 
 {
   const graph = validateExerciseProgressionGraph();
@@ -127,7 +131,7 @@ assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && 
   assert.equal(byId.incline_db_bench.difficultyScore, 2.5);
   assert.ok(byId.incline_db_bench.equipmentOptions.every(option => option.includes("adjustable_bench")), "incline dumbbell bench must require adjustable bench");
   assert.equal(byId.barbell_row.difficultyLevel, "intermediate");
-  assert.ok(byId.db_shoulder_press.equipmentOptions.every(option => option.includes("bench")), "seated dumbbell shoulder press must require a bench");
+  assert.ok(byId.db_shoulder_press.equipmentOptions.every(option => option.some(id => ["bench", "adjustable_bench"].includes(id))), "seated dumbbell shoulder press must require a bench or adjustable bench");
   assert.equal(byId.standing_db_shoulder_press.spinalLoad > byId.db_shoulder_press.spinalLoad, true);
   assert.ok(byId.cable_kickback.coordinationDemand <= 3);
   assert.ok(!byId.step_up.progressionIds.includes("lunge"));
@@ -192,13 +196,24 @@ assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && 
   assert.equal(byId.barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.incline_barbell_bench.requiresSpotterOrSafetyArms, true);
   assert.equal(byId.close_grip_bench.requiresSpotterOrSafetyArms, true);
-  assert.ok(byId.barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("bench") && option.some(id => ["squat_rack", "safety_rack"].includes(id))), "barbell bench must require rack-like equipment");
-  assert.ok(byId.close_grip_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("bench") && option.some(id => ["squat_rack", "safety_rack"].includes(id))), "close-grip bench must require rack-like equipment");
-  assert.ok(byId.incline_barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("adjustable_bench") && option.some(id => ["squat_rack", "safety_rack"].includes(id))), "incline barbell bench must require adjustable bench and rack-like equipment");
+  assert.ok(byId.barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("bench") && option.includes("squat_rack")), "barbell bench must require a true rack, not safety rack alone");
+  assert.ok(byId.close_grip_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("bench") && option.includes("squat_rack")), "close-grip bench must require a true rack, not safety rack alone");
+  assert.ok(byId.incline_barbell_bench.equipmentOptions.every(option => option.includes("barbell") && option.includes("adjustable_bench") && option.includes("squat_rack")), "incline barbell bench must require adjustable bench and a true rack");
+  assert.equal(isExerciseAllowed(byId.barbell_bench, { ...base, experienceLevel: "advanced", trainingLocation: "commercialGym", availableEquipment: ["杠铃", "卧推凳", "保护架"] }), false, "safety rack alone must not satisfy barbell bench setup");
+  assert.equal(isExerciseAllowed(byId.barbell_bench, { ...base, experienceLevel: "advanced", trainingLocation: "commercialGym", availableEquipment: ["杠铃", "卧推凳", "深蹲架"] }), true);
+  assert.equal(isExerciseAllowed(byId.incline_db_bench, { ...base, experienceLevel: "advanced", trainingLocation: "homeSimple", availableEquipment: ["可调哑铃", "卧推凳"] }), false, "flat bench must not satisfy incline dumbbell bench");
+  assert.equal(isExerciseAllowed(byId.incline_db_bench, { ...base, experienceLevel: "advanced", trainingLocation: "homeSimple", availableEquipment: ["可调哑铃", "可调节卧凳"] }), true);
+  assert.equal(isExerciseAllowed(byId.incline_barbell_bench, { ...base, experienceLevel: "advanced", trainingLocation: "commercialGym", availableEquipment: ["杠铃", "卧推凳", "深蹲架"] }), false, "flat bench must not satisfy incline barbell bench");
+  assert.equal(isExerciseAllowed(byId.incline_barbell_bench, { ...base, experienceLevel: "advanced", trainingLocation: "commercialGym", availableEquipment: ["杠铃", "可调节卧凳", "深蹲架"] }), true);
   assert.ok(byId.band_pulldown.equipmentOptions.every(option => option.includes("resistance_band") && option.includes("band_anchor")));
   assert.ok(byId.face_pull.equipmentOptions.filter(option => option.includes("resistance_band")).every(option => option.includes("band_anchor")));
   assert.ok(byId.pallof_press.equipmentOptions.filter(option => option.includes("resistance_band")).every(option => option.includes("band_anchor")));
   assert.ok(!byId.hip_abduction.equipmentOptions.some(option => option.includes("resistance_band") && option.includes("band_anchor")));
+  assert.equal(isExerciseAllowed(byId.band_pulldown, { ...base, trainingLocation: "homeSimple", availableEquipment: ["弹力带"] }), false);
+  assert.equal(isExerciseAllowed(byId.band_pulldown, { ...base, trainingLocation: "homeSimple", availableEquipment: ["弹力带", "弹力带固定点"] }), true);
+  assert.equal(isExerciseAllowed(byId.hip_abduction, { ...base, trainingLocation: "homeSimple", availableEquipment: ["弹力带"] }), true, "hip abduction band version should not require an anchor");
+  assert.ok(byId.reverse_fly.aliases.includes("弹力带拉开"));
+  assert.ok(byId.reverse_fly.instructions.join("").includes("不需要固定点"));
   assert.ok(byId.leg_curl.alternativeDetails.some(item => item.id === "db_rdl" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
   assert.ok(byId.db_rdl.alternativeDetails.some(item => item.id === "glute_bridge" && item.type === "sameMuscleDifferentPattern" && item.requiresPatternCoverageValidation));
   assert.equal(byId.incline_push_up.autoCandidate, false);
@@ -235,8 +250,18 @@ assert.ok(EXERCISES.every(exercise => exercise.countsAsWorkSet !== undefined && 
   assert.equal(byId.farmer_carry.exerciseRole, "loaded_carry");
   assert.equal(byId.farmer_carry.countsAsWorkSet, true);
   assert.equal(byId.farmer_carry.countsTowardMuscleVolume, false);
+  assert.equal(byId.farmer_carry.trackingMode, "distance");
   assert.equal(byId.plank.countsAsWorkSet, true);
   assert.equal(byId.plank.countsTowardMuscleVolume, false);
+  assert.equal(byId.plank.trackingMode, "duration");
+  assert.equal(byId.dead_bug.trackingMode, "reps_per_side");
+  assert.equal(byId.pallof_press.trackingMode, "reps_per_side");
+  assert.equal(byId.wall_sit.trackingMode, "duration");
+  assert.equal(byId.wall_sit.countsTowardMuscleVolume, false);
+  assert.ok(["crunch", "reverse_crunch", "hanging_leg_raise", "lying_leg_raise"].every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === true && byId[id].trackingMode === "reps"));
+  assert.ok(["plank", "side_plank", "dead_bug", "bird_dog", "pallof_press", "incline_plank", "knee_plank", "long_lever_plank", "knee_side_plank", "side_plank_leg_raise", "weighted_plank", "weighted_side_plank"].every(id => byId[id].countsAsWorkSet === true && byId[id].countsTowardMuscleVolume === false));
+  assert.equal(byId.step_up.difficultyScope, "base_movement_pattern");
+  assert.equal(byId.bulgarian_split_squat.difficultyScope, "base_movement_pattern");
   assert.equal(byId.box_squat.name, "徒手箱式深蹲");
   assert.ok(byId.box_squat.aliases.includes("箱式深蹲"));
   assert.equal(byId.pallof_press.name, "帕洛夫抗旋转推");

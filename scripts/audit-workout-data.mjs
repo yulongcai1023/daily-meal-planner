@@ -42,9 +42,12 @@ const relationIds = exercise => [
   ...(exercise.replacedBy || [])
 ];
 const optionKey = option => (option || []).join("+");
+const normalizedOptionKey = option => (option || []).slice().sort().join("+");
 const hasOption = (exercise, predicate) => (exercise.equipmentOptions || []).some(predicate);
 const optionIncludesAny = (option, ids) => option.some(id => ids.includes(id));
 const abnormalCharacters = input => (input.match(/\uFFFD/g) || []).length;
+const dynamicAbsIds = new Set(["crunch", "reverse_crunch", "hanging_leg_raise", "lying_leg_raise"]);
+const coreControlIds = new Set(["plank", "side_plank", "dead_bug", "bird_dog", "pallof_press", "incline_plank", "knee_plank", "long_lever_plank", "knee_side_plank", "side_plank_leg_raise", "weighted_plank", "weighted_side_plank"]);
 
 const outOfRangeDifficulty = [];
 const missingEquipmentOptionSemantics = [];
@@ -66,6 +69,10 @@ for (const exercise of EXERCISES) {
 
   if (!Array.isArray(exercise.equipmentOptions) || !exercise.equipmentOptions.length || !exercise.equipmentOptions.every(option => Array.isArray(option) && option.length)) {
     missingEquipmentOptionSemantics.push(`${exercise.id}: equipmentOptions 缺少二维 AND/OR 语义`);
+  }
+  const normalizedOptionKeys = (exercise.equipmentOptions || []).map(normalizedOptionKey);
+  if (normalizedOptionKeys.length !== new Set(normalizedOptionKeys).size) {
+    missingEquipmentOptionSemantics.push(`${exercise.id}: equipmentOptions 存在重复组合`);
   }
 
   for (const option of exercise.equipmentOptions || []) {
@@ -102,6 +109,18 @@ for (const exercise of EXERCISES) {
   if (exercise.countsAsWorkSet === undefined || exercise.countsTowardMuscleVolume === undefined) {
     invalidCountingSemantics.push(`${exercise.id}: 新统计字段为 undefined`);
   }
+  if (dynamicAbsIds.has(exercise.id) && (!exercise.countsAsWorkSet || !exercise.countsTowardMuscleVolume || exercise.trackingMode !== "reps")) {
+    invalidCountingSemantics.push(`${exercise.id}: 动态腹肌动作必须计入核心直接训练量，并使用 reps 追踪`);
+  }
+  if (coreControlIds.has(exercise.id) && (!exercise.countsAsWorkSet || exercise.countsTowardMuscleVolume)) {
+    invalidCountingSemantics.push(`${exercise.id}: 控制/抗动核心动作应计入正式训练段，但不计入肌肉有效组`);
+  }
+  if (exercise.id === "farmer_carry" && (!exercise.countsAsWorkSet || exercise.countsTowardMuscleVolume || !["distance", "duration"].includes(exercise.trackingMode))) {
+    invalidCountingSemantics.push("farmer_carry: 应作为正式负重行走训练段追踪，但不计入普通肌肉有效组");
+  }
+  if (exercise.id === "wall_sit" && (!exercise.countsAsWorkSet || exercise.countsTowardMuscleVolume || exercise.trackingMode !== "duration")) {
+    invalidCountingSemantics.push("wall_sit: 静力动作应按 duration 追踪，且不计入普通肌肉有效组");
+  }
 
   if (exercise.programRole === "deprecated") {
     if (exercise.autoCandidate !== false) deprecatedReplacementIssues.push(`${exercise.id}: deprecated 动作仍可进入新计划候选池`);
@@ -112,8 +131,8 @@ for (const exercise of EXERCISES) {
     }
   }
 
-  if (exercise.id === "db_shoulder_press" && !hasOption(exercise, option => option.includes("bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
-    incompleteEquipmentCombinations.push("db_shoulder_press: 缺少 哑铃 + 卧推凳 AND 组合");
+  if (exercise.id === "db_shoulder_press" && !hasOption(exercise, option => optionIncludesAny(option, ["bench", "adjustable_bench"]) && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
+    incompleteEquipmentCombinations.push("db_shoulder_press: 缺少 哑铃 + 卧凳 AND 组合");
   }
   if (exercise.id === "preacher_curl") {
     if (!hasOption(exercise, option => option.includes("preacher_bench") && option.includes("adjustable_dumbbells"))) incompleteEquipmentCombinations.push("preacher_curl: 缺少 preacher_bench + adjustable_dumbbells");
@@ -126,14 +145,14 @@ for (const exercise of EXERCISES) {
   if (exercise.id === "db_bench" && !hasOption(exercise, option => option.includes("bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
     incompleteEquipmentCombinations.push("db_bench: 缺少 哑铃 + 卧推凳 AND 组合");
   }
-  if (["barbell_bench", "close_grip_bench"].includes(exercise.id) && !hasOption(exercise, option => option.includes("barbell") && option.includes("bench") && optionIncludesAny(option, ["squat_rack", "safety_rack"]))) {
-    incompleteEquipmentCombinations.push(`${exercise.id}: 杠铃卧推系列必须包含 barbell + bench + rack`);
+  if (["barbell_bench", "close_grip_bench"].includes(exercise.id) && !((exercise.equipmentOptions || []).every(option => option.includes("barbell") && option.includes("bench") && option.includes("squat_rack")))) {
+    incompleteEquipmentCombinations.push(`${exercise.id}: 杠铃卧推系列必须包含 barbell + bench + squat_rack，safety_rack 不能单独替代架体`);
   }
   if (exercise.id === "incline_db_bench" && !hasOption(exercise, option => option.includes("adjustable_bench") && optionIncludesAny(option, ["adjustable_dumbbells", "fixed_dumbbells"]))) {
     incompleteEquipmentCombinations.push("incline_db_bench: 上斜哑铃卧推必须包含 adjustable_bench");
   }
-  if (exercise.id === "incline_barbell_bench" && !hasOption(exercise, option => option.includes("barbell") && option.includes("adjustable_bench") && optionIncludesAny(option, ["squat_rack", "safety_rack"]))) {
-    incompleteEquipmentCombinations.push("incline_barbell_bench: 上斜杠铃卧推必须包含 barbell + adjustable_bench + rack");
+  if (exercise.id === "incline_barbell_bench" && !((exercise.equipmentOptions || []).every(option => option.includes("barbell") && option.includes("adjustable_bench") && option.includes("squat_rack")))) {
+    incompleteEquipmentCombinations.push("incline_barbell_bench: 上斜杠铃卧推必须包含 barbell + adjustable_bench + squat_rack，safety_rack 不能单独替代架体");
   }
   if (exercise.id === "band_pulldown" && !hasOption(exercise, option => option.includes("resistance_band") && option.includes("band_anchor"))) {
     incompleteEquipmentCombinations.push("band_pulldown: 弹力带方案必须包含 band_anchor");
@@ -285,9 +304,9 @@ const md = `# 健身动作数据结构收尾审计\n\n生成时间：${audit.gen
 writeFileSync(mdPath, md, "utf8");
 
 const rows = [
-  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | equipmentOptions |",
-  "| --- | --- | --- | --- | --- | --- | --- | --- |",
-  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
+  "| 动作 ID | 名称 | 难度 | programRole | exerciseRole | 工作组 | 肌肉有效组 | 追踪模式 | equipmentOptions |",
+  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+  ...EXERCISES.map(item => `| ${item.id} | ${item.name} | ${text(item.difficultyScore)} | ${text(item.programRole)} | ${text(item.exerciseRole)} | ${text(item.countsAsWorkSet)} | ${text(item.countsTowardMuscleVolume)} | ${text(item.trackingMode)} | ${text((item.equipmentOptions || []).map(option => `[${option.join("+")}]`).join(" / "))} |`)
 ];
 writeFileSync(reviewPath, `# 健身动作结构报告\n\n生成时间：${audit.generatedAt}\n\n${rows.join("\n")}\n`, "utf8");
 writeFileSync(summaryPath, `# 健身动作数据结构摘要\n\n`
